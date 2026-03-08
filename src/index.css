@@ -177,26 +177,6 @@
     @apply p-2 sm:p-4 md:p-6 lg:p-8;
   }
   
-  /* Animated Pride Flag Gradients */
-  @keyframes lesbian-pride {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  
-  @keyframes rainbow-pride {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  
-  @keyframes bi-pride {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  
-  /* Pride Flag Gradients with Slower Animations */
 /* Pride Flag Gradients with Slower Animations */
 .lesbian-gradient {
   background: linear-gradient(-45deg, 

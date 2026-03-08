@@ -3,7 +3,7 @@ import React from 'react';
 interface AnimatedLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
-  identity?: 'lesbian' | 'bisexual' | 'pansexual' | 'transgender' | 'rainbow';
+  variant?: 'default' | 'global-flow';
   text?: string;
   textClassName?: string;
 }
@@ -11,11 +11,11 @@ interface AnimatedLogoProps {
 export const AnimatedLogo: React.FC<AnimatedLogoProps> = ({ 
   size = 'md', 
   className = '',
-  identity = 'rainbow',
+  variant = 'default',
   text = 'Violets & Vibes',
   textClassName = ''
 }) => {
-  const useWaterFlowHeader = textClassName.includes('vv-global-header-flow');
+  const useWaterFlowHeader = variant === 'global-flow';
   const interactionClasses = useWaterFlowHeader
     ? 'transform-gpu'
     : 'transition-all duration-300 hover:scale-105 hover:drop-shadow-2xl filter drop-shadow-lg';
