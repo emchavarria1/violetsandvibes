@@ -42,7 +42,12 @@ export const PrideHeader: React.FC<PrideHeaderProps> = ({
       </div>
 
       {showLogo && (
-        <AnimatedLogo size="lg" className="mb-2 sm:mb-4" />
+        <AnimatedLogo
+          size="lg"
+          className="mb-2 sm:mb-4"
+          text="Unleash Your Spirit with Violets & Vibes - Your Premier Online Dating and Social Hub!"
+          textClassName="wedding-title vv-global-header-flow leading-tight px-6 sm:px-14 md:px-20"
+        />
       )}
       
       {subtitle && (

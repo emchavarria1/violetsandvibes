@@ -268,10 +268,7 @@
 /* Rainbow Fade Animation for Headers - Slow Gradient */
 @keyframes rainbowFade {
   0% { background-position: 0% 50%; }
-  20% { background-position: 25% 50%; }
-  40% { background-position: 50% 50%; }
-  60% { background-position: 75% 50%; }
-  80% { background-position: 100% 50%; }
+  50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
@@ -287,7 +284,53 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
-  animation: rainbowFade 10s ease-in-out infinite;
+  animation: rainbowFade 18s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+}
+
+@keyframes vvHeaderWaterFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 1000% 50%;
+  }
+}
+
+/* Use only for the global top header text */
+.vv-global-header-flow {
+  background: linear-gradient(
+    102deg,
+    #f297bf 0%,
+    #f49db8 6%,
+    #f7a7ae 12%,
+    #f8b39f 18%,
+    #f7c08f 24%,
+    #f5cd88 30%,
+    #f1da92 36%,
+    #ecdfa0 42%,
+    #d7e2ab 48%,
+    #bfe0b9 54%,
+    #a8dcc8 60%,
+    #96d7d5 66%,
+    #91cfdf 72%,
+    #94c3e9 78%,
+    #9bb3ed 84%,
+    #a8a4ee 90%,
+    #bc9aee 95%,
+    #f297bf 100%
+  );
+  background-size: 1200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  animation: vvHeaderWaterFlow 50s linear infinite;
+  will-change: background-position;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  text-shadow: none;
 }
 
 /* Wedding Font Heading Styles */
@@ -452,7 +495,8 @@
   .rainbow-gradient,
   .gradient-text-pride,
   .bi-gradient,
-  .rainbow-header {
+  .rainbow-header,
+  .vv-global-header-flow {
     animation: none !important;
   }
 }
