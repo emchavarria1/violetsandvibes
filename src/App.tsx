@@ -217,11 +217,7 @@ const App = () => (
               path="/admin"
               element={
                 <ProtectedRoute>
-                  <ProfileGate>
-                    <VerificationGate>
-                      <GlobalLayout><AdminPage /></GlobalLayout>
-                    </VerificationGate>
-                  </ProfileGate>
+                  <GlobalLayout><AdminPage /></GlobalLayout>
                 </ProtectedRoute>
               }
             />

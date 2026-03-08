@@ -74,18 +74,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
   );
 
   const invokeVerificationReview = async (body: Record<string, unknown>) => {
-    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-    if (sessionError) throw sessionError;
-    const accessToken = sessionData.session?.access_token;
-    if (!accessToken) {
-      throw new Error('No active session token found. Please sign out and sign in again.');
-    }
-
     return supabase.functions.invoke('verification-review', {
-      body: {
-        ...body,
-        accessToken,
-      },
+      body,
     });
   };
 
