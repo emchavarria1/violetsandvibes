@@ -8,11 +8,6 @@ export const useAuth = () => {
 
   useEffect(() => {
     let active = true;
-    const loadingTimeout = window.setTimeout(() => {
-      if (!active) return;
-      console.warn('Auth check timed out; continuing unauthenticated for now.');
-      setLoading(false);
-    }, 8000);
 
     const initSession = async () => {
       try {
@@ -25,7 +20,6 @@ export const useAuth = () => {
         if (active) setUser(null);
       } finally {
         if (active) setLoading(false);
-        window.clearTimeout(loadingTimeout);
       }
     };
 
@@ -38,12 +32,10 @@ export const useAuth = () => {
       if (!active) return;
       setUser(session?.user ?? null);
       setLoading(false);
-      window.clearTimeout(loadingTimeout);
     });
 
     return () => {
       active = false;
-      window.clearTimeout(loadingTimeout);
       subscription.unsubscribe();
     };
   }, []);

@@ -74,15 +74,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
   );
 
   const invokeVerificationReview = async (body: Record<string, unknown>) => {
-    // Force-refresh first to avoid stale JWT signatures after auth config changes.
-    const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
-    if (refreshError) {
-      console.warn('Session refresh before admin invoke failed:', refreshError.message);
-    }
-
-    const accessToken =
-      refreshData.session?.access_token ??
-      (await supabase.auth.getSession()).data.session?.access_token;
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) throw sessionError;
+    const accessToken = sessionData.session?.access_token;
     if (!accessToken) {
       throw new Error('No active session token found. Please sign out and sign in again.');
     }
