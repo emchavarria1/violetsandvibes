@@ -1,0 +1,54 @@
+require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
+
+platform :ios, '13.0'
+use_frameworks!
+
+# workaround to avoid Xcode caching of Pods that requires
+# Product -> Clean Build Folder after new Cordova plugins installed
+# Requires CocoaPods 1.6 or newer
+install! 'cocoapods'
+
+def capacitor_pods
+  pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
+  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+  pod 'CapacitorKeyboard', :path => '../../node_modules/@capacitor/keyboard'
+  pod 'CapacitorSplashScreen', :path => '../../node_modules/@capacitor/splash-screen'
+  pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
+end
+
+target 'App' do
+  capacitor_pods
+  # Add your Pods here
+end
+
+post_install do |installer|
+  assertDeploymentTarget(installer)
+
+  installer.pods_project.root_object.attributes['LastUpgradeCheck'] = '2600'
+
+  installer.aggregate_targets.each do |aggregate_target|
+    aggregate_target.user_project.root_object.attributes['LastUpgradeCheck'] = '2600'
+    aggregate_target.user_project.save
+  end
+
+  warning_noisy_targets = ['Capacitor', 'CapacitorCordova', 'CapacitorKeyboard']
+
+  installer.pods_project.targets.each do |target|
+    next unless warning_noisy_targets.include?(target.name)
+
+    target.build_configurations.each do |config|
+      config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
+      config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = 'NO'
+
+      other_cflags = config.build_settings['OTHER_CFLAGS'] || '$(inherited)'
+      other_cflags = [other_cflags] if other_cflags.is_a?(String)
+      unless other_cflags.include?('-Wno-deprecated-declarations')
+        other_cflags << '-Wno-deprecated-declarations'
+      end
+      unless other_cflags.include?('-Wno-objc-protocol-property-synthesis')
+        other_cflags << '-Wno-objc-protocol-property-synthesis'
+      end
+      config.build_settings['OTHER_CFLAGS'] = other_cflags
+    end
+  end
+end

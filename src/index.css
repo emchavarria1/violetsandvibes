@@ -88,6 +88,16 @@
 }
 
 @layer base {
+  html, body, #root {
+    width: 100%;
+    min-height: 100%;
+  }
+
+  html, body {
+    margin: 0;
+    overflow-x: hidden;
+  }
+
   * {
     @apply border-border;
   }
@@ -407,12 +417,18 @@
   
   /* Page Backgrounds */
   .page-gradient {
-    @apply rainbow-gradient min-h-screen relative overflow-hidden;
+    @apply rainbow-gradient min-h-screen relative;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: visible;
   }
   
   /* Calm page background for focus screens (auth/settings/forms) */
 .page-calm {
-  @apply min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900;
+  @apply min-h-screen relative bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: visible;
   isolation: isolate;
 }
 

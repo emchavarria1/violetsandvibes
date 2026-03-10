@@ -217,7 +217,10 @@ const LandingPreviewPage: React.FC = () => {
         />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-6xl px-4 py-6 sm:py-8">
+      <div
+        className="relative z-10 mx-auto max-w-6xl px-4 pb-6 sm:pb-8"
+        style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.5rem)" }}
+      >
         <header className="rounded-3xl border border-white/30 bg-gradient-to-br from-black/88 via-purple-950/55 to-pink-950/52 sm:from-black/80 sm:via-purple-950/70 sm:to-pink-950/65 p-5 sm:p-7 mb-6 sm:mb-8 backdrop-blur-xl shadow-2xl">
           <AnimatedLogo size="lg" className="mb-4" />
           <p className="text-3xl sm:text-4xl font-semibold text-white leading-tight max-w-3xl">

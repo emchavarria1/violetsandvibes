@@ -11,6 +11,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/cli": "^6.2.1",
+    "@capacitor/core": "^6.2.1",
+    "@capacitor/ios": "^6.1.2",
+    "@capacitor/keyboard": "^6.0.2",
+    "@capacitor/splash-screen": "^6.0.2",
+    "@capacitor/status-bar": "^6.0.1",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
@@ -64,14 +71,7 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
     "vaul": "^0.9.3",
-    "zod": "^3.23.8",
-    "@capacitor/core": "^6.1.2",
-    "@capacitor/cli": "^6.1.2",
-    "@capacitor/ios": "^6.1.2",
-    "@capacitor/android": "^6.1.2",
-    "@capacitor/splash-screen": "^6.0.2",
-    "@capacitor/status-bar": "^6.0.1",
-    "@capacitor/keyboard": "^6.0.2"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

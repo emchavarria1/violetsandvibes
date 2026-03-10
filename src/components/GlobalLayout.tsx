@@ -75,7 +75,10 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
   };
 
   return (
-    <div className={`min-h-screen flex flex-col ${className}`}>
+    <div
+      className={`min-h-screen flex flex-col ${className}`}
+      style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.25rem)" }}
+    >
       {/* Header */}
       {showHeader && (
         <div className="relative z-20">
@@ -87,13 +90,16 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
       )}
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto pb-20">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden pb-20">
         {children}
       </div>
 
       {/* Bottom Navigation */}
       {showBottomNav && (
-        <div className="fixed bottom-0 left-0 right-0 z-30">
+        <div
+          className="fixed bottom-0 left-0 right-0 z-30"
+          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        >
           <BottomNavigation />
         </div>
       )}
