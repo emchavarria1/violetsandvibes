@@ -7,6 +7,7 @@ import { HeaderDropdown } from './HeaderDropdown';
 interface PrideHeaderProps {
   subtitle?: string;
   showLogo?: boolean;
+  headerContent?: React.ReactNode;
   className?: string;
   onMenuSelect?: (action: string) => void;
 }
@@ -14,6 +15,7 @@ interface PrideHeaderProps {
 export const PrideHeader: React.FC<PrideHeaderProps> = ({ 
   subtitle,
   showLogo = true,
+  headerContent,
   className = '',
   onMenuSelect
 }) => {
@@ -41,7 +43,11 @@ export const PrideHeader: React.FC<PrideHeaderProps> = ({
         </Link>
       </div>
 
-      {showLogo && (
+      {headerContent ? (
+        <div className="mb-2 sm:mb-4 px-6 sm:px-14 md:px-20">
+          {headerContent}
+        </div>
+      ) : showLogo && (
         <AnimatedLogo
           size="lg"
           variant="global-flow"

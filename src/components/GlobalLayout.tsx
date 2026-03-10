@@ -2,7 +2,7 @@ import React from 'react';
 import { PrideHeader } from './PrideHeader';
 import { BottomNavigation } from './BottomNavigation';
 import { ResponsiveWrapper } from './ResponsiveWrapper';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface GlobalLayoutProps {
   children: React.ReactNode;
@@ -18,6 +18,7 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
   className = ""
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleMenuSelect = (action: string) => {
     switch (action) {
@@ -74,6 +75,66 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
     }
   };
 
+  const headerContent = React.useMemo(() => {
+    switch (location.pathname) {
+      case '/discover':
+        return (
+          <div className="space-y-1">
+            <div className="text-3xl md:text-5xl font-semibold tracking-tight vv-global-header-flow">
+              Unleash Your Spirit
+            </div>
+            <div className="text-2xl md:text-3xl text-pink-300">with Violets &amp; Vibes</div>
+          </div>
+        );
+      case '/matches':
+        return (
+          <div className="space-y-3">
+            <div className="text-4xl md:text-5xl font-semibold tracking-tight vv-global-header-flow">
+              Violets &amp; Vibes
+            </div>
+            <div className="h-[3px] w-32 rounded-full bg-gradient-to-r from-pink-400 via-violet-400 to-indigo-400" />
+            <div className="text-lg text-white/70">
+              Connect safely. Belong fully.
+            </div>
+          </div>
+        );
+      case '/social':
+        return (
+          <div className="space-y-1">
+            <div className="text-4xl md:text-5xl font-bold tracking-tight text-violet-200 drop-shadow-[0_0_6px_rgba(167,139,250,0.7)]">
+              Violets &amp; Vibes
+            </div>
+            <div className="text-lg text-violet-300/80">A sanctuary for connection and kindness.</div>
+          </div>
+        );
+      case '/notifications':
+        return (
+          <div className="space-y-1">
+            <div className="text-3xl md:text-4xl font-semibold tracking-tight text-[#d8e8cf]">
+              Your Dating &amp; Social Notifications Hub!
+            </div>
+          </div>
+        );
+      case '/chat':
+        return (
+          <div className="space-y-2">
+            <div className="text-xs uppercase tracking-wider text-white/40">
+              Messages
+            </div>
+            <div className="text-3xl md:text-4xl font-semibold tracking-tight bg-gradient-to-r from-pink-400 via-violet-400 to-indigo-400 bg-clip-text text-transparent">
+              Violets &amp; Vibes
+            </div>
+            <div className="text-lg text-white/70">
+              Women-centered • Inclusive • Safety-first
+            </div>
+            <div className="mt-4 border-b border-white/10" />
+          </div>
+        );
+      default:
+        return undefined;
+    }
+  }, [location.pathname]);
+
   return (
     <div
       className={`min-h-screen flex flex-col ${className}`}
@@ -84,6 +145,8 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
         <div className="relative z-20">
           <PrideHeader
             onMenuSelect={handleMenuSelect}
+            headerContent={headerContent}
+            showLogo={!headerContent}
             className="mb-0 sm:mb-0 md:mb-0"
           />
         </div>
