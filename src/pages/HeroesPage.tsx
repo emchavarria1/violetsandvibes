@@ -172,19 +172,8 @@ const HeroesPage: React.FC = () => {
                   </div>
 
                   <div className="rounded-2xl border border-pink-300/15 bg-gradient-to-br from-slate-900/85 to-fuchsia-950/70 p-4">
-                    <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-                      <Link className="text-pink-100 underline decoration-pink-300/40 underline-offset-4 hover:text-white" to="/privacy">
-                        Privacy Policy
-                      </Link>
-                      <Link className="text-pink-100 underline decoration-pink-300/40 underline-offset-4 hover:text-white" to="/terms">
-                        Terms of Service
-                      </Link>
-                      <Link className="text-pink-100 underline decoration-pink-300/40 underline-offset-4 hover:text-white" to="/data-deletion">
-                        Data Deletion
-                      </Link>
-                      <Link className="text-pink-100 underline decoration-pink-300/40 underline-offset-4 hover:text-white" to="/contact">
-                        Contact
-                      </Link>
+                    <div className="text-center text-sm text-pink-100">
+                      Women-centered • Safety-first • Identity-Inclusive
                     </div>
                   </div>
                 </div>
@@ -192,8 +181,21 @@ const HeroesPage: React.FC = () => {
             </Card>
           </div>
 
-          <div className="border-t border-white/10 px-5 py-4 text-center text-sm text-white/65 sm:px-8">
-            Women-centered • Inclusive • Safety-first
+          <div className="border-t border-white/10 px-5 py-4 sm:px-8">
+            <div className="grid grid-cols-2 gap-3 text-center text-sm sm:grid-cols-4">
+              <Link className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white" to="/privacy">
+                Privacy Policy
+              </Link>
+              <Link className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white" to="/terms">
+                Terms of Service
+              </Link>
+              <Link className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white" to="/data-deletion">
+                Data Deletion
+              </Link>
+              <Link className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white" to="/contact">
+                Contact Us
+              </Link>
+            </div>
           </div>
         </div>
       </div>

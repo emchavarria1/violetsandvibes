@@ -425,6 +425,22 @@ const CalendarIntegration: React.FC = () => {
   }, [loadEvents, user?.id]);
 
   useEffect(() => {
+    const handleResume = () => {
+      if (document.visibilityState === "visible") {
+        void loadAll();
+      }
+    };
+
+    window.addEventListener("focus", handleResume);
+    document.addEventListener("visibilitychange", handleResume);
+
+    return () => {
+      window.removeEventListener("focus", handleResume);
+      document.removeEventListener("visibilitychange", handleResume);
+    };
+  }, [loadAll]);
+
+  useEffect(() => {
     const url = new URL(window.location.href);
     const statusParam = url.searchParams.get("calendar_connect");
     const provider = url.searchParams.get("provider");
@@ -464,7 +480,18 @@ const CalendarIntegration: React.FC = () => {
 
       if (error) throw error;
       if (!data?.url) throw new Error("No OAuth URL returned.");
-      window.location.href = data.url as string;
+
+      const oauthUrl = data.url as string;
+      const opened = window.open(oauthUrl, "_blank", "noopener,noreferrer");
+
+      if (!opened) {
+        window.location.href = oauthUrl;
+      }
+
+      toast({
+        title: "Continue in browser",
+        description: "Finish calendar sign-in in the browser, then return to the app.",
+      });
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -695,8 +722,11 @@ const CalendarIntegration: React.FC = () => {
           {providerRows.map((row) => {
             const provider = status.providers[row.key];
             return (
-              <div key={row.key} className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
+              <div
+                key={row.key}
+                className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="min-w-0 flex-1">
                   <div className="text-sm text-white/95">{row.name}</div>
                   <div className="text-xs text-white/60 truncate">
                     {provider.connected
@@ -706,15 +736,16 @@ const CalendarIntegration: React.FC = () => {
                 </div>
 
                 {provider.connected ? (
-                  <Badge className="bg-green-500/20 text-green-100 border-green-300/40">Connected</Badge>
+                  <Badge className="w-fit bg-green-500/20 text-green-100 border-green-300/40">Connected</Badge>
                 ) : (
                   <Button
                     size="sm"
                     variant="outline"
+                    className="w-full border-violet-300/30 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 text-white shadow-[0_0_18px_rgba(168,85,247,0.22)] hover:from-violet-500/30 hover:to-fuchsia-500/30 hover:bg-transparent sm:w-auto"
                     onClick={() => void connectProvider(row.key)}
                     disabled={connectingProvider === row.key}
                   >
-                    {connectingProvider === row.key ? "Opening…" : "Connect"}
+                    {connectingProvider === row.key ? "Opening..." : "Connect"}
                   </Button>
                 )}
               </div>

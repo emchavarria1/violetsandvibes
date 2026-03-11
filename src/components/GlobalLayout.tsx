@@ -131,6 +131,14 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
             </div>
           </div>
         );
+      case '/settings':
+        return (
+          <div className="vv-global-header-shell space-y-2 text-center">
+            <div className="vv-global-header-primary vv-global-header-flow">
+              Your App Prefferences
+            </div>
+          </div>
+        );
       case '/chat':
         return (
           <div className="vv-global-header-shell space-y-2 text-center">

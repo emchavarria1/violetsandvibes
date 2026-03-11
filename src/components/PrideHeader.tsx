@@ -32,7 +32,7 @@ export const PrideHeader: React.FC<PrideHeaderProps> = ({
       ${className}
     `}>
       {/* Header Dropdown */}
-      <div className="absolute right-2 z-10 sm:right-4" style={{ top: "calc(env(safe-area-inset-top) + 0.5rem)" }}>
+      <div className="absolute right-3 z-10 sm:right-4" style={{ top: "calc(env(safe-area-inset-top) + 1.85rem)" }}>
         <HeaderDropdown onMenuSelect={onMenuSelect} />
       </div>
 
@@ -40,9 +40,9 @@ export const PrideHeader: React.FC<PrideHeaderProps> = ({
       <div className="absolute left-2 z-10 sm:left-4" style={{ top: "calc(env(safe-area-inset-top) + 0.5rem)" }}>
         <Link
           to="/terms#community-standards"
-          className="inline-flex items-center gap-1 rounded-full border border-pink-300/40 bg-black/45 px-2 py-1 text-[11px] sm:text-xs font-medium text-pink-100 hover:bg-black/60 transition-colors"
+          className="inline-flex items-center gap-1 rounded-full border border-pink-300/40 bg-black/45 px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-1 sm:text-[11px] font-medium text-pink-100 hover:bg-black/60 transition-colors"
         >
-          <ShieldAlert className="h-3 w-3" />
+          <ShieldAlert className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
           Safety Standards
         </Link>
       </div>
