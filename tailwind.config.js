@@ -1,13 +1,7 @@
-import type { Config } from "tailwindcss";
-import typography from "@tailwindcss/typography";
-import animate from "tailwindcss-animate";
-
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+export default {
   darkMode: ["class"],
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     container: {
       center: true,
@@ -83,7 +77,5 @@ const config: Config = {
       },
     },
   },
-  plugins: [animate, typography],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 };
-
-export default config;
