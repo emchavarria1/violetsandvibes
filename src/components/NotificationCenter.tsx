@@ -110,6 +110,7 @@ const NotificationCenter: React.FC = () => {
   const [actorNameById, setActorNameById] = useState<Record<string, string>>({});
   const [postSnippetById, setPostSnippetById] = useState<Record<string, string>>({});
   const [commentSnippetById, setCommentSnippetById] = useState<Record<string, string>>({});
+  const [showUnreadOnly, setShowUnreadOnly] = useState(false);
 
   // UI-only toggle (real push later)
   const [pushEnabled, setPushEnabled] = useState(true);
@@ -218,9 +219,24 @@ const NotificationCenter: React.FC = () => {
     () => notifications.filter((n) => !n.read_at).length,
     [notifications]
   );
+  const readCount = useMemo(
+    () => notifications.filter((n) => !!n.read_at).length,
+    [notifications]
+  );
+  const visibleNotifications = useMemo(() => {
+    const source = showUnreadOnly
+      ? notifications.filter((n) => !n.read_at)
+      : notifications;
+
+    if (showUnreadOnly) return source;
+
+    const unread = source.filter((n) => !n.read_at);
+    const read = source.filter((n) => !!n.read_at).slice(0, 20);
+    return [...unread, ...read];
+  }, [notifications, showUnreadOnly]);
   const grouped = useMemo(() => {
     const map = new Map<string, HydratedNotification[]>();
-    (notifications ?? []).forEach((n) => {
+    (visibleNotifications ?? []).forEach((n) => {
       const k = groupKey(n);
       map.set(k, [...(map.get(k) ?? []), n]);
     });
@@ -228,7 +244,7 @@ const NotificationCenter: React.FC = () => {
     return GROUP_ORDER
       .map((k) => ({ key: k, items: map.get(k) ?? [] }))
       .filter((g) => g.items.length > 0);
-  }, [notifications]);
+  }, [visibleNotifications]);
 
   const loadNotifications = async () => {
     if (!user) {
@@ -299,6 +315,28 @@ const NotificationCenter: React.FC = () => {
     if (updateError) {
       console.error("markAllRead error:", updateError);
       await loadNotifications();
+    }
+  };
+
+  const clearRead = async () => {
+    if (!user) return;
+
+    const previous = notifications;
+    const readIds = notifications.filter((n) => !!n.read_at).map((n) => n.id);
+    if (readIds.length === 0) return;
+
+    setNotifications((prev) => prev.filter((n) => !n.read_at));
+
+    const { error: deleteError } = await supabase
+      .from("notifications")
+      .delete()
+      .eq("recipient_id", user.id)
+      .not("read_at", "is", null);
+
+    if (deleteError) {
+      console.error("clearRead error:", deleteError);
+      setNotifications(previous);
+      return;
     }
   };
 
@@ -408,17 +446,29 @@ const NotificationCenter: React.FC = () => {
               {pushEnabled ? "On" : "Off"}
             </Button>
           </div>
-          <div className="text-xs text-white/70">(UI only for now — real push later.)</div>
         </CardHeader>
       </Card>
 
       {/* Controls */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="text-sm text-white/80">
-          {loading ? "Loading..." : `${notifications.length} total`}
+          {loading
+            ? "Loading..."
+            : showUnreadOnly
+              ? `${unreadCount} unread`
+              : `${visibleNotifications.length} shown${readCount > 20 ? ` • ${readCount - 20} older read hidden` : ""}`}
         </div>
 
         <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant={showUnreadOnly ? "default" : "outline"}
+            onClick={() => setShowUnreadOnly((prev) => !prev)}
+            disabled={!user || notifications.length === 0}
+            className={showUnreadOnly ? "bg-pink-500 hover:bg-pink-600" : "border-white/20 text-white hover:bg-white/10"}
+          >
+            {showUnreadOnly ? "Showing unread" : "Unread only"}
+          </Button>
           <Button
             size="sm"
             variant="outline"
@@ -427,6 +477,15 @@ const NotificationCenter: React.FC = () => {
             className="border-white/20 text-white hover:bg-white/10"
           >
             Mark all read
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={clearRead}
+            disabled={!user || readCount === 0}
+            className="border-white/20 text-white hover:bg-white/10"
+          >
+            Clear read
           </Button>
         </div>
       </div>
@@ -441,7 +500,7 @@ const NotificationCenter: React.FC = () => {
       <div className="space-y-4">
         {loading ? (
           <div className="text-white/70">Loading…</div>
-        ) : notifications.length === 0 ? (
+        ) : visibleNotifications.length === 0 ? (
           <Card className="bg-black/30 border-white/15 text-white">
             <CardContent className="p-5">
               <div className="flex items-start gap-3">
@@ -451,7 +510,9 @@ const NotificationCenter: React.FC = () => {
                 <div className="flex-1">
                   <div className="font-semibold">You’re all caught up</div>
                   <div className="text-sm text-white/70 mt-1">
-                    Likes and comments will show up here as they happen.
+                    {showUnreadOnly
+                      ? "No unread notifications right now."
+                      : "Likes and comments will show up here as they happen."}
                   </div>
                   <div className="mt-4 flex gap-2">
                     <Button

@@ -5,6 +5,7 @@ import { DiscoverProfileCard } from "@/components/DiscoverProfileCard";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BrandPrideCard from "@/components/BrandPrideCard";
+import WomenInviteWomenCard from "@/components/WomenInviteWomenCard";
 
 const Index: React.FC = () => {
   const { user } = useAuth();
@@ -58,6 +59,8 @@ const Index: React.FC = () => {
             )
           }
         />
+
+        <WomenInviteWomenCard />
 
         {loading ? (
           <div className="text-white/70 relative z-10">Loading profiles...</div>

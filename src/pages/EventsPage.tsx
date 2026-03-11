@@ -17,9 +17,9 @@ const EventsPage: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-hidden relative z-10">
+      <div className="relative z-10 flex-1 overflow-y-auto">
         <ResponsiveWrapper maxWidth="2xl" className="h-full">
-          <div className="glass-pride rounded-2xl overflow-hidden">
+          <div className="glass-pride rounded-2xl overflow-visible">
             <div className="p-3 border-b border-white/15 flex justify-end">
               <Button
                 asChild

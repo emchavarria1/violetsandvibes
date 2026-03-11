@@ -79,52 +79,68 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
     switch (location.pathname) {
       case '/discover':
         return (
-          <div className="space-y-1">
-            <div className="text-3xl md:text-5xl font-semibold tracking-tight vv-global-header-flow">
+          <div className="vv-global-header-shell space-y-2 text-center">
+            <div className="vv-global-header-primary vv-global-header-flow">
               Unleash Your Spirit
             </div>
-            <div className="text-2xl md:text-3xl text-pink-300">with Violets &amp; Vibes</div>
+            <div className="vv-global-header-secondary vv-global-header-flow">with Violets &amp; Vibes</div>
           </div>
         );
       case '/matches':
         return (
-          <div className="space-y-3">
-            <div className="text-4xl md:text-5xl font-semibold tracking-tight vv-global-header-flow">
+          <div className="vv-global-header-shell space-y-3 text-center">
+            <div className="vv-global-header-primary vv-global-header-flow">
               Violets &amp; Vibes
             </div>
-            <div className="h-[3px] w-32 rounded-full bg-gradient-to-r from-pink-400 via-violet-400 to-indigo-400" />
-            <div className="text-lg text-white/70">
+            <div className="mx-auto h-[3px] w-32 rounded-full bg-gradient-to-r from-pink-400 via-violet-400 to-indigo-400" />
+            <div className="vv-global-header-secondary vv-global-header-flow">
               Connect safely. Belong fully.
             </div>
           </div>
         );
       case '/social':
         return (
-          <div className="space-y-1">
-            <div className="text-4xl md:text-5xl font-bold tracking-tight text-violet-200 drop-shadow-[0_0_6px_rgba(167,139,250,0.7)]">
+          <div className="vv-global-header-shell space-y-2 text-center">
+            <div className="vv-global-header-primary vv-global-header-flow">
               Violets &amp; Vibes
             </div>
-            <div className="text-lg text-violet-300/80">A sanctuary for connection and kindness.</div>
+            <div className="vv-global-header-secondary vv-global-header-flow">A sanctuary for connection and kindness.</div>
           </div>
         );
       case '/notifications':
         return (
-          <div className="space-y-1">
-            <div className="text-3xl md:text-4xl font-semibold tracking-tight text-[#d8e8cf]">
+          <div className="vv-global-header-shell space-y-2 text-center">
+            <div className="vv-global-header-primary vv-global-header-flow">
               Your Dating &amp; Social Notifications Hub!
+            </div>
+          </div>
+        );
+      case '/calendar':
+        return (
+          <div className="vv-global-header-shell space-y-2 text-center">
+            <div className="vv-global-header-primary vv-global-header-flow font-['Inter']">
+              Your Violets Online Calendar and Vibes Social Meetup Hub!
+            </div>
+          </div>
+        );
+      case '/profile':
+        return (
+          <div className="vv-global-header-shell space-y-2 text-center">
+            <div className="vv-global-header-primary vv-global-header-flow">
+              Make your profile match your vibe!
             </div>
           </div>
         );
       case '/chat':
         return (
-          <div className="space-y-2">
-            <div className="text-xs uppercase tracking-wider text-white/40">
+          <div className="vv-global-header-shell space-y-2 text-center">
+            <div className="vv-global-header-label vv-global-header-flow">
               Messages
             </div>
-            <div className="text-3xl md:text-4xl font-semibold tracking-tight bg-gradient-to-r from-pink-400 via-violet-400 to-indigo-400 bg-clip-text text-transparent">
+            <div className="vv-global-header-primary vv-global-header-flow">
               Violets &amp; Vibes
             </div>
-            <div className="text-lg text-white/70">
+            <div className="vv-global-header-secondary vv-global-header-flow">
               Women-centered • Inclusive • Safety-first
             </div>
             <div className="mt-4 border-b border-white/10" />
@@ -138,7 +154,7 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
   return (
     <div
       className={`min-h-screen flex flex-col ${className}`}
-      style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.25rem)" }}
+      style={{ paddingTop: showHeader ? "0" : "calc(env(safe-area-inset-top) + 0.25rem)" }}
     >
       {/* Header */}
       {showHeader && (
@@ -158,14 +174,7 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
       </div>
 
       {/* Bottom Navigation */}
-      {showBottomNav && (
-        <div
-          className="fixed bottom-0 left-0 right-0 z-30"
-          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-        >
-          <BottomNavigation />
-        </div>
-      )}
+      {showBottomNav && <BottomNavigation />}
     </div>
   );
 };

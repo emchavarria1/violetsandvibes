@@ -15,6 +15,8 @@ export type ProfileRow = {
   birthdate?: string | null;
   interests?: string[] | null;
   gender_identity?: string | null;
+  privacy_settings?: Record<string, any> | null;
+  safety_settings?: Record<string, any> | null;
 };
 
 type MatchingPreferences = {
@@ -377,5 +379,7 @@ export async function fetchDiscoverProfiles(myId: string) {
     birthdate: row.privacy_settings?.showAge === false ? null : (row as any).birthdate ?? null,
     interests: (row as any).interests ?? [],
     gender_identity: (row as any).gender_identity ?? null,
+    privacy_settings: row.privacy_settings ?? null,
+    safety_settings: row.safety_settings ?? null,
   })) as ProfileRow[];
 }

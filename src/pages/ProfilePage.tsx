@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,12 +7,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Ban, Edit, MapPin, Camera, Star, Loader2, UserPlus } from "lucide-react";
+import { Ban, Edit, MapPin, Camera, Star, Loader2, UserPlus, Mic, Square, PlayCircle, Sparkles, Volume2, Trash2 } from "lucide-react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import ProfileMenu from "@/components/ProfileMenu";
 import MessageButton from "@/components/MessageButton";
+import ProfileSafetyScore from "@/components/ProfileSafetyScore";
+import KindnessEndorsements from "@/components/KindnessEndorsements";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
@@ -41,6 +43,7 @@ type EditableProfileForm = {
   sexual_orientation: string;
   interestsText: string;
   primaryPhoto: string;
+  voiceIntroScript: string;
 };
 
 const EMPTY_FORM: EditableProfileForm = {
@@ -51,7 +54,23 @@ const EMPTY_FORM: EditableProfileForm = {
   sexual_orientation: "",
   interestsText: "",
   primaryPhoto: "",
+  voiceIntroScript: "",
 };
+
+const MAX_VOICE_INTRO_SECONDS = 15;
+
+function getVoiceIntroStorageKey(profileId?: string) {
+  return profileId ? `vv_voice_intro_audio_${profileId}` : "";
+}
+
+async function blobToDataUrl(blob: Blob): Promise<string> {
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
 
 function toStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
@@ -70,6 +89,7 @@ function formFromProfile(profile: any): EditableProfileForm {
     sexual_orientation: profile?.sexual_orientation ?? "",
     interestsText: interests.join(", "),
     primaryPhoto: photos[0] ?? "",
+    voiceIntroScript: profile?.lifestyle?.voice_intro_script ?? "",
   };
 }
 
@@ -101,6 +121,18 @@ const ProfilePage: React.FC = () => {
   const [matchConversationId, setMatchConversationId] = useState<string | null>(null);
   const [blockLoading, setBlockLoading] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
+  const [livePrivacySettings, setLivePrivacySettings] = useState<Record<string, any> | null>(null);
+  const [voiceIntroAudio, setVoiceIntroAudio] = useState<string>("");
+  const [voiceIntroSeconds, setVoiceIntroSeconds] = useState<number>(
+    Number(profile?.lifestyle?.voice_intro_seconds ?? 0) || 0
+  );
+  const [isRecordingVoiceIntro, setIsRecordingVoiceIntro] = useState(false);
+  const [voiceIntroSupported, setVoiceIntroSupported] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const voiceIntroChunksRef = useRef<Blob[]>([]);
+  const voiceIntroTimeoutRef = useRef<number | null>(null);
+  const recordingStartedAtRef = useRef<number | null>(null);
 
   const otherUserId = !isOwnProfile ? (profile?.id as string | undefined) : undefined;
 
@@ -120,10 +152,55 @@ const ProfilePage: React.FC = () => {
     return p || "";
   }, [profile?.photos]);
 
+  const voiceIntroText = useMemo(() => {
+    return (
+      formData.voiceIntroScript ||
+      profile?.lifestyle?.voice_intro_script ||
+      ""
+    ).trim();
+  }, [formData.voiceIntroScript, profile?.lifestyle?.voice_intro_script]);
+
+  const hasVoiceIntro = Boolean(voiceIntroText || voiceIntroAudio);
+
   useEffect(() => {
     if (!profile || editing) return;
     setFormData(formFromProfile(profile));
+    setVoiceIntroSeconds(Number(profile?.lifestyle?.voice_intro_seconds ?? 0) || 0);
   }, [profile, editing]);
+
+  useEffect(() => {
+    setLivePrivacySettings(
+      profile?.privacy ?? profile?.privacy_settings ?? null
+    );
+  }, [profile?.privacy, profile?.privacy_settings]);
+
+  useEffect(() => {
+    setVoiceIntroSupported(
+      typeof navigator !== "undefined" &&
+        !!navigator.mediaDevices?.getUserMedia &&
+        typeof MediaRecorder !== "undefined"
+    );
+  }, []);
+
+  useEffect(() => {
+    const storageKey = getVoiceIntroStorageKey(targetId);
+    if (!storageKey || typeof window === "undefined") {
+      setVoiceIntroAudio("");
+      return;
+    }
+
+    setVoiceIntroAudio(window.localStorage.getItem(storageKey) || "");
+  }, [targetId]);
+
+  useEffect(() => {
+    return () => {
+      if (voiceIntroTimeoutRef.current) {
+        window.clearTimeout(voiceIntroTimeoutRef.current);
+      }
+      mediaRecorderRef.current?.stream.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+    };
+  }, []);
 
   useEffect(() => {
     const run = async () => {
@@ -240,6 +317,10 @@ const ProfilePage: React.FC = () => {
     const photos = nextPrimaryPhoto
       ? [nextPrimaryPhoto, ...remainingPhotos]
       : remainingPhotos;
+    const currentLifestyle =
+      profile?.lifestyle_interests && typeof profile.lifestyle_interests === "object"
+        ? profile.lifestyle_interests
+        : {};
 
     try {
       setIsSaving(true);
@@ -253,6 +334,11 @@ const ProfilePage: React.FC = () => {
         sexual_orientation: formData.sexual_orientation.trim(),
         interests,
         photos,
+        lifestyle_interests: {
+          ...currentLifestyle,
+          voice_intro_script: formData.voiceIntroScript.trim(),
+          voice_intro_seconds: voiceIntroSeconds,
+        },
         updated_at: new Date().toISOString(),
       });
 
@@ -268,6 +354,85 @@ const ProfilePage: React.FC = () => {
       setSaveError(message);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const stopVoiceIntroRecording = async () => {
+    const recorder = mediaRecorderRef.current;
+    if (!recorder) return;
+    if (voiceIntroTimeoutRef.current) {
+      window.clearTimeout(voiceIntroTimeoutRef.current);
+      voiceIntroTimeoutRef.current = null;
+    }
+    if (recorder.state !== "inactive") {
+      recorder.stop();
+    }
+  };
+
+  const clearVoiceIntro = () => {
+    const storageKey = getVoiceIntroStorageKey(user?.id);
+    if (storageKey && typeof window !== "undefined") {
+      window.localStorage.removeItem(storageKey);
+    }
+    setVoiceIntroAudio("");
+    setVoiceIntroSeconds(0);
+    setFormData((prev) => ({ ...prev, voiceIntroScript: "" }));
+  };
+
+  const startVoiceIntroRecording = async () => {
+    if (!user?.id || isRecordingVoiceIntro || !voiceIntroSupported) return;
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+
+      mediaRecorderRef.current = recorder;
+      mediaStreamRef.current = stream;
+      voiceIntroChunksRef.current = [];
+      recordingStartedAtRef.current = Date.now();
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          voiceIntroChunksRef.current.push(event.data);
+        }
+      };
+
+      recorder.onstop = async () => {
+        const durationMs = recordingStartedAtRef.current
+          ? Date.now() - recordingStartedAtRef.current
+          : MAX_VOICE_INTRO_SECONDS * 1000;
+        const nextSeconds = Math.max(1, Math.min(MAX_VOICE_INTRO_SECONDS, Math.round(durationMs / 1000)));
+        const blob = new Blob(voiceIntroChunksRef.current, { type: recorder.mimeType || "audio/webm" });
+        const dataUrl = await blobToDataUrl(blob);
+        const storageKey = getVoiceIntroStorageKey(user.id);
+
+        if (storageKey && typeof window !== "undefined") {
+          window.localStorage.setItem(storageKey, dataUrl);
+        }
+
+        setVoiceIntroAudio(dataUrl);
+        setVoiceIntroSeconds(nextSeconds);
+        setIsRecordingVoiceIntro(false);
+
+        stream.getTracks().forEach((track) => track.stop());
+        mediaStreamRef.current = null;
+        mediaRecorderRef.current = null;
+        voiceIntroChunksRef.current = [];
+      };
+
+      recorder.start();
+      setIsRecordingVoiceIntro(true);
+
+      voiceIntroTimeoutRef.current = window.setTimeout(() => {
+        void stopVoiceIntroRecording();
+      }, MAX_VOICE_INTRO_SECONDS * 1000);
+    } catch (recordError: any) {
+      console.error("Voice intro recording failed:", recordError);
+      toast({
+        title: "Voice intro unavailable",
+        description: recordError?.message || "Microphone access is required to record your intro.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -518,9 +683,28 @@ const ProfilePage: React.FC = () => {
                   </Badge>
                 ))}
               </div>
+
+              <div className="w-full">
+                <ProfileSafetyScore
+                  data={{
+                    profileCompleted: profile.profileCompleted ?? profile.profile_completed,
+                    privacySettings: livePrivacySettings ?? profile.privacy ?? profile.privacy_settings,
+                    safetySettings: profile.safety ?? profile.safety_settings,
+                  }}
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
+
+        <KindnessEndorsements
+          profileId={profile.id}
+          displayName={displayName}
+          currentUserId={user?.id}
+          isOwnProfile={isOwnProfile}
+          privacySettings={livePrivacySettings ?? profile.privacy ?? profile.privacy_settings}
+          onUpdated={setLivePrivacySettings}
+        />
 
         {/* About */}
         <Card className="bg-black/70 border-white/15 text-white">
@@ -556,6 +740,34 @@ const ProfilePage: React.FC = () => {
             </p>
           </CardContent>
         </Card>
+
+        {hasVoiceIntro ? (
+          <Card className="bg-black/70 border-white/15 text-white">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2">
+                <Volume2 className="w-4 h-4" />
+                Voice Intro
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {voiceIntroAudio ? (
+                <div className="rounded-2xl border border-pink-300/20 bg-white/5 p-4">
+                  <div className="mb-3 flex items-center gap-2 text-sm text-pink-100">
+                    <PlayCircle className="w-4 h-4" />
+                    {voiceIntroSeconds > 0 ? `${voiceIntroSeconds}-second intro` : "Tap to listen"}
+                  </div>
+                  <audio controls className="w-full" src={voiceIntroAudio} />
+                </div>
+              ) : null}
+
+              {voiceIntroText ? (
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/85">
+                  “{voiceIntroText}”
+                </div>
+              ) : null}
+            </CardContent>
+          </Card>
+        ) : null}
 
         {isOwnProfile && editing && (
           <Card className="bg-black/70 border-white/15 text-white">
@@ -657,6 +869,85 @@ const ProfilePage: React.FC = () => {
                   placeholder="https://..."
                   className="bg-black/30 border-white/20 text-white"
                 />
+              </div>
+
+              <div className="rounded-2xl border border-pink-300/20 bg-white/5 p-4 space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-lg font-semibold text-white">
+                    <Mic className="w-4 h-4 text-pink-300" />
+                    Profile Voice Intro
+                  </div>
+                  <p className="text-sm text-white/70">
+                    Add a 10–15 second voice intro so people can hear your energy before they read your profile.
+                  </p>
+                </div>
+
+                <div className="space-y-1">
+                  <Label htmlFor="profile-voice-intro-script">Intro transcript</Label>
+                  <Textarea
+                    id="profile-voice-intro-script"
+                    name="voiceIntroScript"
+                    value={formData.voiceIntroScript}
+                    onChange={handleChange}
+                    rows={3}
+                    placeholder={`Hi! I'm Maya. I love hiking, dogs, and finding cozy coffee shops.`}
+                    className="bg-black/30 border-white/20 text-white resize-none"
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button
+                    type="button"
+                    onClick={() => void (isRecordingVoiceIntro ? stopVoiceIntroRecording() : startVoiceIntroRecording())}
+                    className={isRecordingVoiceIntro ? "bg-red-500 hover:bg-red-400" : "bg-pink-500 hover:bg-pink-400"}
+                    disabled={!voiceIntroSupported}
+                  >
+                    {isRecordingVoiceIntro ? (
+                      <>
+                        <Square className="w-4 h-4 mr-2" />
+                        Stop Recording
+                      </>
+                    ) : (
+                      <>
+                        <Mic className="w-4 h-4 mr-2" />
+                        Record 15s Intro
+                      </>
+                    )}
+                  </Button>
+
+                  {voiceIntroAudio ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="border-white/20 text-white hover:bg-white/10"
+                      onClick={clearVoiceIntro}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Remove Voice Intro
+                    </Button>
+                  ) : null}
+
+                  <Badge className="bg-white/10 border-white/15 text-white">
+                    <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                    Voices build trust faster than text
+                  </Badge>
+                </div>
+
+                {!voiceIntroSupported ? (
+                  <div className="text-sm text-pink-200 bg-pink-900/20 border border-pink-400/30 rounded-md px-3 py-2">
+                    Voice recording is not available on this device yet.
+                  </div>
+                ) : null}
+
+                {voiceIntroAudio ? (
+                  <div className="rounded-2xl border border-white/10 bg-black/15 p-4">
+                    <div className="mb-2 text-sm text-white/70">
+                      Preview
+                      {voiceIntroSeconds > 0 ? ` · ${voiceIntroSeconds}s` : ""}
+                    </div>
+                    <audio controls className="w-full" src={voiceIntroAudio} />
+                  </div>
+                ) : null}
               </div>
 
               <div className="flex flex-wrap gap-2 pt-1">

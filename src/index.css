@@ -281,40 +281,49 @@
   0% {
     background-position: 0% 50%;
   }
-  100% {
+  50% {
     background-position: 1000% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes vvHeaderGlowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 0.35rem rgba(255, 150, 214, 0.28))
+      drop-shadow(0 0 0.85rem rgba(140, 196, 255, 0.2));
+    opacity: 0.9;
+  }
+  50% {
+    filter: drop-shadow(0 0 0.85rem rgba(255, 150, 214, 0.55))
+      drop-shadow(0 0 1.55rem rgba(140, 196, 255, 0.42));
+    opacity: 1;
   }
 }
 
 /* Use only for the global top header text */
 .vv-global-header-flow {
   background: linear-gradient(
-    102deg,
-    #f297bf 0%,
-    #f49db8 6%,
-    #f7a7ae 12%,
-    #f8b39f 18%,
-    #f7c08f 24%,
-    #f5cd88 30%,
-    #f1da92 36%,
-    #ecdfa0 42%,
-    #d7e2ab 48%,
-    #bfe0b9 54%,
-    #a8dcc8 60%,
-    #96d7d5 66%,
-    #91cfdf 72%,
-    #94c3e9 78%,
-    #9bb3ed 84%,
-    #a8a4ee 90%,
-    #bc9aee 95%,
-    #f297bf 100%
+    90deg,
+    #ff4d6d 0%,
+    #ff8a5b 12%,
+    #ffd166 24%,
+    #b8f26d 36%,
+    #5eead4 50%,
+    #60a5fa 64%,
+    #8b5cf6 78%,
+    #ec4899 90%,
+    #ff4d6d 100%
   );
-  background-size: 1200% 100%;
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
-  animation: vvHeaderWaterFlow 50s linear infinite;
+  animation:
+    vvHeaderWaterFlow 200s ease-in-out infinite,
+    vvHeaderGlowPulse 200s ease-in-out infinite;
   will-change: background-position;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
@@ -322,6 +331,42 @@
   -webkit-backface-visibility: hidden;
   text-shadow: none;
 }
+
+.vv-global-header-shell {
+  width: 100%;
+  text-align: center;
+}
+
+.vv-global-header-primary,
+.vv-global-header-secondary,
+.vv-global-header-label {
+  display: block;
+  width: 100%;
+  text-align: center;
+  line-height: 1.05;
+}
+
+.vv-global-header-primary {
+  font-size: clamp(2rem, 7vw, 4.75rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.vv-global-header-secondary {
+  font-size: clamp(1.15rem, 4vw, 2.15rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.vv-global-header-label {
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
 
 /* Wedding Font Heading Styles */
 .wedding-heading {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,6 +23,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
   const { toast } = useToast();
   const [isCancelling, setIsCancelling] = useState(false);
   const [isUpdatingPaymentMethod, setIsUpdatingPaymentMethod] = useState(false);
+  const isIOS = Capacitor.getPlatform() === 'ios';
 
   const subscriptionData = {
     nextBillingDate: '2024-09-15',
@@ -171,8 +173,12 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Card ending in {subscriptionData.paymentMethod}</p>
-                <p className="text-sm text-gray-600">Auto-renew enabled</p>
+                <p className="font-medium">
+                  {isIOS ? 'Managed through App Store' : `Card ending in ${subscriptionData.paymentMethod}`}
+                </p>
+                <p className="text-sm text-gray-600">
+                  {isIOS ? 'Subscription and billing are managed by Apple.' : 'Auto-renew enabled'}
+                </p>
               </div>
               <Button
                 variant="outline"

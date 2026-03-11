@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,6 +39,7 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
   onUpgrade 
 }) => {
   const { toast } = useToast();
+  const isIOS = Capacitor.getPlatform() === 'ios';
   const currentTierKey: SubscriptionTier =
     currentTier === 'premium' || currentTier === 'elite' ? currentTier : 'free';
   
@@ -116,55 +118,66 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <CreditCard className="w-5 h-5" />
-            Payment Methods
+            {isIOS ? 'Billing' : 'Payment Methods'}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {paymentMethods.map((method) => (
-            <div key={method.id} className="flex items-center justify-between p-3 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <CreditCard className="w-5 h-5 text-gray-500" />
-                <div>
-                  <p className="font-medium">
-                    {method.brand?.toUpperCase()} •••• {method.last4}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Expires {method.expiryMonth}/{method.expiryYear}
-                  </p>
-                </div>
-                {method.isDefault && (
-                  <Badge variant="secondary">Default</Badge>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                {!method.isDefault && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => setDefaultPaymentMethod(method.id)}
-                  >
-                    Set Default
-                  </Button>
-                )}
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => removePaymentMethod(method.id)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
+          {isIOS ? (
+            <div className="rounded-lg border p-4">
+              <p className="font-medium">Managed through App Store</p>
+              <p className="mt-1 text-sm text-gray-500">
+                Subscription billing and renewals are handled by Apple on iOS.
+              </p>
             </div>
-          ))}
-          
-          <Button 
-            variant="outline" 
-            className="w-full"
-            onClick={addPaymentMethod}
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Payment Method
-          </Button>
+          ) : (
+            <>
+              {paymentMethods.map((method) => (
+                <div key={method.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="w-5 h-5 text-gray-500" />
+                    <div>
+                      <p className="font-medium">
+                        {method.brand?.toUpperCase()} •••• {method.last4}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Expires {method.expiryMonth}/{method.expiryYear}
+                      </p>
+                    </div>
+                    {method.isDefault && (
+                      <Badge variant="secondary">Default</Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {!method.isDefault && (
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => setDefaultPaymentMethod(method.id)}
+                      >
+                        Set Default
+                      </Button>
+                    )}
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => removePaymentMethod(method.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={addPaymentMethod}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Payment Method
+              </Button>
+            </>
+          )}
         </CardContent>
       </Card>
 

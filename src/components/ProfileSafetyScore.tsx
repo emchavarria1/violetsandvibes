@@ -22,6 +22,13 @@ function toNumber(value: unknown) {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
+function countKindnessEndorsements(value: unknown) {
+  if (!value || typeof value !== "object") return 0;
+  return Object.values(value as Record<string, unknown>).reduce((sum, entry) => {
+    return sum + (Array.isArray(entry) ? entry.length : 0);
+  }, 0);
+}
+
 function buildSafetyScore(data: ScoreInput) {
   const safety = data.safetySettings ?? {};
   const privacy = data.privacySettings ?? {};
@@ -30,6 +37,7 @@ function buildSafetyScore(data: ScoreInput) {
   const endorsements =
     toNumber(privacy.trusted_endorsements_count) ||
     toNumber(safety.community_endorsements_count) ||
+    countKindnessEndorsements(privacy.kindness_endorsements) ||
     (Array.isArray(privacy.trusted_endorsements) ? privacy.trusted_endorsements.length : 0);
 
   const reports =

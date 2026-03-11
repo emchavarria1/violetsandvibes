@@ -7,7 +7,7 @@ import { extractBlockedUserIds } from "@/lib/safety";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, Flag, Heart, Loader2, MessageCircle } from "lucide-react";
+import { ChevronLeft, Flag, Heart, Lightbulb, Loader2, MessageCircle } from "lucide-react";
 
 type ConversationMemberRow = {
   conversation_id: string;
@@ -89,6 +89,43 @@ function previewText(s?: string | null, max = 60) {
   return t.length > max ? t.slice(0, max - 1) + "…" : t;
 }
 
+const EMPTY_CHAT_PROMPTS = [
+  "What made you smile today?",
+  "What kind of connection are you hoping to find here?",
+  "What's something you're excited about right now?",
+];
+
+const PROMPT_CATEGORIES = [
+  {
+    label: "Fun",
+    prompts: [
+      "What's something that always makes you laugh?",
+      "If you had a free Saturday, how would you spend it?",
+    ],
+  },
+  {
+    label: "Values",
+    prompts: [
+      "What matters most to you in a connection?",
+      "What's a quality you really appreciate in people?",
+    ],
+  },
+  {
+    label: "Local plans",
+    prompts: [
+      "Know any good coffee spots around here?",
+      "What kind of local meetup would you actually enjoy?",
+    ],
+  },
+  {
+    label: "Safe-check",
+    prompts: [
+      "What helps you feel comfortable getting to know someone here?",
+      "What does a respectful first conversation look like to you?",
+    ],
+  },
+] as const;
+
 const ChatView: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -118,6 +155,7 @@ const ChatView: React.FC = () => {
   const [blockedUserIds, setBlockedUserIds] = useState<Set<string>>(new Set());
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
+  const [showPromptPicker, setShowPromptPicker] = useState(false);
 
   const threadContainerRef = useRef<HTMLDivElement | null>(null);
   const newDividerRef = useRef<HTMLDivElement | null>(null);
@@ -692,6 +730,11 @@ const ChatView: React.FC = () => {
     }, 900);
   };
 
+  const applyPrompt = (prompt: string) => {
+    onDraftChange(prompt);
+    setShowPromptPicker(false);
+  };
+
   useEffect(() => {
     let cancelled = false;
 
@@ -816,6 +859,7 @@ const ChatView: React.FC = () => {
   useEffect(() => {
     if (!user || !activeConversationId) {
       setOtherTyping(false);
+      setShowPromptPicker(false);
       return;
     }
 
@@ -1273,7 +1317,62 @@ const ChatView: React.FC = () => {
 
           {/* Composer */}
           <div className="p-4 border-t border-white/10">
+            {showPromptPicker && activeConversationId ? (
+              <div className="mb-4 rounded-2xl border border-white/10 bg-black/30 p-3">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {PROMPT_CATEGORIES.map((category) => (
+                    <div key={category.label} className="space-y-2">
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/45">
+                        {category.label}
+                      </div>
+                      <div className="space-y-2">
+                        {category.prompts.map((prompt) => (
+                          <button
+                            key={prompt}
+                            type="button"
+                            onClick={() => applyPrompt(prompt)}
+                            className="w-full rounded-xl border border-pink-300/15 bg-white/5 px-3 py-2 text-left text-sm text-white/85 transition hover:bg-white/10"
+                          >
+                            {prompt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {activeConversationId && !threadLoading && !threadError && messages.length === 0 ? (
+              <div className="mb-4 space-y-3">
+                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-white/45">
+                  Start with a prompt
+                </div>
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {EMPTY_CHAT_PROMPTS.map((prompt) => (
+                    <button
+                      key={prompt}
+                      type="button"
+                      onClick={() => onDraftChange(prompt)}
+                      className="rounded-2xl border border-pink-300/20 bg-white/5 px-4 py-3 text-left text-sm text-white/85 transition hover:bg-white/10"
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
             <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowPromptPicker((prev) => !prev)}
+                disabled={!activeConversationId || sending}
+                className="shrink-0 border-white/20 bg-white/5 px-3 text-white hover:bg-white/10"
+                title="Prompt"
+              >
+                <Lightbulb className="h-4 w-4" />
+                <span className="ml-2 hidden sm:inline">Prompt</span>
+              </Button>
               <Input
                 value={draft}
                 onChange={(e) => onDraftChange(e.target.value)}

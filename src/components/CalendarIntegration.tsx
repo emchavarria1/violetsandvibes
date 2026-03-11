@@ -16,11 +16,14 @@ import {
   Link2,
   Loader2,
   RefreshCw,
+  Share2,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import EventCard from "./EventCard";
+import { communityCircles } from "./CommunityCirclesCard";
+import { Link } from "react-router-dom";
 
 type Provider = "google" | "outlook";
 
@@ -43,6 +46,7 @@ type CalendarEventRow = {
   title: string;
   description: string | null;
   location: string | null;
+  circle_name: string | null;
   starts_at: string;
   ends_at: string;
   source: "local" | "google" | "outlook";
@@ -56,9 +60,38 @@ type CreateEventForm = {
   title: string;
   description: string;
   location: string;
+  circleName: string;
   startsAt: string;
   endsAt: string;
 };
+
+const EVENT_TEMPLATES = [
+  {
+    label: "Coffee meetup",
+    title: "Coffee Meetup",
+    description: "Low-pressure coffee and conversation for women who want to meet in real life.",
+  },
+  {
+    label: "Dog park walk",
+    title: "Dog Park Walk",
+    description: "Bring your dog, take a walk, and meet other women who love dogs.",
+  },
+  {
+    label: "Pride meetup",
+    title: "Pride Meetup",
+    description: "A joyful LGBTQ+ community meetup for connection, friendship, and celebration.",
+  },
+  {
+    label: "Hiking group",
+    title: "Hiking Group",
+    description: "Trail time, fresh air, and easy conversation with women who love the outdoors.",
+  },
+  {
+    label: "Book club night",
+    title: "Book Club Night",
+    description: "Bring your current read and join a cozy discussion with fellow book lovers.",
+  },
+] as const;
 
 const defaultProviderStatus: Record<Provider, ProviderStatus> = {
   google: {
@@ -94,6 +127,7 @@ const initialCreateForm = (): CreateEventForm => {
     title: "",
     description: "",
     location: "",
+    circleName: "",
     startsAt: formatInputDateTime(start),
     endsAt: formatInputDateTime(end),
   };
@@ -223,6 +257,7 @@ const CalendarIntegration: React.FC = () => {
   const [connectingProvider, setConnectingProvider] = useState<Provider | null>(null);
   const [form, setForm] = useState<CreateEventForm>(initialCreateForm);
   const [autoSynced, setAutoSynced] = useState(false);
+  const [joinedCircles, setJoinedCircles] = useState<string[]>([]);
 
   const loadStatus = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke("calendar-status");
@@ -247,6 +282,33 @@ const CalendarIntegration: React.FC = () => {
     });
   }, []);
 
+  const loadJoinedCircles = useCallback(async () => {
+    if (!user?.id) {
+      setJoinedCircles([]);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("privacy_settings")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    const privacy =
+      data?.privacy_settings && typeof data.privacy_settings === "object"
+        ? (data.privacy_settings as Record<string, unknown>)
+        : {};
+
+    const stored = privacy.social_circles;
+    if (Array.isArray(stored)) {
+      setJoinedCircles(stored.filter((value): value is string => typeof value === "string"));
+    } else {
+      setJoinedCircles([]);
+    }
+  }, [user?.id]);
+
   const loadEvents = useCallback(async () => {
     if (!user) {
       setEvents([]);
@@ -256,7 +318,7 @@ const CalendarIntegration: React.FC = () => {
     const { data, error } = await supabase
       .from("calendar_events")
       .select(
-        "id, title, description, location, starts_at, ends_at, source, source_event_id, sync_state, sync_error, created_at"
+        "id, title, description, location, circle_name, starts_at, ends_at, source, source_event_id, sync_state, sync_error, created_at"
       )
       .eq("user_id", user.id)
       .order("starts_at", { ascending: true })
@@ -270,11 +332,11 @@ const CalendarIntegration: React.FC = () => {
     if (!user) return;
     setLoading(true);
     try {
-      await Promise.all([loadStatus(), loadEvents()]);
+      await Promise.all([loadStatus(), loadEvents(), loadJoinedCircles()]);
     } finally {
       setLoading(false);
     }
-  }, [loadEvents, loadStatus, user]);
+  }, [loadEvents, loadJoinedCircles, loadStatus, user]);
 
   const runSync = useCallback(
     async (payload?: Record<string, unknown>, options?: { silent?: boolean }) => {
@@ -457,6 +519,7 @@ const CalendarIntegration: React.FC = () => {
           title,
           description: form.description.trim() || null,
           location: form.location.trim() || null,
+          circle_name: form.circleName || null,
           starts_at: startsAt.toISOString(),
           ends_at: endsAt.toISOString(),
           source: "local",
@@ -504,6 +567,7 @@ const CalendarIntegration: React.FC = () => {
 
   const toEventCardModel = useCallback((event: CalendarEventRow) => {
     const tags = [
+      event.circle_name || "Open Community",
       event.source === "local"
         ? "Community"
         : event.source === "google"
@@ -529,38 +593,96 @@ const CalendarIntegration: React.FC = () => {
     };
   }, []);
 
+  const applyTemplate = (template: (typeof EVENT_TEMPLATES)[number]) => {
+    setForm((prev) => ({
+      ...prev,
+      title: template.title,
+      description: template.description,
+    }));
+  };
+
+  const handleInviteEvent = async (event: CalendarEventRow) => {
+    const inviteText = [
+      `Join me at ${event.title}`,
+      `${formatDateTime(event.starts_at)}${event.location ? ` • ${event.location}` : ""}`,
+      event.description || "Come hang out with the Violets & Vibes community.",
+    ].join("\n");
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: event.title,
+          text: inviteText,
+        });
+        return;
+      }
+
+      await navigator.clipboard.writeText(inviteText);
+      toast({
+        title: "Invite copied",
+        description: "The event invite text is ready to share.",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Could not share invite",
+        description: error?.message || "Please try again.",
+      });
+    }
+  };
+
   const providerRows: Array<{ key: Provider; name: string }> = [
     { key: "google", name: "Google Calendar" },
     { key: "outlook", name: "Outlook Calendar" },
   ];
 
   return (
-    <div className="p-4 space-y-6 max-w-4xl mx-auto pb-20">
+    <div className="mx-auto max-w-5xl space-y-6 p-4 pb-20">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <CalendarIcon className="w-6 h-6 text-purple-300" />
           <h2 className="wedding-heading rainbow-header text-2xl">Calendar</h2>
         </div>
 
-        <Button
-          variant="outline"
-          className="border-white/20 text-white hover:bg-white/10"
-          onClick={() => void runSync()}
-          disabled={syncing || loading}
-        >
-          {syncing ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Syncing…
-            </>
-          ) : (
-            <>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Sync Now
-            </>
-          )}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white/10">
+            <Link to="/social">Open Social Events</Link>
+          </Button>
+          <Button
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10"
+            onClick={() => void runSync()}
+            disabled={syncing || loading}
+          >
+            {syncing ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Syncing…
+              </>
+            ) : (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Sync Now
+              </>
+            )}
+          </Button>
+        </div>
       </div>
+
+      <Card className="bg-black/30 border-white/15">
+        <CardContent className="p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="text-sm font-semibold text-white">Shared with Social Events</div>
+            <div className="text-xs text-white/65">
+              Events you create here also appear in the Social events UI because both screens use the same calendar event records.
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Badge className="bg-pink-500/20 text-pink-100 border-pink-300/40">Real-time sync</Badge>
+            <Badge className="bg-white/10 border-white/20 text-white">Calendar + Social</Badge>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="bg-black/30 border-white/15">
         <CardHeader className="pb-3">
@@ -645,6 +767,11 @@ const CalendarIntegration: React.FC = () => {
                         <span>{formatDateTime(event.starts_at)}</span>
                       </div>
                       <div className="flex gap-2">
+                        {event.circle_name ? (
+                          <Badge className="bg-pink-500/20 text-pink-100 border-pink-300/40" variant="outline">
+                            {event.circle_name}
+                          </Badge>
+                        ) : null}
                         <Badge className={sourceBadgeClass[event.source]} variant="outline">
                           {event.source}
                         </Badge>
@@ -661,7 +788,11 @@ const CalendarIntegration: React.FC = () => {
                       </div>
                     ) : null}
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                      <Button size="sm" variant="outline" onClick={() => void handleInviteEvent(event)}>
+                        <Share2 className="w-3.5 h-3.5 mr-1" />
+                        Invite
+                      </Button>
                       <Button
                         size="sm"
                         variant="outline"
@@ -714,6 +845,24 @@ const CalendarIntegration: React.FC = () => {
                   />
                 </div>
 
+                <div className="space-y-2">
+                  <Label className="text-white/90">Quick start templates</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {EVENT_TEMPLATES.map((template) => (
+                      <Button
+                        key={template.label}
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="border-white/15 bg-white/5 text-white hover:bg-white/10"
+                        onClick={() => applyTemplate(template)}
+                      >
+                        {template.label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="event-start" className="text-white/90">
@@ -755,6 +904,30 @@ const CalendarIntegration: React.FC = () => {
                     placeholder="Downtown Community Center"
                     className="bg-violet-900/30 border-violet-400/30 text-white placeholder:text-white/50"
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="event-circle" className="text-white/90">
+                    Circle visibility
+                  </Label>
+                  <select
+                    id="event-circle"
+                    value={form.circleName}
+                    onChange={(e) => setForm((prev) => ({ ...prev, circleName: e.target.value }))}
+                    className="flex h-10 w-full rounded-md border border-violet-400/30 bg-violet-900/30 px-3 py-2 text-sm text-white"
+                  >
+                    <option value="">Open Community</option>
+                    {(joinedCircles.length > 0 ? communityCircles.filter((circle) => joinedCircles.includes(circle.name)) : []).map((circle) => (
+                      <option key={circle.name} value={circle.name}>
+                        {circle.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="text-xs text-white/55">
+                    {joinedCircles.length > 0
+                      ? "You can only post calendar events into circles you have joined on the Social page."
+                      : "Join a circle on the Social page to target an event to that community. Otherwise the event stays open to the full community."}
+                  </div>
                 </div>
 
                 <div className="space-y-2">

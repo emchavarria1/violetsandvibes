@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import type { ProfileRow } from "@/lib/profiles";
+import ProfileSafetyScore from "./ProfileSafetyScore";
+import { KindnessReputationPill } from "./KindnessEndorsements";
 
 export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
   const navigate = useNavigate();
@@ -38,6 +40,17 @@ export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
             <div className="text-xs text-white/70">{profile.location}</div>
           ) : null}
         </div>
+
+        <ProfileSafetyScore
+          compact
+          data={{
+            profileCompleted: profile.profile_completed,
+            privacySettings: profile.privacy_settings,
+            safetySettings: profile.safety_settings,
+          }}
+        />
+
+        <KindnessReputationPill privacySettings={profile.privacy_settings} />
 
         {bio ? (
           <div className="text-sm text-white/85 line-clamp-3">{bio}</div>

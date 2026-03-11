@@ -22,18 +22,22 @@ export const PrideHeader: React.FC<PrideHeaderProps> = ({
   return (
     <div className={`
       glass-pride-strong 
-      padding-responsive 
-      mb-4 sm:mb-6 md:mb-8
+      px-3 sm:px-4 md:px-6
+      pt-[calc(env(safe-area-inset-top)+3.4rem)] sm:pt-[calc(env(safe-area-inset-top)+4.25rem)]
+      pb-4 sm:pb-6
+      min-h-[132px] sm:min-h-[164px]
+      mb-0
       relative
+      overflow-hidden
       ${className}
     `}>
       {/* Header Dropdown */}
-      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10">
+      <div className="absolute right-2 z-10 sm:right-4" style={{ top: "calc(env(safe-area-inset-top) + 0.5rem)" }}>
         <HeaderDropdown onMenuSelect={onMenuSelect} />
       </div>
 
       {/* Immediate safety visibility */}
-      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10">
+      <div className="absolute left-2 z-10 sm:left-4" style={{ top: "calc(env(safe-area-inset-top) + 0.5rem)" }}>
         <Link
           to="/terms#community-standards"
           className="inline-flex items-center gap-1 rounded-full border border-pink-300/40 bg-black/45 px-2 py-1 text-[11px] sm:text-xs font-medium text-pink-100 hover:bg-black/60 transition-colors"
@@ -44,16 +48,16 @@ export const PrideHeader: React.FC<PrideHeaderProps> = ({
       </div>
 
       {headerContent ? (
-        <div className="mb-2 sm:mb-4 px-6 sm:px-14 md:px-20">
+        <div className="mb-0 px-2 sm:px-10 md:px-16 text-center">
           {headerContent}
         </div>
       ) : showLogo && (
         <AnimatedLogo
           size="lg"
           variant="global-flow"
-          className="mb-2 sm:mb-4"
+          className="mb-0"
           text="Unleash Your Spirit with Violets & Vibes - Your Premier Online Dating and Social Hub!"
-          textClassName="wedding-title vv-global-header-flow leading-tight px-6 sm:px-14 md:px-20"
+          textClassName="wedding-title vv-global-header-primary vv-global-header-flow px-2 sm:px-10 md:px-16 text-center"
         />
       )}
       

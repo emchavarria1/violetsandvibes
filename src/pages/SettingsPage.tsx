@@ -98,15 +98,32 @@ type SettingsState = {
   };
 };
 
-const NOTIFICATION_ITEMS: Array<{ key: keyof SettingsState['notifications']; label: string }> = [
-  { key: 'matches', label: 'Matches' },
-  { key: 'messages', label: 'Messages' },
-  { key: 'likes', label: 'Likes' },
-  { key: 'events', label: 'Events' },
-  { key: 'marketing', label: 'Marketing' },
-  { key: 'pushNotifications', label: 'Push Notifications' },
-  { key: 'emailNotifications', label: 'Email Notifications' },
-  { key: 'smsNotifications', label: 'SMS Notifications' },
+const NOTIFICATION_GROUPS: Array<{
+  title: string;
+  items: Array<{
+    key: keyof SettingsState['notifications'];
+    label: string;
+    description?: string;
+  }>;
+}> = [
+  {
+    title: 'Activity',
+    items: [
+      { key: 'matches', label: 'Matches' },
+      { key: 'messages', label: 'Messages' },
+      { key: 'likes', label: 'Likes' },
+      { key: 'events', label: 'Events' },
+    ],
+  },
+  {
+    title: 'Communication',
+    items: [
+      { key: 'pushNotifications', label: 'Push notifications' },
+      { key: 'emailNotifications', label: 'Email notifications' },
+      { key: 'smsNotifications', label: 'SMS notifications' },
+      { key: 'marketing', label: 'Marketing', description: 'Promotions and updates' },
+    ],
+  },
 ];
 
 const APP_PREFERENCE_ITEMS: Array<{ key: keyof SettingsState['app']; label: string }> = [
@@ -130,7 +147,7 @@ const PRIVACY_ITEMS: Array<{ key: keyof SettingsState['privacy']; label: string;
 
 const SAFETY_ITEMS: Array<{ key: keyof SettingsState['safety']; label: string; description: string }> = [
   { key: 'twoFactor', label: 'Two Factor', description: 'Saved security preference for account hardening.' },
-  { key: 'blockScreenshots', label: 'Block Screenshots', description: 'Saved preference. Enforcement depends on platform support.' },
+  { key: 'blockScreenshots', label: 'Block Screenshots', description: 'Prevent screenshots of chats and profiles when supported by your device.' },
   { key: 'requireVerification', label: 'Require Verification', description: 'Only show photo-verified profiles in discovery.' },
   { key: 'autoBlockSuspicious', label: 'Auto Block Suspicious', description: 'Saved moderation preference for future enforcement hooks.' },
 ];
@@ -441,15 +458,29 @@ const SettingsPage: React.FC = () => {
                   Notifications
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {NOTIFICATION_ITEMS.map(({ key, label }) => (
-                  <div key={key} className="flex justify-between items-center">
-                    <span>{label}</span>
-                    <Switch 
-                      checked={settings.notifications[key]}
-                      onCheckedChange={(checked) => updateNotificationSetting(key, checked)}
-                      disabled={loadingGeneral}
-                    />
+              <CardContent className="space-y-6">
+                {NOTIFICATION_GROUPS.map(({ title, items }) => (
+                  <div key={title} className="space-y-4">
+                    <div className="text-sm font-semibold tracking-wide text-gray-700 uppercase">
+                      {title}
+                    </div>
+                    <div className="space-y-4">
+                      {items.map(({ key, label, description }) => (
+                        <div key={key} className="flex justify-between items-start gap-4">
+                          <div className="space-y-1">
+                            <div>{label}</div>
+                            {description ? (
+                              <div className="text-xs text-gray-600">{description}</div>
+                            ) : null}
+                          </div>
+                          <Switch 
+                            checked={settings.notifications[key]}
+                            onCheckedChange={(checked) => updateNotificationSetting(key, checked)}
+                            disabled={loadingGeneral}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </CardContent>
@@ -462,6 +493,9 @@ const SettingsPage: React.FC = () => {
                   <Smartphone className="w-5 h-5" />
                   App Preferences
                 </CardTitle>
+                <p className="text-sm text-gray-600">
+                  Customize how the app looks and behaves on your device.
+                </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 {APP_PREFERENCE_ITEMS.map(({ key, label }) => (

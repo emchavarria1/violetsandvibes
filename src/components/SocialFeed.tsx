@@ -4,16 +4,19 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import EventCard from "./EventCard";
+import CommunityCirclesCard, { communityCircles } from "./CommunityCirclesCard";
 import { Plus, ShieldAlert } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { Link, useLocation } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 type PostRow = {
   id: string;
   author_id: string;
   title: string | null;
   body: string;
+  circle_name?: string | null;
   created_at: string;
   updated_at: string | null;
   edited_at: string | null;
@@ -48,6 +51,7 @@ type CalendarEventRow = {
   title: string;
   description: string | null;
   location: string | null;
+  circle_name?: string | null;
   starts_at: string;
   ends_at: string;
   source: "local" | "google" | "outlook";
@@ -66,7 +70,37 @@ type FeedEvent = {
   tags: string[];
   organizer: string;
   isAttending: boolean;
+  circleName?: string | null;
 };
+
+const CIRCLE_STORAGE_KEY = "vv_joined_circles_v1";
+const EVENT_TEMPLATES = [
+  {
+    label: "Coffee meetup",
+    title: "Coffee Meetup",
+    description: "Low-pressure coffee and conversation for women who want to meet in real life.",
+  },
+  {
+    label: "Dog park walk",
+    title: "Dog Park Walk",
+    description: "Bring your dog, take a walk, and meet other women who love dogs.",
+  },
+  {
+    label: "Pride meetup",
+    title: "Pride Meetup",
+    description: "A joyful LGBTQ+ community meetup for connection, friendship, and celebration.",
+  },
+  {
+    label: "Hiking group",
+    title: "Hiking Group",
+    description: "Trail time, fresh air, and easy conversation with women who love the outdoors.",
+  },
+  {
+    label: "Book club night",
+    title: "Book Club Night",
+    description: "Bring your current read and join a cozy discussion with fellow book lovers.",
+  },
+];
 
 function incMap(map: Map<string, number>, key: string, delta: number) {
   const next = new Map(map);
@@ -128,6 +162,7 @@ function formatEventTimeRange(startIso: string, endIso: string) {
 const SocialFeed: React.FC = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const { toast } = useToast();
 
   const [newPost, setNewPost] = useState("");
   const [posting, setPosting] = useState(false);
@@ -175,6 +210,44 @@ const SocialFeed: React.FC = () => {
   const [eventsLoading, setEventsLoading] = useState(true);
   const [eventsError, setEventsError] = useState<string | null>(null);
   const [creatingEvent, setCreatingEvent] = useState(false);
+  const [activeCircle, setActiveCircle] = useState<string | null>(null);
+  const [joinedCircles, setJoinedCircles] = useState<string[]>(() => {
+    try {
+      const raw = localStorage.getItem(CIRCLE_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === "string") : [];
+    } catch {
+      return [];
+    }
+  });
+  const [joinedCirclesHydrated, setJoinedCirclesHydrated] = useState(false);
+
+  const loadJoinedCircles = useCallback(async () => {
+    if (!user?.id) return;
+
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("privacy_settings")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      const privacy =
+        data?.privacy_settings && typeof data.privacy_settings === "object"
+          ? (data.privacy_settings as Record<string, unknown>)
+          : {};
+      const stored = privacy.social_circles;
+      if (Array.isArray(stored)) {
+        setJoinedCircles(stored.filter((value): value is string => typeof value === "string"));
+      }
+    } catch (error) {
+      console.warn("Could not load joined circles from profile:", error);
+    } finally {
+      setJoinedCirclesHydrated(true);
+    }
+  }, [user?.id]);
 
   // Persist whenever it changes
   useEffect(() => {
@@ -206,7 +279,7 @@ const SocialFeed: React.FC = () => {
 
       const withMetadata = await supabase
         .from("posts")
-        .select("id, author_id, title, body, created_at, updated_at, edited_at, collapsed_by_author")
+        .select("id, author_id, title, body, circle_name, created_at, updated_at, edited_at, collapsed_by_author")
         .order("created_at", { ascending: false })
         .limit(30);
 
@@ -216,7 +289,7 @@ const SocialFeed: React.FC = () => {
       if (postsError && isMissingPostMetadataColumnError(postsError)) {
         const fallback = await supabase
           .from("posts")
-          .select("id, author_id, title, body, created_at")
+          .select("id, author_id, title, body, circle_name, created_at")
           .order("created_at", { ascending: false })
           .limit(30);
 
@@ -393,7 +466,7 @@ const SocialFeed: React.FC = () => {
       const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from("calendar_events")
-        .select("id, title, description, location, starts_at, ends_at, source, sync_state")
+        .select("id, title, description, location, circle_name, starts_at, ends_at, source, sync_state")
         .eq("user_id", user.id)
         .gte("ends_at", nowIso)
         .order("starts_at", { ascending: true })
@@ -425,6 +498,7 @@ const SocialFeed: React.FC = () => {
           tags,
           organizer: "You",
           isAttending: true,
+          circleName: event.circle_name ?? null,
         } as FeedEvent;
       });
 
@@ -556,6 +630,57 @@ const SocialFeed: React.FC = () => {
     if (!user) return;
     void loadEvents();
   }, [loadEvents, user?.id]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CIRCLE_STORAGE_KEY, JSON.stringify(joinedCircles));
+    } catch {
+      // ignore local persistence issues
+    }
+  }, [joinedCircles]);
+
+  useEffect(() => {
+    if (!user) return;
+    void loadJoinedCircles();
+  }, [loadJoinedCircles, user?.id]);
+
+  useEffect(() => {
+    if (!user?.id || !joinedCirclesHydrated) return;
+
+    const persistJoinedCircles = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("privacy_settings")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        const privacy =
+          data?.privacy_settings && typeof data.privacy_settings === "object"
+            ? (data.privacy_settings as Record<string, unknown>)
+            : {};
+
+        const { error: updateError } = await supabase
+          .from("profiles")
+          .update({
+            privacy_settings: {
+              ...privacy,
+              social_circles: joinedCircles,
+            },
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", user.id);
+
+        if (updateError) throw updateError;
+      } catch (error) {
+        console.warn("Could not persist joined circles:", error);
+      }
+    };
+
+    void persistJoinedCircles();
+  }, [joinedCircles, joinedCirclesHydrated, user?.id]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -869,6 +994,7 @@ const SocialFeed: React.FC = () => {
       author_id: user.id,
       title,
       body,
+      circle_name: activeCircle,
       created_at: new Date().toISOString(),
       updated_at: null,
       edited_at: null,
@@ -892,8 +1018,9 @@ const SocialFeed: React.FC = () => {
           author_id: user.id,
           title,
           body,
+          ...(activeCircle ? { circle_name: activeCircle } : {}),
         })
-        .select("id, author_id, title, body, created_at, updated_at, edited_at, collapsed_by_author")
+        .select("id, author_id, title, body, circle_name, created_at, updated_at, edited_at, collapsed_by_author")
         .single();
 
       let savedRow: any = data;
@@ -902,7 +1029,7 @@ const SocialFeed: React.FC = () => {
       if (savedRowError && isMissingPostMetadataColumnError(savedRowError)) {
         const fallbackLookup = await supabase
           .from("posts")
-          .select("id, author_id, title, body, created_at")
+          .select("id, author_id, title, body, circle_name, created_at")
           .eq("id", newPostId)
           .maybeSingle();
 
@@ -917,27 +1044,6 @@ const SocialFeed: React.FC = () => {
             edited_at: null,
             collapsed_by_author: false,
           };
-        } else {
-          const fallbackInsert = await supabase
-            .from("posts")
-            .insert({
-              id: newPostId,
-              author_id: user.id,
-              title,
-              body,
-            })
-            .select("id, author_id, title, body, created_at")
-            .single();
-
-          savedRowError = fallbackInsert.error;
-          savedRow = fallbackInsert.data
-          ? {
-              ...fallbackInsert.data,
-              updated_at: null,
-              edited_at: null,
-              collapsed_by_author: false,
-            }
-          : null;
         }
       }
 
@@ -1402,6 +1508,7 @@ const SocialFeed: React.FC = () => {
         title,
         description: newEvent.description.trim() || null,
         location: newEvent.location.trim() || null,
+        ...(activeCircle ? { circle_name: activeCircle } : {}),
         starts_at: startsAt.toISOString(),
         ends_at: endsAt.toISOString(),
         source: "local",
@@ -1431,6 +1538,69 @@ const SocialFeed: React.FC = () => {
     console.log("Joining event:", eventId);
   };
 
+  const applyEventTemplate = (template: (typeof EVENT_TEMPLATES)[number]) => {
+    setNewEvent((prev) => ({
+      ...prev,
+      title: template.title,
+      description: template.description,
+    }));
+  };
+
+  const handleInviteEvent = async (eventId: string) => {
+    const event = events.find((item) => item.id === eventId);
+    if (!event) return;
+
+    const eventUrl = `${window.location.origin}/social?event=${event.id}`;
+    const message = `Join me for ${event.title} on ${event.date} at ${event.time}. Invite friends outside the app and bring your people. ${eventUrl}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: event.title,
+          text: message,
+          url: eventUrl,
+        });
+        return;
+      } catch (error) {
+        if ((error as Error).name === "AbortError") return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(message);
+      toast({
+        title: "Invite copied",
+        description: "Share it with friends outside the app.",
+      });
+    } catch (error) {
+      toast({
+        title: "Could not copy invite",
+        description: "Try again in a moment.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleToggleJoinCircle = (circleName: string) => {
+    setJoinedCircles((prev) => {
+      const next = prev.includes(circleName)
+        ? prev.filter((name) => name !== circleName)
+        : [...prev, circleName];
+      return next;
+    });
+    setActiveCircle(circleName);
+  };
+
+  const filteredPosts = posts.filter((post) => {
+    if (!activeCircle) return true;
+    return post.circle_name === activeCircle;
+  });
+
+  const filteredEvents = events.filter((event) => {
+    if (!activeCircle) return true;
+    return event.circleName === activeCircle;
+  });
+
   return (
     <div className="p-4 w-full">
       <div className="max-w-7xl mx-auto grid social-feed-columns gap-3 sm:gap-4 items-start">
@@ -1448,9 +1618,21 @@ const SocialFeed: React.FC = () => {
             </CardContent>
           </Card>
 
+          <CommunityCirclesCard
+            activeCircle={activeCircle}
+            joinedCircleNames={joinedCircles}
+            onSelectCircle={setActiveCircle}
+            onToggleJoin={handleToggleJoinCircle}
+          />
+
           {/* Create Post */}
           <Card className="bg-violet-950/80 border-violet-400/40 text-white backdrop-blur-sm">
             <CardContent className="p-4">
+              {activeCircle ? (
+                <div className="mb-3 inline-flex items-center rounded-full border border-pink-300/25 bg-pink-400/10 px-3 py-1 text-xs font-medium text-pink-100">
+                  Posting into {activeCircle}
+                </div>
+              ) : null}
               <Textarea
                 placeholder="Share something with the community..."
                 value={newPost}
@@ -1475,12 +1657,14 @@ const SocialFeed: React.FC = () => {
           {/* Feed */}
           {loading ? (
             <div className="text-white/80">Loading feed…</div>
-          ) : posts.length === 0 ? (
+          ) : filteredPosts.length === 0 ? (
             <div className="text-white/80">
-              No posts yet. Be the first to share something 💜
+              {activeCircle
+                ? `No posts in ${activeCircle} yet. Start the conversation.`
+                : "No posts yet. Be the first to share something 💜"}
             </div>
           ) : (
-            posts.map((post) => {
+            filteredPosts.map((post) => {
               const isOwnPost = post.author_id === user?.id;
               const isAutoCollapsed =
                 Date.now() - new Date(post.created_at).getTime() >= POST_AUTO_COLLAPSE_MS;
@@ -1528,6 +1712,11 @@ const SocialFeed: React.FC = () => {
                           Posting…
                         </span>
                       )}
+                    </div>
+                    <div className="mt-3">
+                      <span className="inline-flex rounded-full border border-pink-300/20 bg-pink-400/10 px-2 py-1 text-[11px] font-medium text-pink-100">
+                        {post.circle_name ?? "Open Community"}
+                      </span>
                     </div>
                   </CardHeader>
                   <CardContent className={isCollapsedCardView ? "px-3 pb-3 pt-1" : "p-4 pt-0"}>
@@ -1812,6 +2001,26 @@ const SocialFeed: React.FC = () => {
           {showCreateEvent && (
             <Card className="bg-gradient-to-br from-pink-50 to-purple-50 border-pink-200">
               <CardContent className="p-4 space-y-3">
+                <div className="space-y-2">
+                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">
+                    Real-world event ideas
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {EVENT_TEMPLATES.map((template) => (
+                      <Button
+                        key={template.label}
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => applyEventTemplate(template)}
+                        className="border-pink-200 bg-white/80 text-violet-700 hover:bg-pink-50"
+                      >
+                        {template.label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
                 <Input
                   placeholder="Event title"
                   value={newEvent.title}
@@ -1839,6 +2048,9 @@ const SocialFeed: React.FC = () => {
                   value={newEvent.location}
                   onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
                 />
+                <div className="rounded-xl border border-pink-200 bg-white/70 px-3 py-2 text-sm text-violet-700">
+                  Invite friends outside the app after you create the event. That is how circles spread into real-life networks.
+                </div>
                 <div className="flex space-x-2">
                   <Button
                     onClick={() => void handleCreateEvent()}
@@ -1863,11 +2075,20 @@ const SocialFeed: React.FC = () => {
 
           {eventsLoading ? (
             <div className="text-white/80">Loading events…</div>
-          ) : events.length === 0 ? (
-            <div className="text-white/80">No upcoming events yet. Create one to get started.</div>
+          ) : filteredEvents.length === 0 ? (
+            <div className="text-white/80">
+              {activeCircle
+                ? `No upcoming meetups in ${activeCircle} yet. Create one to get started.`
+                : "No upcoming events yet. Create one to get started."}
+            </div>
           ) : (
-            events.map((event) => (
-              <EventCard key={event.id} event={event} onJoin={handleJoinEvent} />
+            filteredEvents.map((event) => (
+              <div key={event.id} className="space-y-2">
+                <div className="inline-flex rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] font-medium text-white/75">
+                  {event.circleName ?? "Open Community"}
+                </div>
+                <EventCard event={event} onJoin={handleJoinEvent} onInvite={handleInviteEvent} />
+              </div>
             ))
           )}
         </aside>

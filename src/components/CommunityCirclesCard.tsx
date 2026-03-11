@@ -1,9 +1,10 @@
 import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, HeartHandshake, MessageCircleMore, PawPrint, Sparkles, Users, BookOpen, Mountain, Briefcase, Rainbow } from "lucide-react";
 
-type Circle = {
+export type Circle = {
   name: string;
   description: string;
   stats: {
@@ -16,7 +17,7 @@ type Circle = {
   tone: string;
 };
 
-const circles: Circle[] = [
+export const communityCircles: Circle[] = [
   {
     name: "Women Who Love Dogs",
     description: "Pup photos, dog-friendly meetups, and low-pressure connection.",
@@ -61,7 +62,19 @@ const circles: Circle[] = [
   },
 ];
 
-export const CommunityCirclesCard: React.FC = () => {
+type CommunityCirclesCardProps = {
+  activeCircle: string | null;
+  joinedCircleNames: string[];
+  onSelectCircle: (circleName: string | null) => void;
+  onToggleJoin: (circleName: string) => void;
+};
+
+export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
+  activeCircle,
+  joinedCircleNames,
+  onSelectCircle,
+  onToggleJoin,
+}) => {
   return (
     <Card className="overflow-hidden border-white/15 bg-[linear-gradient(135deg,rgba(33,16,71,0.96),rgba(17,23,60,0.96))] text-white shadow-2xl">
       <CardContent className="p-4 sm:p-5">
@@ -93,11 +106,34 @@ export const CommunityCirclesCard: React.FC = () => {
           </div>
         </div>
 
+        <div className="mb-4 flex flex-wrap gap-2">
+          <Button
+            variant={activeCircle === null ? "secondary" : "outline"}
+            className={activeCircle === null ? "bg-white text-violet-950 hover:bg-white/90" : "border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"}
+            onClick={() => onSelectCircle(null)}
+          >
+            All Circles
+          </Button>
+          {communityCircles.map((circle) => (
+            <Button
+              key={`filter-${circle.name}`}
+              variant={activeCircle === circle.name ? "secondary" : "outline"}
+              className={activeCircle === circle.name ? "bg-pink-200 text-violet-950 hover:bg-pink-100" : "border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"}
+              onClick={() => onSelectCircle(circle.name)}
+            >
+              {circle.name}
+            </Button>
+          ))}
+        </div>
+
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {circles.map((circle) => (
+          {communityCircles.map((circle) => {
+            const isJoined = joinedCircleNames.includes(circle.name);
+            const isActive = activeCircle === circle.name;
+            return (
             <div
               key={circle.name}
-              className={`rounded-[24px] border bg-gradient-to-br ${circle.tone} p-4 backdrop-blur-sm transition duration-200 hover:bg-white/10`}
+              className={`rounded-[24px] border bg-gradient-to-br ${circle.tone} p-4 backdrop-blur-sm transition duration-200 hover:bg-white/10 ${isActive ? "ring-2 ring-pink-300/70" : ""}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -145,18 +181,22 @@ export const CommunityCirclesCard: React.FC = () => {
               </div>
 
               <div className="mt-4 flex gap-2">
-                <Button className="flex-1 bg-white text-violet-950 hover:bg-white/90">
-                  Join Circle
+                <Button
+                  className={isJoined ? "flex-1 bg-emerald-300 text-emerald-950 hover:bg-emerald-200" : "flex-1 bg-white text-violet-950 hover:bg-white/90"}
+                  onClick={() => onToggleJoin(circle.name)}
+                >
+                  {isJoined ? "Joined" : "Join Circle"}
                 </Button>
                 <Button
                   variant="outline"
                   className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                  onClick={() => onSelectCircle(circle.name)}
                 >
                   Open
                 </Button>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       </CardContent>
     </Card>

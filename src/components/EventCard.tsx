@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Users, Heart, Sparkles } from 'lucide-react';
+import { Calendar, MapPin, Users, Heart, Sparkles, Share2 } from 'lucide-react';
 
 interface EventCardProps {
   event: {
@@ -21,9 +21,10 @@ interface EventCardProps {
   };
   onJoin?: (eventId: string) => void;
   onLike?: (eventId: string) => void;
+  onInvite?: (eventId: string) => void;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike }) => {
+const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike, onInvite }) => {
   return (
     <Card className="mb-4 overflow-hidden border-0 hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 group relative bg-black/90 backdrop-blur-sm text-white">
       {/* Identity-based gradient overlay */}
@@ -99,23 +100,36 @@ const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike }) => {
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
+        <div className="flex flex-wrap justify-between items-center gap-3">
           <span className="text-sm text-gray-400 font-medium group-hover:text-gray-300 transition-colors duration-300">
             by {event.organizer}
           </span>
-          
-          <Button
-            onClick={() => onJoin?.(event.id)}
-            size="sm"
-            className={`font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden group/btn ${
-              event.isAttending
-                ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600'
-                : 'bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600'
-            }`}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
-            <span className="relative z-10">{event.isAttending ? 'Attending' : 'Join Event'}</span>
-          </Button>
+
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onInvite?.(event.id)}
+              className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              Invite Friends
+            </Button>
+
+            <Button
+              onClick={() => onJoin?.(event.id)}
+              size="sm"
+              className={`font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden group/btn ${
+                event.isAttending
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600'
+                  : 'bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600'
+              }`}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
+              <span className="relative z-10">{event.isAttending ? 'Attending' : 'Join Event'}</span>
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
