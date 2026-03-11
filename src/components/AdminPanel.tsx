@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Shield, CheckCircle2, XCircle, RefreshCw, Eye } from 'lucide-react';
+import { Shield, CheckCircle2, XCircle, RefreshCw, Eye, MessagesSquare } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { FunctionsHttpError } from '@supabase/supabase-js';
@@ -25,6 +25,17 @@ type QueueItem = {
 
 type DecisionTarget = 'photo' | 'id' | 'both';
 type DecisionType = 'approve' | 'reject';
+
+type CircleSuggestionItem = {
+  id: string;
+  userId: string;
+  name: string;
+  note: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  submitterName: string;
+  submitterUsername: string | null;
+};
 
 const resolveFunctionErrorMessage = async (error: unknown) => {
   if (error instanceof FunctionsHttpError) {
@@ -55,12 +66,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
   const [queueLoading, setQueueLoading] = useState(true);
   const [queueError, setQueueError] = useState<string | null>(null);
   const [queue, setQueue] = useState<QueueItem[]>([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(true);
+  const [suggestionsError, setSuggestionsError] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<CircleSuggestionItem[]>([]);
   const [decisionLoadingKey, setDecisionLoadingKey] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     if (!user?.id) return;
     void loadQueue();
+    void loadSuggestions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
@@ -71,6 +86,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
   const pendingIdCount = useMemo(
     () => queue.filter((item) => item.idStatus === 'submitted').length,
     [queue]
+  );
+  const pendingSuggestionCount = useMemo(
+    () => suggestions.filter((item) => item.status === 'pending').length,
+    [suggestions]
   );
 
   const invokeVerificationReview = async (body: Record<string, unknown>) => {
@@ -110,6 +129,119 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
     setIsAdmin(true);
     setQueue((data?.items ?? []) as QueueItem[]);
     setQueueLoading(false);
+  };
+
+  const loadSuggestions = async () => {
+    if (!user?.id) {
+      setSuggestionsLoading(false);
+      setSuggestionsError('Session not ready yet. Please refresh.');
+      return;
+    }
+
+    setSuggestionsLoading(true);
+    setSuggestionsError(null);
+
+    const { data, error } = await supabase
+      .from('circle_suggestions')
+      .select('id, user_id, name, note, status, created_at')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      if (error.message.toLowerCase().includes('permission denied')) {
+        setIsAdmin(false);
+        setSuggestions([]);
+        setSuggestionsLoading(false);
+        return;
+      }
+
+      setSuggestionsError(error.message || 'Could not load circle suggestions.');
+      setSuggestions([]);
+      setSuggestionsLoading(false);
+      return;
+    }
+
+    const rows = (data ?? []) as Array<{
+      id: string;
+      user_id: string;
+      name: string;
+      note: string | null;
+      status: 'pending' | 'approved' | 'rejected';
+      created_at: string;
+    }>;
+
+    const userIds = Array.from(new Set(rows.map((item) => item.user_id)));
+    const profileMap = new Map<string, { full_name: string | null; username: string | null }>();
+
+    if (userIds.length > 0) {
+      const { data: profileRows, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, full_name, username')
+        .in('id', userIds);
+
+      if (profileError) {
+        console.warn('Failed to load suggestion submitter names:', profileError.message);
+      } else {
+        for (const row of profileRows ?? []) {
+          profileMap.set(row.id, {
+            full_name: row.full_name ?? null,
+            username: row.username ?? null,
+          });
+        }
+      }
+    }
+
+    setSuggestions(
+      rows.map((item) => {
+        const profile = profileMap.get(item.user_id);
+        return {
+          id: item.id,
+          userId: item.user_id,
+          name: item.name,
+          note: item.note,
+          status: item.status,
+          createdAt: item.created_at,
+          submitterName: profile?.full_name || profile?.username || 'Member',
+          submitterUsername: profile?.username || null,
+        };
+      })
+    );
+    setSuggestionsLoading(false);
+  };
+
+  const handleSuggestionDecision = async (
+    suggestion: CircleSuggestionItem,
+    decision: Exclude<CircleSuggestionItem['status'], 'pending'>
+  ) => {
+    const key = `suggestion:${suggestion.id}:${decision}`;
+    setDecisionLoadingKey(key);
+    try {
+      const { error } = await supabase
+        .from('circle_suggestions')
+        .update({
+          status: decision,
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: user.id,
+        })
+        .eq('id', suggestion.id);
+
+      if (error) throw error;
+
+      toast({
+        title: decision === 'approved' ? 'Circle approved' : 'Circle rejected',
+        description: `${suggestion.name} was ${decision}.`,
+      });
+    } catch (error) {
+      console.error('Failed to review circle suggestion:', error);
+      toast({
+        title: 'Review failed',
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDecisionLoadingKey(null);
+      await loadSuggestions();
+    }
   };
 
   const handleDecision = async (
@@ -199,6 +331,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{pendingIdCount}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Circle Suggestions</CardTitle>
+            <MessagesSquare className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{pendingSuggestionCount}</div>
           </CardContent>
         </Card>
       </div>
@@ -345,6 +487,88 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                   >
                     <XCircle className="h-4 w-4 mr-1" />
                     {decisionLoadingKey === rejectBothKey ? 'Saving…' : 'Reject Both'}
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between gap-3">
+            <CardTitle>Pending Circle Suggestions</CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => void loadSuggestions()}
+              disabled={suggestionsLoading}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${suggestionsLoading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {suggestionsLoading ? (
+            <div className="text-sm text-muted-foreground">Loading circle suggestions…</div>
+          ) : null}
+
+          {suggestionsError ? (
+            <div className="text-sm text-red-600">{suggestionsError}</div>
+          ) : null}
+
+          {!suggestionsLoading && !suggestionsError && suggestions.length === 0 ? (
+            <div className="text-sm text-muted-foreground">No pending circle suggestions.</div>
+          ) : null}
+
+          {suggestions.map((item) => {
+            const approveKey = `suggestion:${item.id}:approved`;
+            const rejectKey = `suggestion:${item.id}:rejected`;
+
+            return (
+              <div key={item.id} className="rounded-lg border p-4 space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="font-semibold">{item.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      Submitted by {item.submitterName}
+                      {item.submitterUsername ? ` (@${item.submitterUsername})` : ''}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Submitted: {new Date(item.createdAt).toLocaleString()}
+                    </div>
+                  </div>
+                  <Badge variant="secondary">Pending</Badge>
+                </div>
+
+                {item.note ? (
+                  <div className="rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-muted-foreground">
+                    {item.note}
+                  </div>
+                ) : (
+                  <div className="text-sm text-muted-foreground">No moderator note included.</div>
+                )}
+
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    size="sm"
+                    className="bg-green-600 hover:bg-green-700"
+                    disabled={decisionLoadingKey !== null}
+                    onClick={() => void handleSuggestionDecision(item, 'approved')}
+                  >
+                    <CheckCircle2 className="h-4 w-4 mr-1" />
+                    {decisionLoadingKey === approveKey ? 'Saving…' : 'Approve'}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    disabled={decisionLoadingKey !== null}
+                    onClick={() => void handleSuggestionDecision(item, 'rejected')}
+                  >
+                    <XCircle className="h-4 w-4 mr-1" />
+                    {decisionLoadingKey === rejectKey ? 'Saving…' : 'Reject'}
                   </Button>
                 </div>
               </div>

@@ -165,7 +165,7 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
   }
 
   return (
-    <div className="rounded-2xl border border-emerald-300/20 bg-white/5 p-4">
+    <div className="rounded-2xl border border-emerald-300/20 bg-black/20 p-4 shadow-[0_12px_28px_rgba(0,0,0,0.2)]">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">
@@ -187,7 +187,7 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
           type="button"
           size="sm"
           variant="outline"
-          className="border-emerald-300/30 bg-white/5 text-emerald-50 hover:bg-white/10"
+          className="border-emerald-300/30 bg-black/20 text-emerald-50 hover:bg-black/30"
           onClick={() => void handleShare()}
         >
           <Share2 className="mr-2 h-4 w-4" />

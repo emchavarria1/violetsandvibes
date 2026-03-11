@@ -108,6 +108,67 @@
         });
       })();
     </script>
+    <script>
+      (function () {
+        var reloadKey = "vv_chunk_reload_attempted";
+
+        function shouldRecoverChunkError(message) {
+          if (!message) return false;
+          return (
+            message.indexOf("Failed to fetch dynamically imported module") !== -1 ||
+            message.indexOf("Importing a module script failed") !== -1 ||
+            message.indexOf("error loading dynamically imported module") !== -1 ||
+            message.indexOf("Unable to preload CSS") !== -1
+          );
+        }
+
+        function recoverOnce() {
+          try {
+            if (sessionStorage.getItem(reloadKey) === "1") return;
+            sessionStorage.setItem(reloadKey, "1");
+          } catch (_) {}
+
+          window.location.replace(window.location.href.split("#")[0]);
+        }
+
+        window.addEventListener("load", function () {
+          try {
+            sessionStorage.removeItem(reloadKey);
+          } catch (_) {}
+        });
+
+        window.addEventListener(
+          "error",
+          function (event) {
+            var target = event && event.target;
+            if (target && target.tagName === "SCRIPT") {
+              recoverOnce();
+              return;
+            }
+
+            var message = event && typeof event.message === "string" ? event.message : "";
+            if (shouldRecoverChunkError(message)) {
+              recoverOnce();
+            }
+          },
+          true
+        );
+
+        window.addEventListener("unhandledrejection", function (event) {
+          var reason = event && event.reason;
+          var message =
+            typeof reason === "string"
+              ? reason
+              : reason && typeof reason.message === "string"
+                ? reason.message
+                : "";
+
+          if (shouldRecoverChunkError(message)) {
+            recoverOnce();
+          }
+        });
+      })();
+    </script>
   </head>
 
   <body>

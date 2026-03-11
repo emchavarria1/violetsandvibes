@@ -22,6 +22,7 @@ export type Circle = {
   glow: string;
   activity: {
     postsToday: number;
+    activeChats: number;
     meetupNote: string;
   };
 };
@@ -34,7 +35,7 @@ export const communityCircles: Circle[] = [
     icon: <PawPrint className="h-4 w-4" />,
     tone: "from-rose-400/18 to-fuchsia-400/10 border-rose-300/25",
     glow: "shadow-[0_10px_40px_rgba(244,114,182,0.18)]",
-    activity: { postsToday: 4, meetupNote: "Dog walk this Saturday" },
+    activity: { postsToday: 4, activeChats: 7, meetupNote: "Dog walk this Saturday" },
   },
   {
     name: "Book Lovers",
@@ -43,7 +44,7 @@ export const communityCircles: Circle[] = [
     icon: <BookOpen className="h-4 w-4" />,
     tone: "from-emerald-400/20 to-sky-400/10 border-emerald-300/25",
     glow: "shadow-[0_10px_40px_rgba(45,212,191,0.18)]",
-    activity: { postsToday: 4, meetupNote: "Book swap this Saturday" },
+    activity: { postsToday: 4, activeChats: 6, meetupNote: "Book swap this Saturday" },
   },
   {
     name: "Hiking Friends",
@@ -52,7 +53,7 @@ export const communityCircles: Circle[] = [
     icon: <Mountain className="h-4 w-4" />,
     tone: "from-sky-400/20 to-indigo-400/10 border-sky-300/25",
     glow: "shadow-[0_10px_40px_rgba(74,222,128,0.18)]",
-    activity: { postsToday: 3, meetupNote: "Trail meetup this Sunday" },
+    activity: { postsToday: 3, activeChats: 5, meetupNote: "Trail meetup this Sunday" },
   },
   {
     name: "Healing & Support",
@@ -61,7 +62,7 @@ export const communityCircles: Circle[] = [
     icon: <HeartHandshake className="h-4 w-4" />,
     tone: "from-pink-400/20 to-fuchsia-400/10 border-pink-300/25",
     glow: "shadow-[0_10px_40px_rgba(244,114,182,0.2)]",
-    activity: { postsToday: 6, meetupNote: "Support circle tonight" },
+    activity: { postsToday: 6, activeChats: 8, meetupNote: "Support circle tonight" },
   },
   {
     name: "LGBTQ+ Pride Circle",
@@ -70,7 +71,7 @@ export const communityCircles: Circle[] = [
     icon: <Rainbow className="h-4 w-4" />,
     tone: "from-fuchsia-400/20 to-indigo-400/10 border-fuchsia-300/25",
     glow: "shadow-[0_10px_40px_rgba(167,139,250,0.22)]",
-    activity: { postsToday: 5, meetupNote: "Pride meetup this weekend" },
+    activity: { postsToday: 5, activeChats: 9, meetupNote: "Pride meetup this weekend" },
   },
   {
     name: "Women in Tech",
@@ -79,7 +80,7 @@ export const communityCircles: Circle[] = [
     icon: <Laptop className="h-4 w-4" />,
     tone: "from-cyan-400/20 to-violet-400/10 border-cyan-300/25",
     glow: "shadow-[0_10px_40px_rgba(56,189,248,0.2)]",
-    activity: { postsToday: 3, meetupNote: "Tech coffee next Thursday" },
+    activity: { postsToday: 3, activeChats: 6, meetupNote: "Tech coffee next Thursday" },
   },
   {
     name: "Entrepreneurs",
@@ -88,7 +89,7 @@ export const communityCircles: Circle[] = [
     icon: <Briefcase className="h-4 w-4" />,
     tone: "from-violet-400/20 to-cyan-400/10 border-violet-300/25",
     glow: "shadow-[0_10px_40px_rgba(250,204,21,0.2)]",
-    activity: { postsToday: 2, meetupNote: "Founder coffee next week" },
+    activity: { postsToday: 2, activeChats: 7, meetupNote: "Founder coffee next week" },
   },
   {
     name: "Creative Artists",
@@ -97,7 +98,7 @@ export const communityCircles: Circle[] = [
     icon: <Palette className="h-4 w-4" />,
     tone: "from-fuchsia-400/18 to-orange-400/10 border-fuchsia-300/25",
     glow: "shadow-[0_10px_40px_rgba(217,70,239,0.2)]",
-    activity: { postsToday: 5, meetupNote: "Sketch night this Friday" },
+    activity: { postsToday: 5, activeChats: 6, meetupNote: "Sketch night this Friday" },
   },
   {
     name: "Single Moms Support",
@@ -106,7 +107,7 @@ export const communityCircles: Circle[] = [
     icon: <Baby className="h-4 w-4" />,
     tone: "from-rose-400/18 to-orange-400/10 border-rose-300/25",
     glow: "shadow-[0_10px_40px_rgba(251,113,133,0.2)]",
-    activity: { postsToday: 4, meetupNote: "Support meetup this Sunday" },
+    activity: { postsToday: 4, activeChats: 7, meetupNote: "Support meetup this Sunday" },
   },
   {
     name: "Mindfulness & Meditation",
@@ -115,8 +116,15 @@ export const communityCircles: Circle[] = [
     icon: <Leaf className="h-4 w-4" />,
     tone: "from-emerald-400/18 to-teal-400/10 border-emerald-300/25",
     glow: "shadow-[0_10px_40px_rgba(52,211,153,0.2)]",
-    activity: { postsToday: 3, meetupNote: "Meditation circle tomorrow" },
+    activity: { postsToday: 3, activeChats: 5, meetupNote: "Meditation circle tomorrow" },
   },
+];
+
+const trendingCircleNames = [
+  "Women Who Love Dogs",
+  "Healing & Support",
+  "Entrepreneurs",
+  "Hiking Friends",
 ];
 
 type CommunityCirclesCardProps = {
@@ -138,6 +146,9 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
   const [suggestedCircleName, setSuggestedCircleName] = useState("");
   const [suggestionNote, setSuggestionNote] = useState("");
   const [submittingSuggestion, setSubmittingSuggestion] = useState(false);
+  const trendingCircles = communityCircles.filter((circle) =>
+    trendingCircleNames.includes(circle.name)
+  );
 
   const handleInviteFriends = async (circleName: string) => {
     const text = `I just joined the ${circleName} circle on Violets & Vibes. Invite friends to grow this circle.`;
@@ -277,6 +288,26 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
           </div>
         ) : null}
 
+        <div className="mb-4 rounded-2xl border border-white/12 bg-white/5 p-4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.16)]">
+          <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-pink-100/90">
+            <Sparkles className="h-4 w-4 text-pink-300" />
+            Trending Circles
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {trendingCircles.map((circle) => (
+              <button
+                key={`trending-${circle.name}`}
+                type="button"
+                onClick={() => onSelectCircle(circle.name)}
+                className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/6 px-3 py-2 text-sm text-white transition hover:bg-white/10"
+              >
+                <span className="text-base leading-none">🔥</span>
+                <span>{circle.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="mb-4 flex flex-wrap gap-2">
           <Button
             variant={activeCircle === null ? "secondary" : "outline"}
@@ -314,6 +345,11 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
                   </div>
                   <h4 className="mt-3 text-lg font-semibold text-white">{circle.name}</h4>
                   <p className="mt-2 text-sm text-white/78">{circle.description}</p>
+                  <div className="mt-3 space-y-1.5 text-sm text-white/78">
+                    <div>🔥 {circle.activity.postsToday} new post{circle.activity.postsToday === 1 ? "" : "s"} today</div>
+                    <div>💬 {circle.activity.activeChats} active chats</div>
+                    <div>📅 {circle.activity.meetupNote}</div>
+                  </div>
                 </div>
                 <Badge className="border-white/14 bg-white/8 text-white">
                   {circle.stats.members} members
@@ -348,14 +384,6 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
                     Member list
                   </div>
                   <div className="mt-1 text-lg font-semibold text-white">{circle.stats.members}</div>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/4 backdrop-blur-md px-4 py-3 text-sm text-white/82">
-                <div className="font-medium text-white">Recent activity</div>
-                <div className="mt-2 space-y-1.5 text-white/72">
-                  <div>&bull; {circle.activity.postsToday} new post{circle.activity.postsToday === 1 ? "" : "s"} today</div>
-                  <div>&bull; {circle.activity.meetupNote}</div>
                 </div>
               </div>
 

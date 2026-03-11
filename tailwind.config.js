@@ -1,7 +1,16 @@
+import path from "path";
+import animate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
+
 /** @type {import('tailwindcss').Config} */
+const rootDir = "/Users/edna.chavarria/404 page fixed/violetsandvibes";
+
 export default {
   darkMode: ["class"],
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    path.join(rootDir, "index.html"),
+    path.join(rootDir, "src/**/*.{js,ts,jsx,tsx}"),
+  ],
   theme: {
     container: {
       center: true,
@@ -77,5 +86,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [animate, typography],
 };

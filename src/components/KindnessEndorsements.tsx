@@ -196,7 +196,7 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
   }
 
   return (
-    <div className="rounded-2xl border border-pink-300/20 bg-white/5 p-4">
+    <div className="rounded-2xl border border-pink-300/20 bg-black/20 p-4 shadow-[0_12px_28px_rgba(0,0,0,0.2)]">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-pink-300/25 bg-pink-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-pink-100">
@@ -225,7 +225,7 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
             type="button"
             size="sm"
             variant="outline"
-            className="mt-3 w-full border-pink-300/20 bg-white/5 text-pink-50 hover:bg-white/10"
+            className="mt-3 w-full border-pink-300/20 bg-black/20 text-pink-50 hover:bg-black/30"
             onClick={() => void handleShare()}
           >
             <Share2 className="mr-2 h-4 w-4" />
@@ -255,7 +255,7 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
                     type="button"
                     size="sm"
                     variant={endorsedByMe ? "secondary" : "outline"}
-                    className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10"
+                    className="w-full border-white/15 bg-black/20 text-white hover:bg-black/30"
                     disabled={!currentUserId || isSaving === item.key}
                     onClick={() => void handleToggleEndorsement(item.key)}
                   >

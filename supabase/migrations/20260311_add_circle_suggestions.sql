@@ -57,6 +57,69 @@ begin
     join pg_namespace n on c.relnamespace = n.oid
     where n.nspname = 'public'
       and c.relname = 'circle_suggestions'
+      and p.polname = 'circle_suggestions_select_admin'
+  ) then
+    execute $sql$
+      create policy circle_suggestions_select_admin
+        on public.circle_suggestions
+        for select
+        to authenticated
+        using (
+          exists (
+            select 1
+            from public.admin_roles ar
+            where ar.user_id = auth.uid()
+          )
+        );
+    $sql$;
+  end if;
+end
+$$;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policy p
+    join pg_class c on p.polrelid = c.oid
+    join pg_namespace n on c.relnamespace = n.oid
+    where n.nspname = 'public'
+      and c.relname = 'circle_suggestions'
+      and p.polname = 'circle_suggestions_update_admin'
+  ) then
+    execute $sql$
+      create policy circle_suggestions_update_admin
+        on public.circle_suggestions
+        for update
+        to authenticated
+        using (
+          exists (
+            select 1
+            from public.admin_roles ar
+            where ar.user_id = auth.uid()
+          )
+        )
+        with check (
+          exists (
+            select 1
+            from public.admin_roles ar
+            where ar.user_id = auth.uid()
+          )
+        );
+    $sql$;
+  end if;
+end
+$$;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policy p
+    join pg_class c on p.polrelid = c.oid
+    join pg_namespace n on c.relnamespace = n.oid
+    where n.nspname = 'public'
+      and c.relname = 'circle_suggestions'
       and p.polname = 'circle_suggestions_select_own'
   ) then
     execute $sql$

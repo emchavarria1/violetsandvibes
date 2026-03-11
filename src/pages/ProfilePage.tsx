@@ -674,7 +674,7 @@ const ProfilePage: React.FC = () => {
     <div className="page-calm min-h-screen p-4">
       <div className="max-w-2xl mx-auto space-y-6 relative z-10">
         {/* Header card */}
-        <Card className="glass-pride-strong text-white overflow-hidden">
+        <Card className="overflow-hidden border-white/12 bg-[linear-gradient(145deg,rgba(20,12,44,0.96),rgba(9,13,30,0.96))] text-white shadow-2xl backdrop-blur-md">
           <CardContent className="p-6">
             <div className="flex flex-col items-center text-center gap-4">
               <Avatar className="w-28 h-28 border-2 border-white/20">
@@ -726,7 +726,7 @@ const ProfilePage: React.FC = () => {
                   {socialProofItems.map((item) => (
                     <div
                       key={`${item.label}-${item.value}`}
-                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left"
+                      className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-left shadow-[0_10px_24px_rgba(0,0,0,0.18)]"
                     >
                       <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-pink-200/80">
                         {item.label}
@@ -763,16 +763,16 @@ const ProfilePage: React.FC = () => {
         />
 
         {/* About */}
-        <Card className="glass-pride text-white">
+        <Card className="border-white/12 bg-[linear-gradient(145deg,rgba(18,10,38,0.94),rgba(8,12,28,0.94))] text-white shadow-xl backdrop-blur-md">
           <CardHeader className="pb-2">
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex items-center justify-between text-white">
               About
               <div className="flex items-center gap-2">
                 {isOwnProfile ? (
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-white hover:bg-white/10"
+                    className="text-white hover:bg-white/10 hover:text-white"
                     onClick={() => {
                       if (editing) {
                         cancelEditing();
@@ -798,7 +798,7 @@ const ProfilePage: React.FC = () => {
         </Card>
 
         {hasVoiceIntro ? (
-          <Card className="glass-pride text-white">
+          <Card className="border-white/12 bg-[linear-gradient(145deg,rgba(18,10,38,0.94),rgba(8,12,28,0.94))] text-white shadow-xl backdrop-blur-md">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2">
                 <Volume2 className="w-4 h-4" />
@@ -807,7 +807,7 @@ const ProfilePage: React.FC = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               {voiceIntroAudio ? (
-                <div className="rounded-2xl border border-pink-300/20 bg-white/5 p-4">
+                <div className="rounded-2xl border border-pink-300/20 bg-black/20 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.18)]">
                   <div className="mb-3 flex items-center gap-2 text-sm text-pink-100">
                     <PlayCircle className="w-4 h-4" />
                     {voiceIntroSeconds > 0 ? `${voiceIntroSeconds}-second intro` : "Tap to listen"}
@@ -817,7 +817,7 @@ const ProfilePage: React.FC = () => {
               ) : null}
 
               {voiceIntroText ? (
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/85">
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-4 text-white/85 shadow-[0_10px_24px_rgba(0,0,0,0.18)]">
                   “{voiceIntroText}”
                 </div>
               ) : null}
@@ -826,7 +826,7 @@ const ProfilePage: React.FC = () => {
         ) : null}
 
         {isOwnProfile && editing && (
-          <Card className="glass-pride text-white">
+          <Card className="border-white/12 bg-[linear-gradient(145deg,rgba(18,10,38,0.94),rgba(8,12,28,0.94))] text-white shadow-xl backdrop-blur-md">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2">
                 <Edit className="w-4 h-4" />
@@ -927,7 +927,7 @@ const ProfilePage: React.FC = () => {
                 />
               </div>
 
-              <div className="rounded-2xl border border-pink-300/20 bg-white/5 p-4 space-y-4">
+              <div className="rounded-2xl border border-pink-300/20 bg-black/20 p-4 space-y-4 shadow-[0_12px_28px_rgba(0,0,0,0.22)]">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-lg font-semibold text-white">
                     <Mic className="w-4 h-4 text-pink-300" />
@@ -1088,14 +1088,14 @@ const ProfilePage: React.FC = () => {
               </Button>
 
               {isBlocked ? (
-                <div className="text-sm text-white/80 bg-white/5 border border-white/10 rounded-xl px-3 py-2">
+                <div className="text-sm text-white/80 bg-black/20 border border-white/10 rounded-xl px-3 py-2">
                   You blocked this user. Unblock to see messaging and match actions again.
                 </div>
               ) : null}
 
               {isBlocked ? null : matched ? (
                 <>
-                  <div className="text-sm text-white/80 bg-white/5 border border-white/10 rounded-xl px-3 py-2">
+                  <div className="text-sm text-white/80 bg-black/20 border border-white/10 rounded-xl px-3 py-2">
                     Matched 💜 You can message each other.
                   </div>
 
