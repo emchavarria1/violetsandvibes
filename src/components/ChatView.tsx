@@ -337,9 +337,20 @@ const ChatView: React.FC = () => {
 
       // Pick first (newest) message per conversation_id
       const latestByConvo = new Map<string, { body: string; sender_id: string; created_at: string }>();
+      const latestOtherByConvo = new Map<
+        string,
+        { body: string; sender_id: string; created_at: string }
+      >();
       (msgRows ?? []).forEach((m: any) => {
         if (!latestByConvo.has(m.conversation_id)) {
           latestByConvo.set(m.conversation_id, {
+            body: m.body,
+            sender_id: m.sender_id,
+            created_at: m.created_at,
+          });
+        }
+        if (m.sender_id !== user.id && !latestOtherByConvo.has(m.conversation_id)) {
+          latestOtherByConvo.set(m.conversation_id, {
             body: m.body,
             sender_id: m.sender_id,
             created_at: m.created_at,
@@ -378,7 +389,7 @@ const ChatView: React.FC = () => {
         const lastReadAt = lastReadByConvo.get(cid) ?? null;
         const meta = convoById.get(cid);
         const lastMessageAt = meta?.last_message_at ?? null;
-        const latest = latestByConvo.get(cid);
+        const latest = latestOtherByConvo.get(cid) ?? latestByConvo.get(cid);
         const lastMessagePreview = previewText(latest?.body ?? null);
         const lastMessageSenderId = latest?.sender_id ?? null;
 
@@ -942,8 +953,12 @@ const ChatView: React.FC = () => {
               return {
                 ...c,
                 lastMessageAt: nowIso,
-                lastMessagePreview: previewText(row.body),
-                lastMessageSenderId: row.sender_id,
+                lastMessagePreview: isMine
+                  ? c.lastMessagePreview ?? previewText(row.body)
+                  : previewText(row.body),
+                lastMessageSenderId: isMine
+                  ? c.lastMessageSenderId ?? row.sender_id
+                  : row.sender_id,
                 hasUnread,
               };
             });
@@ -1068,7 +1083,7 @@ const ChatView: React.FC = () => {
       <div className="h-full w-full md:grid md:grid-cols-[340px_1fr]">
         {/* LEFT: Conversation list */}
         <div
-          className={`border-b md:border-b-0 md:border-r border-white/10 bg-black/30 ${
+          className={`glass-pride border-b md:border-b-0 md:border-r border-white/10 ${
             activeConversationId ? "hidden md:block" : "block"
           }`}
         >
@@ -1117,8 +1132,8 @@ const ChatView: React.FC = () => {
                     }}
                     className={`w-full text-left rounded-xl p-3 transition-all border ${
                       isActive
-                        ? "bg-violet-950/70 border-violet-400/40"
-                        : "bg-black/40 border-white/10 hover:bg-black/55"
+                        ? "bg-white/10 border-violet-300/40 backdrop-blur-md shadow-lg"
+                        : "bg-white/5 border-white/10 backdrop-blur-md shadow-lg hover:bg-white/10"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -1152,7 +1167,7 @@ const ChatView: React.FC = () => {
                         </div>
                         <div className="text-xs text-white/55 mt-0.5 truncate">
                           {c.lastMessagePreview
-                            ? `${c.lastMessageSenderId === user?.id ? "You: " : ""}${c.lastMessagePreview}`
+                            ? c.lastMessagePreview
                             : c.hasUnread
                               ? "New messages"
                               : "—"}
@@ -1168,12 +1183,12 @@ const ChatView: React.FC = () => {
 
         {/* RIGHT: Thread */}
         <div
-          className={`h-full flex-col bg-black/20 ${
+          className={`h-full flex-col bg-[#0F0B1F] ${
             activeConversationId ? "flex" : "hidden md:flex"
           }`}
         >
           {/* Thread header */}
-          <div className="p-3 sm:p-4 border-b border-white/10 flex items-center justify-between">
+          <div className="border-b border-white/10 bg-white/5 backdrop-blur-md p-3 sm:p-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Button
                 size="icon"
@@ -1231,7 +1246,10 @@ const ChatView: React.FC = () => {
           ) : null}
 
           {/* Messages */}
-          <div ref={threadContainerRef} className="flex-1 overflow-y-auto p-4 space-y-2">
+          <div
+            ref={threadContainerRef}
+            className="flex-1 overflow-y-auto bg-[#0F0B1F] p-4 space-y-2"
+          >
             {!activeConversationId ? (
               <div className="text-white/70">
                 Choose someone to start chatting 💜
@@ -1274,10 +1292,10 @@ const ChatView: React.FC = () => {
 
                     <div className={`flex ${mine ? "justify-end" : "justify-start"}`}>
                       <div
-                        className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm whitespace-pre-wrap ${
+                        className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm whitespace-pre-wrap shadow-[0_12px_30px_rgba(0,0,0,0.22)] ${
                           mine
-                            ? "bg-gradient-to-r from-pink-500/90 to-purple-600/90 text-white"
-                            : "bg-white/10 text-white/90 border border-white/10"
+                            ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white"
+                            : "border border-white/10 bg-[#2B1F3F] text-white/92"
                         }`}
                       >
                         {m.body}
@@ -1316,9 +1334,9 @@ const ChatView: React.FC = () => {
           )}
 
           {/* Composer */}
-          <div className="p-4 border-t border-white/10">
+          <div className="border-t border-white/10 bg-white/5 backdrop-blur-md p-4">
             {showPromptPicker && activeConversationId ? (
-              <div className="mb-4 rounded-2xl border border-white/10 bg-black/30 p-3">
+              <div className="mb-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg p-3">
                 <div className="grid gap-3 sm:grid-cols-2">
                   {PROMPT_CATEGORIES.map((category) => (
                     <div key={category.label} className="space-y-2">

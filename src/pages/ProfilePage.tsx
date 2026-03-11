@@ -77,6 +77,20 @@ function toStringArray(value: unknown): string[] {
   return value.map((item) => `${item ?? ""}`.trim()).filter(Boolean);
 }
 
+function toTrustCount(privacySettings?: Record<string, any> | null) {
+  if (!privacySettings || typeof privacySettings !== "object") return 0;
+  if (
+    typeof privacySettings.trusted_endorsements_count === "number" &&
+    Number.isFinite(privacySettings.trusted_endorsements_count)
+  ) {
+    return privacySettings.trusted_endorsements_count;
+  }
+  if (Array.isArray(privacySettings.trusted_endorsements)) {
+    return privacySettings.trusted_endorsements.length;
+  }
+  return 0;
+}
+
 function formFromProfile(profile: any): EditableProfileForm {
   const interests = toStringArray(profile?.interests);
   const photos = toStringArray(profile?.photos);
@@ -151,6 +165,29 @@ const ProfilePage: React.FC = () => {
     const p = profile?.photos?.[0];
     return p || "";
   }, [profile?.photos]);
+
+  const socialProofItems = useMemo(() => {
+    const privacy = (livePrivacySettings ?? profile?.privacy ?? profile?.privacy_settings ?? {}) as Record<string, any>;
+    const socialCircles = toStringArray(privacy.social_circles);
+    const trustCount = toTrustCount(privacy);
+    const items: Array<{ label: string; value: string }> = [];
+
+    if (socialCircles.length > 0) {
+      items.push({
+        label: "Circle Member",
+        value: `${socialCircles[0]} Circle`,
+      });
+    }
+
+    if (trustCount > 0) {
+      items.push({
+        label: "Trusted Connection",
+        value: trustCount >= 5 ? "Community-endorsed" : "Trust growing in community",
+      });
+    }
+
+    return items;
+  }, [livePrivacySettings, profile?.privacy, profile?.privacy_settings]);
 
   const voiceIntroText = useMemo(() => {
     return (
@@ -637,7 +674,7 @@ const ProfilePage: React.FC = () => {
     <div className="page-calm min-h-screen p-4">
       <div className="max-w-2xl mx-auto space-y-6 relative z-10">
         {/* Header card */}
-        <Card className="bg-black/70 border-white/15 text-white overflow-hidden">
+        <Card className="glass-pride-strong text-white overflow-hidden">
           <CardContent className="p-6">
             <div className="flex flex-col items-center text-center gap-4">
               <Avatar className="w-28 h-28 border-2 border-white/20">
@@ -684,6 +721,24 @@ const ProfilePage: React.FC = () => {
                 ))}
               </div>
 
+              {socialProofItems.length > 0 ? (
+                <div className="grid w-full gap-3 sm:grid-cols-2">
+                  {socialProofItems.map((item) => (
+                    <div
+                      key={`${item.label}-${item.value}`}
+                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left"
+                    >
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-pink-200/80">
+                        {item.label}
+                      </div>
+                      <div className="mt-2 text-sm font-medium text-white">
+                        {item.value}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
               <div className="w-full">
                 <ProfileSafetyScore
                   data={{
@@ -691,6 +746,7 @@ const ProfilePage: React.FC = () => {
                     privacySettings: livePrivacySettings ?? profile.privacy ?? profile.privacy_settings,
                     safetySettings: profile.safety ?? profile.safety_settings,
                   }}
+                  displayName={displayName}
                 />
               </div>
             </div>
@@ -707,7 +763,7 @@ const ProfilePage: React.FC = () => {
         />
 
         {/* About */}
-        <Card className="bg-black/70 border-white/15 text-white">
+        <Card className="glass-pride text-white">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center justify-between">
               About
@@ -742,7 +798,7 @@ const ProfilePage: React.FC = () => {
         </Card>
 
         {hasVoiceIntro ? (
-          <Card className="bg-black/70 border-white/15 text-white">
+          <Card className="glass-pride text-white">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2">
                 <Volume2 className="w-4 h-4" />
@@ -770,7 +826,7 @@ const ProfilePage: React.FC = () => {
         ) : null}
 
         {isOwnProfile && editing && (
-          <Card className="bg-black/70 border-white/15 text-white">
+          <Card className="glass-pride text-white">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2">
                 <Edit className="w-4 h-4" />

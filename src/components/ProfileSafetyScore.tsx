@@ -1,7 +1,11 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ShieldCheck, HeartHandshake, UserCheck, AlertTriangle, Sparkles } from "lucide-react";
+import { Share2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { getVerificationState } from "@/lib/verification";
+import { shareBadgeCard } from "@/lib/shareBadgeCard";
 
 type ScoreInput = {
   profileCompleted?: boolean | null;
@@ -12,6 +16,7 @@ type ScoreInput = {
 type ProfileSafetyScoreProps = {
   data: ScoreInput;
   compact?: boolean;
+  displayName?: string;
 };
 
 function clamp(value: number, min: number, max: number) {
@@ -109,8 +114,43 @@ function buildSafetyScore(data: ScoreInput) {
   };
 }
 
-export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({ data, compact = false }) => {
+export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
+  data,
+  compact = false,
+  displayName,
+}) => {
+  const { toast } = useToast();
   const result = buildSafetyScore(data);
+  const shareLabel =
+    result.badgeLabel === "Trusted Member"
+      ? "Verified Safe Communicator"
+      : result.badgeLabel;
+
+  const handleShare = async () => {
+    const text = `I earned the ${shareLabel} badge on Violets & Vibes.`;
+
+    try {
+      const result = await shareBadgeCard({
+        badgeTitle: shareLabel,
+        badgeSubtitle: text,
+        profileName: displayName,
+      });
+      toast({
+        title: result === "shared" ? "Badge shared" : "Badge downloaded",
+        description:
+          result === "shared"
+            ? "Your trust badge card is ready to post."
+            : "Your trust badge card was saved as an image.",
+      });
+    } catch (error) {
+      console.error("Could not share safety badge:", error);
+      toast({
+        title: "Could not share badge",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   if (compact) {
     return (
@@ -143,6 +183,16 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({ data, co
             Trust is earned here through verification, kindness, and steady community signals.
           </p>
         </div>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          className="border-emerald-300/30 bg-white/5 text-emerald-50 hover:bg-white/10"
+          onClick={() => void handleShare()}
+        >
+          <Share2 className="mr-2 h-4 w-4" />
+          Share badge
+        </Button>
       </div>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2">

@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { HeartHandshake, ShieldCheck, Sparkles, Users } from "lucide-react";
+import { HeartHandshake, Share2, ShieldCheck, Sparkles, Users } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { shareBadgeCard } from "@/lib/shareBadgeCard";
 
 const ENDORSEMENT_TYPES = [
   { key: "supportive", label: "Supportive", emoji: "💜" },
@@ -58,6 +59,12 @@ function getReputationLabel(totalCount: number) {
   return "Growing trust";
 }
 
+function getShareableKindnessBadge(totalCount: number, byType: Record<EndorsementKey, string[]>) {
+  if (byType.community_builder.length >= 3) return "Top Community Builder";
+  if (byType.safe_communicator.length >= 3) return "Verified Safe Communicator";
+  return getReputationLabel(totalCount);
+}
+
 export function KindnessReputationPill({
   privacySettings,
 }: {
@@ -94,6 +101,36 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
     () => normalizeKindnessEndorsements(privacySettings),
     [privacySettings]
   );
+  const shareBadge = useMemo(
+    () => getShareableKindnessBadge(summary.totalCount, summary.byType),
+    [summary]
+  );
+
+  const handleShare = async () => {
+    const text = `I earned the ${shareBadge} badge on Violets & Vibes.`;
+
+    try {
+      const result = await shareBadgeCard({
+        badgeTitle: shareBadge,
+        badgeSubtitle: text,
+        profileName: displayName,
+      });
+      toast({
+        title: result === "shared" ? "Badge shared" : "Badge downloaded",
+        description:
+          result === "shared"
+            ? "Your community badge card is ready to post."
+            : "Your community badge card was saved as an image.",
+      });
+    } catch (error: any) {
+      console.error("Could not share kindness badge:", error);
+      toast({
+        title: "Could not share badge",
+        description: error?.message || "Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleToggleEndorsement = async (key: EndorsementKey) => {
     if (!currentUserId || isOwnProfile || isSaving) return;
@@ -184,6 +221,16 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
             {summary.uniqueEndorsers.length} community endorsement{summary.uniqueEndorsers.length === 1 ? "" : "s"}
           </div>
           <div className="mt-1 text-white/60">Respect becomes visible when other women vouch for it.</div>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="mt-3 w-full border-pink-300/20 bg-white/5 text-pink-50 hover:bg-white/10"
+            onClick={() => void handleShare()}
+          >
+            <Share2 className="mr-2 h-4 w-4" />
+            Share {shareBadge}
+          </Button>
         </div>
       </div>
 

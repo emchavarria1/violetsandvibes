@@ -26,10 +26,10 @@ interface EventCardProps {
 
 const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike, onInvite }) => {
   return (
-    <Card className="mb-4 overflow-hidden border-0 hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 group relative bg-black/90 backdrop-blur-sm text-white">
+    <Card className="glass-pride mb-4 overflow-hidden border-white/10 hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 group relative text-white">
       {/* Identity-based gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-200/30 via-purple-200/30 to-indigo-200/30" />
-      <div className="absolute inset-0 bg-gradient-to-tr from-yellow-200/20 via-green-200/20 to-blue-200/20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-300/12 via-violet-300/8 to-indigo-300/12" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/5" />
       
       {/* Floating sparkles */}
       <div className="absolute top-3 right-3">
@@ -79,29 +79,29 @@ const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike, onInvite }
       </CardHeader>
 
       <CardContent className="pt-0 relative z-10">
-        <p className="text-gray-300 text-sm mb-4 line-clamp-2 group-hover:text-gray-200 transition-colors duration-300">
+        <p className="text-white/78 text-sm mb-4 line-clamp-2 group-hover:text-white/90 transition-colors duration-300">
           {event.description}
         </p>
 
         <div className="space-y-3 mb-5">
-          <div className="flex items-center text-sm text-gray-300 group-hover:text-gray-200 transition-colors duration-300">
+          <div className="flex items-center text-sm text-white/75 group-hover:text-white/90 transition-colors duration-300">
             <Calendar className="w-4 h-4 mr-3 text-pink-500 group-hover:text-purple-500 group-hover:scale-110 transition-all duration-300" />
             <span className="font-medium">{event.date} at {event.time}</span>
           </div>
           
-          <div className="flex items-center text-sm text-gray-300 group-hover:text-gray-200 transition-colors duration-300">
+          <div className="flex items-center text-sm text-white/75 group-hover:text-white/90 transition-colors duration-300">
             <MapPin className="w-4 h-4 mr-3 text-pink-500 group-hover:text-purple-500 group-hover:scale-110 transition-all duration-300" />
             <span className="font-medium">{event.location}</span>
           </div>
           
-          <div className="flex items-center text-sm text-gray-300 group-hover:text-gray-200 transition-colors duration-300">
+          <div className="flex items-center text-sm text-white/75 group-hover:text-white/90 transition-colors duration-300">
             <Users className="w-4 h-4 mr-3 text-pink-500 group-hover:text-purple-500 group-hover:scale-110 transition-all duration-300" />
             <span className="font-medium">{event.attendees}/{event.maxAttendees} attending</span>
           </div>
         </div>
 
         <div className="flex flex-wrap justify-between items-center gap-3">
-          <span className="text-sm text-gray-400 font-medium group-hover:text-gray-300 transition-colors duration-300">
+          <span className="text-sm text-white/60 font-medium group-hover:text-white/80 transition-colors duration-300">
             by {event.organizer}
           </span>
 
@@ -131,6 +131,22 @@ const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike, onInvite }
             </Button>
           </div>
         </div>
+
+        {event.isAttending ? (
+          <div className="mt-4 rounded-2xl border border-pink-300/15 bg-pink-400/10 p-3 text-sm text-pink-50">
+            <div className="font-medium">Invite a friend to attend with you</div>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => onInvite?.(event.id)}
+              className="mt-3 w-full border-pink-300/20 bg-white/5 text-pink-50 hover:bg-white/10"
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              Invite a friend
+            </Button>
+          </div>
+        ) : null}
       </CardContent>
     </Card>
   );

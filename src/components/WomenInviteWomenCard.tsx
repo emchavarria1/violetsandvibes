@@ -91,7 +91,7 @@ export const WomenInviteWomenCard: React.FC = () => {
                   className="bg-pink-500 text-white hover:bg-pink-400"
                 >
                   <Share2 className="mr-2 h-4 w-4" />
-                  Invite 3 Women
+                  Invite 3 trusted women
                 </Button>
                 <Button
                   variant="outline"

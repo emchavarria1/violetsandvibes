@@ -31,13 +31,19 @@ export const PrideHeader: React.FC<PrideHeaderProps> = ({
       overflow-hidden
       ${className}
     `}>
+      <div className="pointer-events-none absolute inset-0 opacity-45">
+        <div className="absolute -top-12 -left-10 h-40 w-40 rounded-full bg-pink-500/35 blur-3xl" />
+        <div className="absolute -top-4 right-0 h-44 w-44 rounded-full bg-violet-500/30 blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 h-40 w-40 rounded-full bg-indigo-500/28 blur-3xl" />
+      </div>
+
       {/* Header Dropdown */}
       <div className="absolute right-3 z-10 sm:right-4" style={{ top: "calc(env(safe-area-inset-top) + 1.85rem)" }}>
         <HeaderDropdown onMenuSelect={onMenuSelect} />
       </div>
 
       {/* Immediate safety visibility */}
-      <div className="absolute left-2 z-10 sm:left-4" style={{ top: "calc(env(safe-area-inset-top) + 0.5rem)" }}>
+      <div className="absolute left-2 z-10 sm:left-4" style={{ top: "calc(env(safe-area-inset-top) + 1.85rem)" }}>
         <Link
           to="/terms#community-standards"
           className="inline-flex items-center gap-1 rounded-full border border-pink-300/40 bg-black/45 px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-1 sm:text-[11px] font-medium text-pink-100 hover:bg-black/60 transition-colors"

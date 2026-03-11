@@ -1535,7 +1535,28 @@ const SocialFeed: React.FC = () => {
   };
 
   const handleJoinEvent = (eventId: string) => {
-    console.log("Joining event:", eventId);
+    let joinedEventTitle = "";
+
+    setEvents((prev) =>
+      prev.map((event) => {
+        if (event.id !== eventId) return event;
+        if (event.isAttending) return event;
+
+        joinedEventTitle = event.title;
+        return {
+          ...event,
+          isAttending: true,
+          attendees: Math.min(event.maxAttendees, event.attendees + 1),
+        };
+      })
+    );
+
+    if (joinedEventTitle) {
+      toast({
+        title: "RSVP confirmed",
+        description: `Invite a friend to attend with you for ${joinedEventTitle}.`,
+      });
+    }
   };
 
   const applyEventTemplate = (template: (typeof EVENT_TEMPLATES)[number]) => {

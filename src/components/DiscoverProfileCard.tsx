@@ -14,9 +14,30 @@ export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
   const bio = (profile.bio || "").trim();
   const photo = profile.photos?.[0];
   const showPhoto = !!photo && !imageFailed;
+  const privacy = (profile.privacy_settings ?? {}) as Record<string, any>;
+  const socialCircles = Array.isArray(privacy.social_circles)
+    ? privacy.social_circles.filter((value: unknown): value is string => typeof value === "string")
+    : [];
+  const trustCount =
+    typeof privacy.trusted_endorsements_count === "number"
+      ? privacy.trusted_endorsements_count
+      : Array.isArray(privacy.trusted_endorsements)
+        ? privacy.trusted_endorsements.length
+        : 0;
+  const socialProofItems = [
+    socialCircles[0]
+      ? { label: "Circle Member", value: `${socialCircles[0]} Circle` }
+      : null,
+    trustCount > 0
+      ? {
+          label: "Trusted Connection",
+          value: trustCount >= 5 ? "Community-endorsed" : "Trust growing",
+        }
+      : null,
+  ].filter(Boolean) as Array<{ label: string; value: string }>;
 
   return (
-    <Card className="bg-violet-950/90 border-violet-400/35 text-white overflow-hidden shadow-xl">
+    <Card className="glass-pride overflow-hidden border-white/10 text-white shadow-xl">
       {showPhoto ? (
         <div className="h-44 w-full">
           <img
@@ -51,6 +72,22 @@ export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
         />
 
         <KindnessReputationPill privacySettings={profile.privacy_settings} />
+
+        {socialProofItems.length > 0 ? (
+          <div className="grid gap-2">
+            {socialProofItems.map((item) => (
+              <div
+                key={`${item.label}-${item.value}`}
+                className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2"
+              >
+                <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-pink-200/75">
+                  {item.label}
+                </div>
+                <div className="mt-1 text-sm text-white/92">{item.value}</div>
+              </div>
+            ))}
+          </div>
+        ) : null}
 
         {bio ? (
           <div className="text-sm text-white/85 line-clamp-3">{bio}</div>
