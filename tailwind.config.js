@@ -1,9 +1,10 @@
 import path from "path";
+import { fileURLToPath } from "url";
 import animate from "tailwindcss-animate";
 import typography from "@tailwindcss/typography";
 
 /** @type {import('tailwindcss').Config} */
-const rootDir = process.cwd();
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default {
   darkMode: ["class"],
