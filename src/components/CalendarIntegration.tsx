@@ -241,6 +241,34 @@ const downloadIcs = (event: CalendarEventRow) => {
   window.URL.revokeObjectURL(url);
 };
 
+const getCalendarFunctionErrorMessage = (error: unknown, action: "connect" | "sync" | "status") => {
+  const rawMessage =
+    error instanceof Error
+      ? error.message
+      : typeof error === "string"
+        ? error
+        : "";
+
+  const normalized = rawMessage.toLowerCase();
+
+  if (
+    normalized.includes("failed to send a request to the edge function") ||
+    normalized.includes("failed to fetch") ||
+    normalized.includes("networkerror") ||
+    normalized.includes("fetch")
+  ) {
+    if (action === "connect") {
+      return "Calendar connection is not available right now. You can still create events here and use Google, Outlook, or Apple .ics export below.";
+    }
+    if (action === "sync") {
+      return "Calendar sync is not available right now. Your events are still saved locally in the app.";
+    }
+    return "Calendar services are temporarily unavailable. Local events still work in the app.";
+  }
+
+  return rawMessage || "Please try again.";
+};
+
 const CalendarIntegration: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -333,10 +361,17 @@ const CalendarIntegration: React.FC = () => {
     setLoading(true);
     try {
       await Promise.all([loadStatus(), loadEvents(), loadJoinedCircles()]);
+    } catch (error) {
+      console.error("Failed to load calendar integration:", error);
+      toast({
+        variant: "destructive",
+        title: "Calendar unavailable",
+        description: getCalendarFunctionErrorMessage(error, "status"),
+      });
     } finally {
       setLoading(false);
     }
-  }, [loadEvents, loadJoinedCircles, loadStatus, user]);
+  }, [loadEvents, loadJoinedCircles, loadStatus, toast, user]);
 
   const runSync = useCallback(
     async (payload?: Record<string, unknown>, options?: { silent?: boolean }) => {
@@ -380,7 +415,7 @@ const CalendarIntegration: React.FC = () => {
           toast({
             variant: "destructive",
             title: "Sync failed",
-            description: error?.message || "Could not sync calendars.",
+            description: getCalendarFunctionErrorMessage(error, "sync"),
           });
         }
       } finally {
@@ -496,7 +531,7 @@ const CalendarIntegration: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Connection failed",
-        description: error?.message || `Could not connect ${provider}.`,
+        description: getCalendarFunctionErrorMessage(error, "connect"),
       });
     } finally {
       setConnectingProvider(null);
