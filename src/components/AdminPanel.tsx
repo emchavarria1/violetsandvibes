@@ -231,12 +231,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
 
       toast({
         title: decision === 'approved' ? t('approve') : t('reject'),
-        description: `${suggestion.name} was ${decision}.`,
+        description:
+          decision === 'approved'
+            ? t('suggestionApproved', { name: suggestion.name })
+            : t('suggestionRejected', { name: suggestion.name }),
       });
     } catch (error) {
       console.error('Failed to review circle suggestion:', error);
       toast({
-        title: 'Review failed',
+        title: t('reviewFailed'),
         description: error instanceof Error ? error.message : 'Please try again.',
         variant: 'destructive',
       });
@@ -267,14 +270,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
         title: decision === 'approve' ? t('approved') : t('rejected'),
         description:
           data?.targetUserId === item.userId
-            ? `${item.name} was updated successfully.`
-            : 'Decision saved.',
+            ? t('memberUpdatedSuccessfully', { name: item.name })
+            : t('decisionSaved'),
       });
     } catch (error) {
       const message = await resolveFunctionErrorMessage(error);
       console.error('Failed to save verification decision:', error);
       toast({
-        title: 'Decision failed',
+        title: t('decisionFailed'),
         description: message || 'Please try again.',
         variant: 'destructive',
       });
