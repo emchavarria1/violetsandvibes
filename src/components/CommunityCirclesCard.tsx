@@ -3,10 +3,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CalendarDays, HeartHandshake, MessageCircleMore, PawPrint, Sparkles, Users, BookOpen, Mountain, Briefcase, Rainbow, Laptop, Palette, Baby, Leaf } from "lucide-react";
+import { CalendarDays, HeartHandshake, MessageCircleMore, PawPrint, Sparkles, Users, BookOpen, Mountain, Briefcase, Rainbow, Laptop, Palette, Baby, Leaf, Flame } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/lib/i18n";
 
 export type Circle = {
   name: string;
@@ -142,6 +143,7 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
 }) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [showSuggestForm, setShowSuggestForm] = useState(false);
   const [suggestedCircleName, setSuggestedCircleName] = useState("");
   const [suggestionNote, setSuggestionNote] = useState("");
@@ -221,54 +223,53 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
           <div>
             <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-pink-300/25 bg-pink-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-pink-100">
               <Users className="h-3.5 w-3.5" />
-              Community Circles
+              {t("communityCircles")}
             </div>
             <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-              Dating + friendship + community
+              {t("datingFriendshipCommunity")}
             </h3>
             <p className="mt-2 max-w-3xl text-sm sm:text-base text-white/75">
-              Circles keep people engaged even when they do not match quickly. Each circle blends posts,
-              meetups, chats, and member lists so the app keeps momentum through real community.
+              {t("communityCirclesDescription")}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button className="bg-pink-500 text-white hover:bg-pink-400">
               <Sparkles className="mr-2 h-4 w-4" />
-              Create a Circle
+              {t("createCircle")}
             </Button>
             <Button
               variant="outline"
               className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
               onClick={() => setShowSuggestForm((prev) => !prev)}
             >
-              Suggest a Circle
+              {t("suggestCircle")}
             </Button>
             <Button
               variant="outline"
               className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
             >
-              Browse all Circles
+              {t("browseAllCircles")}
             </Button>
           </div>
         </div>
 
         {showSuggestForm ? (
           <div className="mb-4 rounded-2xl border border-white/12 bg-white/5 p-4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.16)]">
-            <div className="text-sm font-semibold text-white">Suggest a Circle</div>
+            <div className="text-sm font-semibold text-white">{t("suggestCircle")}</div>
             <div className="mt-1 text-sm text-white/70">
-              Suggest ideas like <span className="text-white/85">Women in Tech</span>, <span className="text-white/85">Divorced &amp; Rebuilding</span>, or <span className="text-white/85">Dog Moms 🐾</span>. Admins and moderators review suggestions before they go live.
+              {t("suggestCircleHelp")}
             </div>
             <div className="mt-3 flex flex-col gap-2 sm:flex-row">
               <Input
                 value={suggestedCircleName}
                 onChange={(event) => setSuggestedCircleName(event.target.value)}
-                placeholder="Suggest a circle idea"
+                placeholder={t("suggestCircleIdea")}
                 className="border-white/15 bg-black/20 text-white placeholder:text-white/45"
               />
               <Input
                 value={suggestionNote}
                 onChange={(event) => setSuggestionNote(event.target.value)}
-                placeholder="Optional note for moderators"
+                placeholder={t("optionalNoteForModerators")}
                 className="border-white/15 bg-black/20 text-white placeholder:text-white/45"
               />
               <Button
@@ -277,12 +278,12 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
                 disabled={!suggestedCircleName.trim() || !user?.id || submittingSuggestion}
                 className="bg-pink-500 text-white hover:bg-pink-400"
               >
-                {submittingSuggestion ? "Submitting..." : "Submit idea"}
+                {submittingSuggestion ? t("submitting") : t("submitIdea")}
               </Button>
             </div>
             {!user ? (
               <div className="mt-2 text-xs text-white/55">
-                Sign in to submit a circle suggestion.
+                {t("signInToSubmitCircleSuggestion")}
               </div>
             ) : null}
           </div>
@@ -291,7 +292,7 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
         <div className="mb-4 rounded-2xl border border-white/12 bg-white/5 p-4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.16)]">
           <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-pink-100/90">
             <Sparkles className="h-4 w-4 text-pink-300" />
-            Trending Circles
+            {t("trendingCircles")}
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
             {trendingCircles.map((circle) => (
@@ -314,7 +315,7 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
             className={activeCircle === null ? "bg-white text-violet-950 hover:bg-white/90" : "border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"}
             onClick={() => onSelectCircle(null)}
           >
-            All Circles
+            {t("allCircles")}
           </Button>
           {communityCircles.map((circle) => (
             <Button
@@ -341,18 +342,27 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
                 <div>
                   <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-violet-100">
                     {circle.icon}
-                    Circle
+                    {t("circle")}
                   </div>
                   <h4 className="mt-3 text-lg font-semibold text-white">{circle.name}</h4>
                   <p className="mt-2 text-sm text-white/78">{circle.description}</p>
                   <div className="mt-3 space-y-1.5 text-sm text-white/78">
-                    <div>🔥 {circle.activity.postsToday} new post{circle.activity.postsToday === 1 ? "" : "s"} today</div>
-                    <div>💬 {circle.activity.activeChats} active chats</div>
-                    <div>📅 {circle.activity.meetupNote}</div>
+                    <div className="flex items-center gap-2">
+                      <Flame className="h-4 w-4 text-pink-300" />
+                      <span>{t("newPostsToday", { count: circle.activity.postsToday })}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MessageCircleMore className="h-4 w-4 text-sky-300" />
+                      <span>{t("activeChats", { count: circle.activity.activeChats })}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CalendarDays className="h-4 w-4 text-amber-300" />
+                      <span>{circle.activity.meetupNote}</span>
+                    </div>
                   </div>
                 </div>
                 <Badge className="border-white/14 bg-white/8 text-white">
-                  {circle.stats.members} members
+                  {circle.stats.members} {t("members")}
                 </Badge>
               </div>
 
@@ -360,28 +370,28 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
                 <div className="rounded-2xl border border-white/10 bg-white/4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)] p-3">
                   <div className="flex items-center gap-2 text-white/70">
                     <MessageCircleMore className="h-4 w-4 text-white/70" />
-                    Chats
+                    {t("chats")}
                   </div>
                   <div className="mt-1 text-lg font-semibold text-white">{circle.stats.chats}</div>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)] p-3">
                   <div className="flex items-center gap-2 text-white/70">
                     <CalendarDays className="h-4 w-4 text-white/70" />
-                    Meetups
+                    {t("meetups")}
                   </div>
                   <div className="mt-1 text-lg font-semibold text-white">{circle.stats.meetups}</div>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)] p-3">
                   <div className="flex items-center gap-2 text-white/70">
                     <Sparkles className="h-4 w-4 text-white/70" />
-                    Posts
+                    {t("posts")}
                   </div>
                   <div className="mt-1 text-lg font-semibold text-white">{circle.stats.posts}</div>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)] p-3">
                   <div className="flex items-center gap-2 text-white/70">
                     <Users className="h-4 w-4 text-white/70" />
-                    Member list
+                    {t("memberList")}
                   </div>
                   <div className="mt-1 text-lg font-semibold text-white">{circle.stats.members}</div>
                 </div>
@@ -390,22 +400,22 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
               <div className="flex gap-2">
                 <Button
                   className={isJoined ? "flex-1 bg-emerald-300 text-emerald-950 hover:bg-emerald-200" : "flex-1 bg-white text-violet-950 hover:bg-white/90"}
-                  onClick={() => onToggleJoin(circle.name)}
+                  onClick={() => {
+                    if (isJoined) {
+                      onSelectCircle(circle.name);
+                      return;
+                    }
+
+                    onToggleJoin(circle.name);
+                  }}
                 >
-                  {isJoined ? "Joined" : "Join this circle"}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white"
-                  onClick={() => onSelectCircle(circle.name)}
-                >
-                  Open
+                  {isJoined ? t("openCircle") : t("joinCircle")}
                 </Button>
               </div>
               {isJoined ? (
                 <div className="rounded-2xl border border-pink-300/15 bg-pink-400/10 p-3">
                   <div className="text-sm font-medium text-pink-50">
-                    Invite friends to grow this circle
+                    {t("inviteFriendsToGrowThisCircle")}
                   </div>
                   <Button
                     type="button"
@@ -414,7 +424,7 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
                     className="mt-3 w-full border-pink-300/20 bg-white/5 text-pink-50 hover:bg-white/10"
                     onClick={() => void handleInviteFriends(circle.name)}
                   >
-                    Invite friends
+                    {t("inviteFriends")}
                   </Button>
                 </div>
               ) : null}

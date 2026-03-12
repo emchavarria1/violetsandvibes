@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Bell, Heart, MessageCircle, Calendar, Settings } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/lib/i18n";
 
 type NotificationRow = {
   id: string;
@@ -103,6 +104,7 @@ function snippet(text?: string | null, max = 80) {
 const NotificationCenter: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t, locale } = useI18n();
 
   const [notifications, setNotifications] = useState<HydratedNotification[]>([]);
   const [loading, setLoading] = useState(true);
@@ -114,6 +116,30 @@ const NotificationCenter: React.FC = () => {
 
   // UI-only toggle (real push later)
   const [pushEnabled, setPushEnabled] = useState(true);
+
+  const formatTimeAgo = (iso?: string) => {
+    if (!iso) return t("justNow");
+
+    const d = new Date(iso);
+    const diff = Date.now() - d.getTime();
+    const s = Math.floor(diff / 1000);
+
+    if (s < 10) return t("justNow");
+
+    try {
+      const formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+      if (s < 60) return formatter.format(-s, "second");
+      const m = Math.floor(s / 60);
+      if (m < 60) return formatter.format(-m, "minute");
+      const h = Math.floor(m / 60);
+      if (h < 24) return formatter.format(-h, "hour");
+      const days = Math.floor(h / 24);
+      return formatter.format(-days, "day");
+    } catch (error) {
+      console.warn("RelativeTimeFormat unavailable, falling back:", error);
+      return timeAgo(iso);
+    }
+  };
 
   const formatNotification = (n: any) => {
     const actor = n.actorName || (n.actor_id ? actorNameById[n.actor_id] : undefined) || "Someone";
@@ -142,7 +168,7 @@ const NotificationCenter: React.FC = () => {
         };
       default:
         return {
-          title: "Notification",
+          title: t("notifications"),
           message: "",
         };
     }
@@ -415,7 +441,7 @@ const NotificationCenter: React.FC = () => {
             )}
           </div>
 
-          <h2 className="wedding-heading rainbow-header">Notifications</h2>
+          <h2 className="wedding-heading rainbow-header">{t("notifications")}</h2>
 
           {unreadCount > 0 && (
             <Badge className="bg-pink-500">{unreadCount}</Badge>
@@ -426,7 +452,7 @@ const NotificationCenter: React.FC = () => {
           variant="ghost"
           size="sm"
           onClick={() => navigate("/settings")}
-          title="Settings"
+          title={t("settings")}
         >
           <Settings className="w-4 h-4" />
         </Button>
@@ -436,14 +462,14 @@ const NotificationCenter: React.FC = () => {
       <Card className="bg-black/40 border-white/15 text-white">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm">Push Notifications</CardTitle>
+            <CardTitle className="text-sm">{t("pushNotificationsLabel")}</CardTitle>
             <Button
               variant={pushEnabled ? "default" : "outline"}
               size="sm"
               onClick={() => setPushEnabled(!pushEnabled)}
               className={pushEnabled ? "bg-green-500 hover:bg-green-600" : ""}
             >
-              {pushEnabled ? "On" : "Off"}
+              {pushEnabled ? t("on") : t("off")}
             </Button>
           </div>
         </CardHeader>
@@ -453,9 +479,9 @@ const NotificationCenter: React.FC = () => {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="text-sm text-white/80">
           {loading
-            ? "Loading..."
+            ? t("loading")
             : showUnreadOnly
-              ? `${unreadCount} unread`
+              ? `${unreadCount} ${t("unreadOnly").toLowerCase()}`
               : `${visibleNotifications.length} shown${readCount > 20 ? ` • ${readCount - 20} older read hidden` : ""}`}
         </div>
 
@@ -467,7 +493,7 @@ const NotificationCenter: React.FC = () => {
             disabled={!user || notifications.length === 0}
             className={showUnreadOnly ? "bg-pink-500 hover:bg-pink-600" : "border-white/20 text-white hover:bg-white/10"}
           >
-            {showUnreadOnly ? "Showing unread" : "Unread only"}
+            {showUnreadOnly ? t("showingUnread") : t("unreadOnly")}
           </Button>
           <Button
             size="sm"
@@ -476,7 +502,7 @@ const NotificationCenter: React.FC = () => {
             disabled={!user || unreadCount === 0}
             className="border-white/20 text-white hover:bg-white/10"
           >
-            Mark all read
+            {t("markAllRead")}
           </Button>
           <Button
             size="sm"
@@ -485,7 +511,7 @@ const NotificationCenter: React.FC = () => {
             disabled={!user || readCount === 0}
             className="border-white/20 text-white hover:bg-white/10"
           >
-            Clear read
+            {t("clearRead")}
           </Button>
         </div>
       </div>
@@ -499,7 +525,7 @@ const NotificationCenter: React.FC = () => {
       {/* List */}
       <div className="space-y-4">
         {loading ? (
-          <div className="text-white/70">Loading…</div>
+          <div className="text-white/70">{t("loading")}</div>
         ) : visibleNotifications.length === 0 ? (
           <Card className="bg-black/30 border-white/15 text-white">
             <CardContent className="p-5">
@@ -508,11 +534,11 @@ const NotificationCenter: React.FC = () => {
                   <Bell className="w-5 h-5 text-white/70" />
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold">You’re all caught up</div>
+                  <div className="font-semibold">{t("notificationsCaughtUp")}</div>
                   <div className="text-sm text-white/70 mt-1">
                     {showUnreadOnly
-                      ? "No unread notifications right now."
-                      : "Likes and comments will show up here as they happen."}
+                      ? t("noUnreadNotifications")
+                      : t("notificationsWillShowHere")}
                   </div>
                   <div className="mt-4 flex gap-2">
                     <Button
@@ -520,7 +546,7 @@ const NotificationCenter: React.FC = () => {
                       className="bg-white/10 hover:bg-white/15 text-white"
                       onClick={() => navigate("/social")}
                     >
-                      Go to Social
+                      {t("goToSocial")}
                     </Button>
                     <Button
                       size="sm"
@@ -528,7 +554,7 @@ const NotificationCenter: React.FC = () => {
                       className="border-white/20 text-white hover:bg-white/10"
                       onClick={loadNotifications}
                     >
-                      Refresh
+                      {t("refresh")}
                     </Button>
                   </div>
                 </div>
@@ -539,7 +565,7 @@ const NotificationCenter: React.FC = () => {
           grouped.map((group) => (
             <div key={group.key} className="space-y-3">
               <div className="text-xs uppercase tracking-wide text-white/60 px-1">
-                {group.key}
+                {group.key === "New" ? t("newGroup") : group.key === "Today" ? t("today") : group.key === "This week" ? t("thisWeek") : t("earlier")}
               </div>
 
               {group.items.map((n) => {
@@ -571,7 +597,7 @@ const NotificationCenter: React.FC = () => {
 
                             <div className="flex items-center gap-2 shrink-0">
                               <span className="text-xs text-white/60">
-                                {timeAgo(n.created_at)}
+                                {formatTimeAgo(n.created_at)}
                               </span>
                               {unread && (
                                 <span className="h-2 w-2 rounded-full bg-red-500" />
@@ -581,7 +607,7 @@ const NotificationCenter: React.FC = () => {
 
                           {n.type === "post_like" && (
                             <div className="mt-2 text-xs text-white/60">
-                              Tap to view the post
+                              {t("tapToViewPost")}
                             </div>
                           )}
                         </div>
@@ -603,7 +629,7 @@ const NotificationCenter: React.FC = () => {
           onClick={() => void loadNotifications()}
           disabled={!user}
         >
-          Refresh
+          {t("refresh")}
         </Button>
       </div>
     </div>

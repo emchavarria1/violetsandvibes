@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useNotifications } from "@/hooks/useNotifications";
+import { useI18n } from "@/lib/i18n";
 import { 
   Compass, 
   Heart, 
@@ -14,17 +15,18 @@ import {
 const BottomNavigation: React.FC = () => {
   const location = useLocation();
   const { unreadCount } = useNotifications();
+  const { t } = useI18n();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   
   const navItems = [
-    { path: '/discover', icon: Compass, label: 'Discover' },
-    { path: '/matches', icon: Heart, label: 'Matches' },
-    { path: '/chat', icon: MessageCircle, label: 'Chat' },
-    { path: '/notifications', icon: Bell, label: 'Alerts' },
-    { path: '/social', icon: Users, label: 'Social' },
-    { path: '/calendar', icon: Calendar, label: 'Calendar' },
-    { path: '/profile', icon: User, label: 'Profile' }
+    { path: '/discover', icon: Compass, label: t('discover') },
+    { path: '/matches', icon: Heart, label: t('matches') },
+    { path: '/chat', icon: MessageCircle, label: t('chat') },
+    { path: '/notifications', icon: Bell, label: t('alerts') },
+    { path: '/social', icon: Users, label: t('social') },
+    { path: '/calendar', icon: Calendar, label: t('calendar') },
+    { path: '/profile', icon: User, label: t('profile') }
   ];
 
   useEffect(() => {

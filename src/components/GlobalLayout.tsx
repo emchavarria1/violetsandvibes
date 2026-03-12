@@ -3,6 +3,7 @@ import { PrideHeader } from './PrideHeader';
 import { BottomNavigation } from './BottomNavigation';
 import { ResponsiveWrapper } from './ResponsiveWrapper';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useI18n } from '@/lib/i18n';
 
 interface GlobalLayoutProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useI18n();
 
   const handleMenuSelect = (action: string) => {
     switch (action) {
@@ -143,7 +145,7 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
         return (
           <div className="vv-global-header-shell space-y-2 text-center">
             <div className="vv-global-header-label vv-global-header-flow">
-              Messages
+              {t('messages')}
             </div>
             <div className="vv-global-header-primary vv-global-header-flow">
               Violets &amp; Vibes

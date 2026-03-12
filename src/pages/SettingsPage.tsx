@@ -40,6 +40,7 @@ import PricingTiers from '@/components/PricingTiers';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/components/theme-provider';
 import { applyAppPreferences, DEFAULT_APP_PREFERENCES, normalizeAppPreferences } from '@/lib/appPreferences';
+import { useI18n } from '@/lib/i18n';
 import {
   applyAdminBypassTier,
   isAdminBypassUser,
@@ -174,6 +175,7 @@ const SettingsPage: React.FC = () => {
   const { toast } = useToast();
   const { user, signOut } = useAuth();
   const { setTheme } = useTheme();
+  const { t } = useI18n();
   
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>('free');
   
@@ -365,7 +367,7 @@ const SettingsPage: React.FC = () => {
   };
 
   const handleSignOut = async () => {
-    if (confirm('Are you sure you want to sign out?')) {
+    if (confirm(`${t('signOut')}?`)) {
       await signOut();
       navigate('/signin');
     }
@@ -417,36 +419,65 @@ const SettingsPage: React.FC = () => {
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
   };
 
+  const notificationGroupTitle = (title: string) =>
+    title === 'Activity' ? t('activity') : title === 'Communication' ? t('communication') : title;
+
+  const notificationLabel = (label: string) => {
+    switch (label) {
+      case 'Matches': return t('matches');
+      case 'Messages': return t('messages');
+      case 'Likes': return t('likes');
+      case 'Events': return t('events');
+      case 'Push notifications': return t('pushNotifications');
+      case 'Email notifications': return t('emailNotifications');
+      case 'SMS notifications': return t('smsNotifications');
+      case 'Marketing': return t('marketing');
+      default: return label;
+    }
+  };
+
+  const appPreferenceLabel = (label: string) => {
+    switch (label) {
+      case 'Dark Mode': return 'Dark Mode';
+      case 'Reduced Motion': return 'Reduced Motion';
+      case 'High Contrast': return 'High Contrast';
+      case 'Large Text': return 'Large Text';
+      case 'Auto Play Videos': return 'Auto Play Videos';
+      case 'Sound Effects': return 'Sound Effects';
+      default: return label;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 p-4">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Settings</h1>
+            <h1 className="text-3xl font-bold">{t('settingsPageTitle')}</h1>
             <p className="text-sm text-gray-600 mt-1">
               {loadingGeneral
-                ? 'Loading settings...'
+                ? t('loadingSettings')
                 : saveStatus === 'saving'
-                ? 'Saving changes...'
+                ? t('savingChanges')
                 : saveStatus === 'saved'
-                ? 'All changes saved'
+                ? t('allChangesSaved')
                 : saveStatus === 'error'
-                ? 'Save issue. Changes may not persist.'
-                : 'Changes save automatically'}
+                ? t('saveIssueMayNotPersist')
+                : t('changesSaveAutomatically')}
             </p>
           </div>
           <Button variant="ghost" onClick={() => navigate(-1)}>
-            Done
+            {t('done')}
           </Button>
         </div>
 
         <Tabs defaultValue="general" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="privacy">Privacy</TabsTrigger>
-            <TabsTrigger value="payments">Payments</TabsTrigger>
-            <TabsTrigger value="account">Account</TabsTrigger>
+            <TabsTrigger value="general">{t('general')}</TabsTrigger>
+            <TabsTrigger value="privacy">{t('privacy')}</TabsTrigger>
+            <TabsTrigger value="payments">{t('payments')}</TabsTrigger>
+            <TabsTrigger value="account">{t('account')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general" className="space-y-6">
@@ -455,22 +486,22 @@ const SettingsPage: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Bell className="w-5 h-5" />
-                  Notifications
+                  {t('notifications')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {NOTIFICATION_GROUPS.map(({ title, items }) => (
                   <div key={title} className="space-y-4">
                     <div className="text-sm font-semibold tracking-wide text-gray-700 uppercase">
-                      {title}
+                      {notificationGroupTitle(title)}
                     </div>
                     <div className="space-y-4">
                       {items.map(({ key, label, description }) => (
                         <div key={key} className="flex justify-between items-start gap-4">
                           <div className="space-y-1">
-                            <div>{label}</div>
+                            <div>{notificationLabel(label)}</div>
                             {description ? (
-                              <div className="text-xs text-gray-600">{description}</div>
+                              <div className="text-xs text-gray-600">{description === 'Promotions and updates' ? t('promotionsAndUpdates') : description}</div>
                             ) : null}
                           </div>
                           <Switch 
@@ -491,16 +522,16 @@ const SettingsPage: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Smartphone className="w-5 h-5" />
-                  App Preferences
+                  {t('appPreferences')}
                 </CardTitle>
                 <p className="text-sm text-gray-600">
-                  Customize how the app looks and behaves on your device.
+                  {t('appPreferencesDescription')}
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 {APP_PREFERENCE_ITEMS.map(({ key, label }) => (
                   <div key={key} className="flex justify-between items-center">
-                    <span>{label}</span>
+                    <span>{appPreferenceLabel(label)}</span>
                     <Switch 
                       checked={settings.app[key]}
                       onCheckedChange={(checked) => updateAppSetting(key, checked)}
@@ -516,7 +547,7 @@ const SettingsPage: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Heart className="w-5 h-5" />
-                  Matching Preferences
+                  {t('matchingPreferences')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -540,7 +571,7 @@ const SettingsPage: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Eye className="w-5 h-5" />
-                  Privacy Controls
+                  {t('privacyControls')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -565,7 +596,7 @@ const SettingsPage: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="w-5 h-5" />
-                  Safety & Security
+                  {t('safetySecurity')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -588,14 +619,14 @@ const SettingsPage: React.FC = () => {
             <Card>
               <CardContent className="pt-6">
                 <div className="text-sm text-gray-700">
-                  Photo/ID verification status is managed on the Verification page.
+                  {t('verificationStatusManaged')}
                 </div>
                 <Button
                   variant="outline"
                   className="mt-3"
                   onClick={() => navigate('/verification')}
                 >
-                  Open Verification
+                  {t('openVerification')}
                 </Button>
               </CardContent>
             </Card>
@@ -615,7 +646,7 @@ const SettingsPage: React.FC = () => {
             {/* Pricing Comparison */}
             <Card>
               <CardHeader>
-                <CardTitle>Available Plans</CardTitle>
+                <CardTitle>{t('availablePlans')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <PricingTiers 
@@ -634,7 +665,7 @@ const SettingsPage: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="w-5 h-5" />
-                  Account Management
+                  {t('accountManagement')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -644,8 +675,8 @@ const SettingsPage: React.FC = () => {
                   onClick={() => navigate('/edit-profile')}
                 >
                   <div className="text-left">
-                    <div>Edit Profile</div>
-                    <div className="text-xs text-gray-600">Update photos, bio, and profile details.</div>
+                    <div>{t('editProfile')}</div>
+                    <div className="text-xs text-gray-600">{t('editProfileDescription')}</div>
                   </div>
                   <ChevronRight className="w-4 h-4" />
                 </Button>
@@ -655,8 +686,8 @@ const SettingsPage: React.FC = () => {
                   onClick={() => navigate('/verification')}
                 >
                   <div className="text-left">
-                    <div>Verification</div>
-                    <div className="text-xs text-gray-600">Manage your identity and photo verification status.</div>
+                    <div>{t('verification')}</div>
+                    <div className="text-xs text-gray-600">{t('verificationDescription')}</div>
                   </div>
                   <ChevronRight className="w-4 h-4" />
                 </Button>
@@ -667,8 +698,8 @@ const SettingsPage: React.FC = () => {
                   disabled={deletingAccount}
                 >
                   <div className="text-left">
-                    <div>{deletingAccount ? 'Deleting Account…' : 'Delete Account'}</div>
-                    <div className="text-xs text-red-500/80">Permanent action. This cannot be undone.</div>
+                    <div>{deletingAccount ? t('deletingAccount') : t('deleteAccount')}</div>
+                    <div className="text-xs text-red-500/80">{t('deleteAccountDescription')}</div>
                   </div>
                   <ChevronRight className="w-4 h-4" />
                 </Button>
@@ -684,7 +715,7 @@ const SettingsPage: React.FC = () => {
                   onClick={handleSignOut}
                 >
                   <LogOut className="w-4 h-4 mr-2" />
-                  Sign Out
+                  {t('signOut')}
                 </Button>
               </CardContent>
             </Card>
@@ -702,16 +733,15 @@ const SettingsPage: React.FC = () => {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-red-600">Delete Account Permanently</DialogTitle>
+            <DialogTitle className="text-red-600">{t('deleteAccountPermanently')}</DialogTitle>
             <DialogDescription>
-              This deletes your account, profile, photos, messages, likes/matches, and related data.
-              This action cannot be undone.
+              {t('deleteAccountDialogDescription')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-2">
             <label htmlFor="delete-confirm-input" className="text-sm font-medium text-foreground">
-              Type <span className="font-bold tracking-wide">DELETE</span> to confirm:
+              {t('typeToConfirm')} <span className="font-bold tracking-wide">DELETE</span> {t('toConfirm')}
             </label>
             <Input
               id="delete-confirm-input"
@@ -733,7 +763,7 @@ const SettingsPage: React.FC = () => {
               }}
               disabled={deletingAccount}
             >
-              Cancel
+              {t('cancel')}
             </Button>
             <Button
               type="button"
@@ -741,7 +771,7 @@ const SettingsPage: React.FC = () => {
               onClick={handleDeleteAccount}
               disabled={deletingAccount || deleteConfirmText !== 'DELETE'}
             >
-              {deletingAccount ? 'Deleting Account…' : 'Delete Account'}
+              {deletingAccount ? t('deletingAccount') : t('deleteAccount')}
             </Button>
           </DialogFooter>
         </DialogContent>

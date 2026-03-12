@@ -6,6 +6,7 @@ import { Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getVerificationState } from "@/lib/verification";
 import { shareBadgeCard } from "@/lib/shareBadgeCard";
+import { useI18n } from "@/lib/i18n";
 
 type ScoreInput = {
   profileCompleted?: boolean | null;
@@ -119,6 +120,7 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
   compact = false,
   displayName,
 }) => {
+  const { t } = useI18n();
   const { toast } = useToast();
   const result = buildSafetyScore(data);
   const shareLabel =
@@ -159,7 +161,7 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
           <ShieldCheck className="mr-1.5 h-3.5 w-3.5" />
           {result.badgeLabel}
         </Badge>
-        <span className="text-xs text-white/70">Safety Score {result.score}</span>
+        <span className="text-xs text-white/70">{t("safetyScore")} {result.score}</span>
       </div>
     );
   }
@@ -170,7 +172,7 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">
             <ShieldCheck className="h-3.5 w-3.5" />
-            Safety Score
+            {t("safetyScore")}
           </div>
           <div className="mt-3 flex items-center gap-3">
             <div className="text-3xl font-semibold text-white">{result.score}</div>
@@ -191,7 +193,7 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
           onClick={() => void handleShare()}
         >
           <Share2 className="mr-2 h-4 w-4" />
-          Share badge
+          {t("shareBadge")}
         </Button>
       </div>
 

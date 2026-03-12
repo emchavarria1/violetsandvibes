@@ -5,33 +5,36 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedLogo } from "@/components/AnimatedLogo";
 import { CalendarDays, HeartHandshake, MessageCircleHeart, ShieldCheck, Users } from "lucide-react";
-
-const pillars = [
-  {
-    icon: ShieldCheck,
-    title: "Safety-first by design",
-    body: "Verification, boundaries, reporting tools, and community standards that stay visible.",
-  },
-  {
-    icon: MessageCircleHeart,
-    title: "Connection with intention",
-    body: "Dating, friendship, and meaningful conversations without the usual chaos.",
-  },
-  {
-    icon: Users,
-    title: "Community that retains",
-    body: "Circles, voice intros, and shared spaces keep people engaged beyond matching.",
-  },
-];
-
-const featureRows = [
-  "Women-centered • Inclusive • Safety-first",
-  "Community circles for shared interests",
-  "Voice intros, events, and local meetups",
-  "Respect, kindness, and trust signals built in",
-];
+import { useI18n } from "@/lib/i18n";
 
 const HeroesPage: React.FC = () => {
+  const { t } = useI18n();
+
+  const pillars = [
+    {
+      icon: ShieldCheck,
+      title: t("safetyFirstByDesign"),
+      body: t("safetyFirstByDesignBody"),
+    },
+    {
+      icon: MessageCircleHeart,
+      title: t("connectionWithIntention"),
+      body: t("connectionWithIntentionBody"),
+    },
+    {
+      icon: Users,
+      title: t("communityThatRetains"),
+      body: t("communityThatRetainsBody"),
+    },
+  ];
+
+  const featureRows = [
+    t("womenCenteredInclusiveSafetyFirstShort"),
+    t("communityCirclesForSharedInterests"),
+    t("voiceIntrosEventsMeetups"),
+    t("respectKindnessTrustSignals"),
+  ];
+
   return (
     <div className="page-calm relative min-h-screen overflow-x-hidden">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -76,16 +79,16 @@ const HeroesPage: React.FC = () => {
 
             <div className="mx-auto max-w-4xl text-center">
               <h1 className="vv-global-header-primary vv-global-header-flow">
-                Friendship, dating, and community with intention
+                {t("friendshipDatingCommunityWithIntention")}
               </h1>
               <p className="mt-4 text-base text-pink-50/85 sm:text-lg">
-                A women-centered space for safer connection, real community, and relationships built with care.
+                {t("womenCenteredSpace")}
               </p>
             </div>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Button asChild className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700">
-                <Link to="/signin?redirect=%2Fsocial">Join the Community</Link>
+                <Link to="/signin?redirect=%2Fsocial">{t("joinTheCommunity")}</Link>
               </Button>
               <Button
                 asChild
@@ -94,7 +97,7 @@ const HeroesPage: React.FC = () => {
               >
                 <Link to="/signin?redirect=%2Fsocial&tab=login">
                   <span className="bg-gradient-to-r from-pink-300 via-amber-200 via-emerald-200 via-sky-200 to-fuchsia-300 bg-clip-text text-transparent">
-                    Sign In
+                    {t("signIn")}
                   </span>
                 </Link>
               </Button>
@@ -106,7 +109,7 @@ const HeroesPage: React.FC = () => {
               <Card className="border-white/10 bg-[linear-gradient(180deg,rgba(30,27,75,0.88),rgba(15,23,42,0.92))] text-white shadow-[0_12px_40px_rgba(168,85,247,0.16)]">
                 <CardContent className="p-5">
                   <div className="mb-3 flex items-center gap-2">
-                    <Badge className="border-pink-300/30 bg-gradient-to-r from-pink-500/20 to-violet-500/20 text-pink-50">Why it feels different</Badge>
+                    <Badge className="border-pink-300/30 bg-gradient-to-r from-pink-500/20 to-violet-500/20 text-pink-50">{t("whyItFeelsDifferent")}</Badge>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {featureRows.map((item) => (
@@ -146,34 +149,34 @@ const HeroesPage: React.FC = () => {
               <CardContent className="p-5">
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-200/20 bg-gradient-to-r from-cyan-400/15 to-violet-500/15 px-3 py-1 text-xs uppercase tracking-[0.2em] text-cyan-50/80">
                   <CalendarDays className="h-3.5 w-3.5" />
-                  In the app
+                  {t("inTheApp")}
                 </div>
 
                 <div className="space-y-4">
                   <div className="rounded-2xl border border-cyan-200/10 bg-gradient-to-r from-slate-900/85 to-sky-950/70 p-4">
-                    <div className="text-sm font-medium text-white">Events and calendar</div>
+                    <div className="text-sm font-medium text-white">{t("eventsAndCalendar")}</div>
                     <div className="mt-1 text-sm text-white/85">
-                      Create meetups, invite people, and keep Social and Calendar synced.
+                      {t("eventsAndCalendarBody")}
                     </div>
                   </div>
 
                   <div className="rounded-2xl border border-violet-200/10 bg-gradient-to-r from-slate-900/85 to-violet-950/70 p-4">
-                    <div className="text-sm font-medium text-white">Chats with prompts</div>
+                    <div className="text-sm font-medium text-white">{t("chatsWithPrompts")}</div>
                     <div className="mt-1 text-sm text-white/85">
-                      Empty-thread starters, prompt shortcuts, and safer conversation framing.
+                      {t("chatsWithPromptsBody")}
                     </div>
                   </div>
 
                   <div className="rounded-2xl border border-pink-200/10 bg-gradient-to-r from-slate-900/85 to-rose-950/70 p-4">
-                    <div className="text-sm font-medium text-white">Trust signals</div>
+                    <div className="text-sm font-medium text-white">{t("trustSignals")}</div>
                     <div className="mt-1 text-sm text-white/85">
-                      Safety score, kindness endorsements, and respect-centered profile reputation.
+                      {t("trustSignalsBody")}
                     </div>
                   </div>
 
                   <div className="rounded-2xl border border-pink-300/15 bg-gradient-to-br from-slate-900/85 to-fuchsia-950/70 p-4">
                     <div className="text-center text-sm text-pink-100">
-                      Women-centered • Safety-first • Identity-Inclusive
+                      {t("womenCenteredSafetyFirstIdentityInclusive")}
                     </div>
                   </div>
                 </div>
@@ -184,16 +187,16 @@ const HeroesPage: React.FC = () => {
           <div className="border-t border-white/10 px-5 py-4 sm:px-8">
             <div className="grid grid-cols-2 gap-3 text-center text-sm sm:grid-cols-4">
               <Link className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white" to="/privacy">
-                Privacy Policy
+                {t("privacyPolicy")}
               </Link>
               <Link className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white" to="/terms">
-                Terms of Service
+                {t("termsOfService")}
               </Link>
               <Link className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white" to="/data-deletion">
-                Data Deletion
+                {t("dataDeletion")}
               </Link>
               <Link className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white" to="/contact">
-                Contact Us
+                {t("contactUs")}
               </Link>
             </div>
           </div>

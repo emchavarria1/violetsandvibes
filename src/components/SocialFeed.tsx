@@ -10,6 +10,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { Link, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useI18n } from "@/lib/i18n";
 
 type PostRow = {
   id: string;
@@ -160,6 +161,7 @@ function formatEventTimeRange(startIso: string, endIso: string) {
 }
 
 const SocialFeed: React.FC = () => {
+  const { t } = useI18n();
   const { user } = useAuth();
   const location = useLocation();
   const { toast } = useToast();
@@ -505,7 +507,7 @@ const SocialFeed: React.FC = () => {
       setEvents(mapped);
     } catch (e: any) {
       console.error(e);
-      setEventsError(e?.message || "Failed to load events");
+        setEventsError(e?.message || "Failed to load events");
     } finally {
       setEventsLoading(false);
     }
@@ -1181,7 +1183,7 @@ const SocialFeed: React.FC = () => {
 
   const deletePost = async (postId: string) => {
     if (!user) return;
-    if (!window.confirm("Delete this post? This cannot be undone.")) return;
+    if (!window.confirm(t("deletePostConfirm"))) return;
 
     setPostActionLoadingById((prev) => ({ ...prev, [postId]: true }));
     setError(null);
@@ -1651,11 +1653,11 @@ const SocialFeed: React.FC = () => {
             <CardContent className="p-4">
               {activeCircle ? (
                 <div className="mb-3 inline-flex items-center rounded-full border border-pink-300/25 bg-pink-400/10 px-3 py-1 text-xs font-medium text-pink-100">
-                  Posting into {activeCircle}
+                  {t("postingInto", { circle: activeCircle })}
                 </div>
               ) : null}
               <Textarea
-                placeholder="Share something with the community..."
+                placeholder={t("shareSomethingWithTheCommunity")}
                 value={newPost}
                 onChange={(e) => setNewPost(e.target.value)}
                 className="mb-3 bg-violet-900/70 border-violet-500/50 text-white placeholder:text-white/70 focus-visible:border-violet-300"
@@ -1668,7 +1670,7 @@ const SocialFeed: React.FC = () => {
                   disabled={!newPost.trim() || posting}
                   className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
                 >
-                  {posting ? "Posting…" : "Share Post"}
+                  {posting ? t("posting") : t("sharePost")}
                 </Button>
               </div>
               {error && <div className="text-sm text-red-300 mt-2">{error}</div>}
@@ -1677,12 +1679,12 @@ const SocialFeed: React.FC = () => {
 
           {/* Feed */}
           {loading ? (
-            <div className="text-white/80">Loading feed…</div>
+            <div className="text-white/80">{t("loadingFeed")}</div>
           ) : filteredPosts.length === 0 ? (
             <div className="text-white/80">
               {activeCircle
-                ? `No posts in ${activeCircle} yet. Start the conversation.`
-                : "No posts yet. Be the first to share something 💜"}
+                ? t("noPostsInCircleYet", { circle: activeCircle })
+                : `${t("noPostsYet")} 💜`}
             </div>
           ) : (
             filteredPosts.map((post) => {
@@ -1723,20 +1725,20 @@ const SocialFeed: React.FC = () => {
                             {timeAgo(post.created_at)}
                           </p>
                           {post.edited_at && !isCollapsedCardView ? (
-                            <p className="text-xs text-white/50">edited {timeAgo(post.edited_at)}</p>
+                            <p className="text-xs text-white/50">{t("editSaved")} {timeAgo(post.edited_at)}</p>
                           ) : null}
                         </div>
                       </div>
 
                       {post._optimistic && (
                         <span className="text-xs px-2 py-1 rounded-full bg-white/10 border border-white/15 text-white/80">
-                          Posting…
+                          {t("postInFlight")}
                         </span>
                       )}
                     </div>
                     <div className="mt-3">
                       <span className="inline-flex rounded-full border border-pink-300/20 bg-pink-400/10 px-2 py-1 text-[11px] font-medium text-pink-100">
-                        {post.circle_name ?? "Open Community"}
+                        {post.circle_name ?? t("openCommunity")}
                       </span>
                     </div>
                   </CardHeader>
@@ -1758,7 +1760,7 @@ const SocialFeed: React.FC = () => {
                               onClick={() => saveEditedPost(post.id)}
                               disabled={postActionLoading || !editingPostBody.trim()}
                             >
-                              {postActionLoading ? "Saving…" : "Save"}
+                              {postActionLoading ? t("saving") : t("save")}
                             </Button>
                             <Button
                               type="button"
@@ -1767,7 +1769,7 @@ const SocialFeed: React.FC = () => {
                               onClick={cancelEditPost}
                               disabled={postActionLoading}
                             >
-                              Cancel
+                              {t("cancel")}
                             </Button>
                           </div>
                         </div>
@@ -1785,12 +1787,12 @@ const SocialFeed: React.FC = () => {
                             {!isCollapsedCardView ? (
                               <span className="text-xs px-2 py-1 rounded-full bg-white/10 border border-white/15 text-white/75">
                                 {isManuallyCollapsed
-                                  ? "Collapsed by author"
-                                  : "Auto-collapsed after 24h"}
+                                  ? t("collapsedByAuthor")
+                                  : t("autoCollapsedAfter24h")}
                               </span>
                             ) : (
                               <span className="text-[11px] text-white/65">
-                                {isManuallyCollapsed ? "Collapsed" : "Auto-collapsed"}
+                                {isManuallyCollapsed ? t("collapsed") : t("autoCollapsed")}
                               </span>
                             )}
                             <button
@@ -1803,7 +1805,7 @@ const SocialFeed: React.FC = () => {
                                 }))
                               }
                             >
-                              {isBodyExpanded ? "Collapse view" : "Show full post"}
+                              {isBodyExpanded ? t("collapseView") : t("showFullPost")}
                             </button>
                           </div>
                         )}
@@ -1852,7 +1854,7 @@ const SocialFeed: React.FC = () => {
                           disabled={postActionLoading}
                           onClick={() => startEditPost(post)}
                         >
-                          Edit
+                          {t("edit")}
                         </button>
                         <button
                           type="button"
@@ -1862,7 +1864,7 @@ const SocialFeed: React.FC = () => {
                             toggleManualPostCollapse(post.id, !isManuallyCollapsed)
                           }
                         >
-                          {isManuallyCollapsed ? "Uncollapse" : "Collapse"}
+                          {isManuallyCollapsed ? t("uncollapse") : t("collapse")}
                         </button>
                         <button
                           type="button"
@@ -1870,7 +1872,7 @@ const SocialFeed: React.FC = () => {
                           disabled={postActionLoading}
                           onClick={() => deletePost(post.id)}
                         >
-                          Delete
+                          {t("delete")}
                         </button>
                       </div>
                     )}
@@ -1879,9 +1881,9 @@ const SocialFeed: React.FC = () => {
                       <div className="mt-4 border-t border-white/20 pt-3 space-y-3">
                       {/* Existing Comments */}
                       {commentsLoadingByPost[post.id] ? (
-                        <div className="text-sm text-white/60">Loading comments…</div>
+                        <div className="text-sm text-white/60">{t("loadingComments")}</div>
                       ) : (commentsByPost[post.id] ?? []).length === 0 ? (
-                        <div className="text-sm text-white/60">No comments yet.</div>
+                        <div className="text-sm text-white/60">{t("noCommentsYet")}</div>
                       ) : (
                         commentsByPost[post.id].map((c) => {
                           const isReplying = replyToByPost[post.id] === c.id;
@@ -1920,7 +1922,7 @@ const SocialFeed: React.FC = () => {
                                     });
                                   }}
                                 >
-                                  Reply
+                                  {t("reply")}
                                 </button>
                               </div>
 
@@ -1934,7 +1936,7 @@ const SocialFeed: React.FC = () => {
                               {isReplying && (
                                 <div className="mt-2 ml-4 flex gap-2">
                                   <Input
-                                    placeholder={`Reply to ${c.authorName || "Member"}…`}
+                                    placeholder={t("replyToMember", { name: c.authorName || "Member" })}
                                     value={replyInputs[`${post.id}:${c.id}`] || ""}
                                     onChange={(e) =>
                                       setReplyInputs((prev) => ({
@@ -1953,7 +1955,7 @@ const SocialFeed: React.FC = () => {
                                       !((replyInputs[`${post.id}:${c.id}`] || "").trim())
                                     }
                                   >
-                                    Send
+                                    {t("send")}
                                   </Button>
                                   <Button
                                     type="button"
@@ -1963,7 +1965,7 @@ const SocialFeed: React.FC = () => {
                                       setReplyToByPost((prev) => ({ ...prev, [post.id]: null }))
                                     }
                                   >
-                                    Cancel
+                                    {t("cancel")}
                                   </Button>
                                 </div>
                               )}
@@ -1975,7 +1977,7 @@ const SocialFeed: React.FC = () => {
                       {/* Add Comment */}
                       <div className="flex gap-2">
                         <Input
-                          placeholder="Write a comment…"
+                          placeholder={t("writeAComment")}
                           value={commentInputs[post.id] || ""}
                           onChange={(e) =>
                             setCommentInputs((prev) => ({
@@ -1986,7 +1988,7 @@ const SocialFeed: React.FC = () => {
                           className="bg-violet-900/50 border-violet-400/40 text-white"
                         />
                         <Button type="button" onClick={() => sendComment(post.id)}>
-                          Comment
+                          {t("comment")}
                         </Button>
                       </div>
                       </div>
@@ -2000,7 +2002,7 @@ const SocialFeed: React.FC = () => {
 
         <aside className="space-y-4">
           <div className="px-1">
-            <h2 className="wedding-heading text-2xl text-white">Events</h2>
+            <h2 className="wedding-heading text-2xl text-white">{t("events")}</h2>
           </div>
 
           <Button
@@ -2008,7 +2010,7 @@ const SocialFeed: React.FC = () => {
             variant="outline"
             className="w-full border-white/20 text-white hover:bg-white/10"
           >
-            <Link to="/calendar">Open Calendar</Link>
+            <Link to="/calendar">{t("openCalendar")}</Link>
           </Button>
 
           <Button
@@ -2016,7 +2018,7 @@ const SocialFeed: React.FC = () => {
             className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Create Event
+            {t("createEvent")}
           </Button>
 
           {showCreateEvent && (
@@ -2024,7 +2026,7 @@ const SocialFeed: React.FC = () => {
               <CardContent className="p-4 space-y-3">
                 <div className="space-y-2">
                   <div className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">
-                    Real-world event ideas
+                    {t("realWorldEventIdeas")}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {EVENT_TEMPLATES.map((template) => (
@@ -2043,12 +2045,12 @@ const SocialFeed: React.FC = () => {
                 </div>
 
                 <Input
-                  placeholder="Event title"
+                  placeholder={t("eventTitle")}
                   value={newEvent.title}
                   onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
                 />
                 <Textarea
-                  placeholder="Event description"
+                  placeholder={t("eventDescription")}
                   value={newEvent.description}
                   onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
                 />
@@ -2065,12 +2067,12 @@ const SocialFeed: React.FC = () => {
                   />
                 </div>
                 <Input
-                  placeholder="Location"
+                  placeholder={t("location")}
                   value={newEvent.location}
                   onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
                 />
                 <div className="rounded-xl border border-pink-200 bg-white/70 px-3 py-2 text-sm text-violet-700">
-                  Invite friends outside the app after you create the event. That is how circles spread into real-life networks.
+                  {t("inviteFriendsOutsideApp")}
                 </div>
                 <div className="flex space-x-2">
                   <Button
@@ -2078,14 +2080,14 @@ const SocialFeed: React.FC = () => {
                     className="flex-1"
                     disabled={creatingEvent}
                   >
-                    {creatingEvent ? "Creating…" : "Create"}
+                    {creatingEvent ? t("creating") : t("create")}
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => setShowCreateEvent(false)}
                     disabled={creatingEvent}
                   >
-                    Cancel
+                    {t("cancel")}
                   </Button>
                 </div>
               </CardContent>
@@ -2095,18 +2097,18 @@ const SocialFeed: React.FC = () => {
           {eventsError ? <div className="text-sm text-red-300">{eventsError}</div> : null}
 
           {eventsLoading ? (
-            <div className="text-white/80">Loading events…</div>
+            <div className="text-white/80">{t("loadingEvents")}</div>
           ) : filteredEvents.length === 0 ? (
             <div className="text-white/80">
               {activeCircle
-                ? `No upcoming meetups in ${activeCircle} yet. Create one to get started.`
-                : "No upcoming events yet. Create one to get started."}
+                ? t("noUpcomingMeetupsInCircle", { circle: activeCircle })
+                : t("noUpcomingEvents")}
             </div>
           ) : (
             filteredEvents.map((event) => (
               <div key={event.id} className="space-y-2">
                 <div className="inline-flex rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] font-medium text-white/75">
-                  {event.circleName ?? "Open Community"}
+                  {event.circleName ?? t("openCommunity")}
                 </div>
                 <EventCard event={event} onJoin={handleJoinEvent} onInvite={handleInviteEvent} />
               </div>

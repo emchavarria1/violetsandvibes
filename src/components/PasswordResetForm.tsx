@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { authService } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
+import { useI18n } from '@/lib/i18n';
 
 interface PasswordResetFormProps {
   onBack: () => void;
@@ -14,6 +15,7 @@ export function PasswordResetForm({ onBack }: PasswordResetFormProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useI18n();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,14 +25,14 @@ export function PasswordResetForm({ onBack }: PasswordResetFormProps) {
     try {
       await authService.resetPassword(email);
       toast({
-        title: 'Reset email sent',
-        description: 'Check your email for password reset instructions.',
+        title: t('resetEmailSent'),
+        description: t('checkEmailResetInstructions'),
       });
       setEmail('');
     } catch (error: any) {
       toast({
-        title: 'Error',
-        description: error.message || 'Failed to send reset email',
+        title: t('error'),
+        description: error.message || t('failedToSendResetEmail'),
         variant: 'destructive',
       });
     } finally {
@@ -41,19 +43,19 @@ export function PasswordResetForm({ onBack }: PasswordResetFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Reset Password</CardTitle>
+        <CardTitle>{t('resetPassword')}</CardTitle>
         <CardDescription>
-          Enter your email address and we'll send you a link to reset your password.
+          {t('enterYourEmailToReset')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="reset-email">Email</Label>
+            <Label htmlFor="reset-email">{t('email')}</Label>
             <Input
               id="reset-email"
               type="email"
-              placeholder="Enter your email"
+              placeholder={t('enterYourEmail')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -61,10 +63,10 @@ export function PasswordResetForm({ onBack }: PasswordResetFormProps) {
           </div>
           <div className="flex gap-2">
             <Button type="submit" disabled={isLoading} className="flex-1">
-              {isLoading ? 'Sending...' : 'Send Reset Email'}
+              {isLoading ? t('sending') : t('sendResetEmail')}
             </Button>
             <Button type="button" variant="outline" onClick={onBack}>
-              Back
+              {t('back')}
             </Button>
           </div>
         </form>

@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, MapPin, Users, Heart, Sparkles, Share2 } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 interface EventCardProps {
   event: {
@@ -25,6 +26,8 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike, onInvite }) => {
+  const { t } = useI18n();
+
   return (
     <Card className="glass-pride mb-4 overflow-hidden border-white/10 hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 group relative text-white">
       {/* Identity-based gradient overlay */}
@@ -114,7 +117,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike, onInvite }
               className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white"
             >
               <Share2 className="w-4 h-4 mr-2" />
-              Invite Friends
+              {t('inviteFriends')}
             </Button>
 
             <Button
@@ -127,14 +130,14 @@ const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike, onInvite }
               }`}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
-              <span className="relative z-10">{event.isAttending ? 'Attending' : 'Join Event'}</span>
+              <span className="relative z-10">{event.isAttending ? t('attending') : t('joinEvent')}</span>
             </Button>
           </div>
         </div>
 
         {event.isAttending ? (
           <div className="mt-4 rounded-2xl border border-pink-300/15 bg-pink-400/10 p-3 text-sm text-pink-50">
-            <div className="font-medium">Invite a friend to attend with you</div>
+            <div className="font-medium">{t('inviteFriendToAttendWithYou')}</div>
             <Button
               type="button"
               size="sm"
@@ -143,7 +146,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike, onInvite }
               className="mt-3 w-full border-pink-300/20 bg-white/5 text-pink-50 hover:bg-white/10"
             >
               <Share2 className="w-4 h-4 mr-2" />
-              Invite a friend
+              {t('inviteFriend')}
             </Button>
           </div>
         ) : null}

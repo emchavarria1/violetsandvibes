@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { authService, SignUpData } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
+import { useI18n } from '@/lib/i18n';
 
 interface FormData extends SignUpData {
   confirmPassword: string;
@@ -20,6 +21,7 @@ const CreateAccountForm: React.FC = () => {
   const [boundaryConfirmed, setBoundaryConfirmed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useI18n();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -33,9 +35,8 @@ const CreateAccountForm: React.FC = () => {
 
     if (!boundaryConfirmed) {
       toast({
-        title: "Confirmation Required",
-        description:
-          "Please confirm this platform boundary before creating an account.",
+        title: t("confirmationRequired"),
+        description: t("confirmPlatformBoundary"),
         variant: "destructive",
       });
       return;
@@ -43,8 +44,8 @@ const CreateAccountForm: React.FC = () => {
     
     if (formData.password !== formData.confirmPassword) {
       toast({
-        title: "Password Mismatch",
-        description: "Passwords do not match. Please try again.",
+        title: t("passwordMismatch"),
+        description: t("passwordsDoNotMatch"),
         variant: "destructive",
       });
       return;
@@ -52,8 +53,8 @@ const CreateAccountForm: React.FC = () => {
 
     if (formData.password.length < 6) {
       toast({
-        title: "Password Too Short",
-        description: "Password must be at least 6 characters long.",
+        title: t("passwordTooShort"),
+        description: t("passwordMinLength"),
         variant: "destructive",
       });
       return;
@@ -70,10 +71,10 @@ const CreateAccountForm: React.FC = () => {
 
       const hasSession = !!authData?.session;
       toast({
-        title: "Account Created!",
+        title: t("accountCreated"),
         description: hasSession
-          ? "You are now signed in."
-          : "Please check your email to verify your account.",
+          ? t("youAreNowSignedIn")
+          : t("checkEmailToVerify"),
       });
       
       // Reset form
@@ -97,9 +98,8 @@ const CreateAccountForm: React.FC = () => {
           });
 
           toast({
-            title: "Account Created",
-            description:
-              "Your account is active. You are now signed in.",
+            title: t("accountCreatedSignedIn"),
+            description: t("accountActiveSignedIn"),
           });
           return;
         } catch {
@@ -108,8 +108,8 @@ const CreateAccountForm: React.FC = () => {
       }
 
       toast({
-        title: "Registration Failed",
-        description: error.message || "Please try again.",
+        title: t("registrationFailed"),
+        description: error.message || t("pleaseTryAgain"),
         variant: "destructive",
       });
     } finally {
@@ -121,7 +121,7 @@ const CreateAccountForm: React.FC = () => {
     <div className="space-y-6">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name" className="text-white/90">Full Name</Label>
+          <Label htmlFor="name" className="text-white/90">{t('fullName')}</Label>
           <Input
             id="name"
             name="name"
@@ -134,7 +134,7 @@ const CreateAccountForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-white/90">Email</Label>
+          <Label htmlFor="email" className="text-white/90">{t('email')}</Label>
           <Input
             id="email"
             name="email"
@@ -147,7 +147,7 @@ const CreateAccountForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-white/90">Password</Label>
+          <Label htmlFor="password" className="text-white/90">{t('password')}</Label>
           <Input
             id="password"
             name="password"
@@ -161,7 +161,7 @@ const CreateAccountForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword" className="text-white/90">Confirm Password</Label>
+          <Label htmlFor="confirmPassword" className="text-white/90">{t('confirmPassword')}</Label>
           <Input
             id="confirmPassword"
             name="confirmPassword"
@@ -185,10 +185,8 @@ const CreateAccountForm: React.FC = () => {
               htmlFor="boundary-confirmation"
               className="text-sm leading-relaxed text-white/90"
             >
-              <span className="font-semibold text-pink-200">Required: </span>
-              By creating an account, you confirm you are a woman (inclusive of
-              transgender women and aligned non-binary individuals). This
-              platform is not open to men or couples.
+              <span className="font-semibold text-pink-200">{t('required')} </span>
+              {t('boundaryConfirmation')}
             </Label>
           </div>
         </div>
@@ -198,7 +196,7 @@ const CreateAccountForm: React.FC = () => {
           className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700"
           disabled={isLoading || !boundaryConfirmed}
         >
-          {isLoading ? 'Creating Account...' : 'Create Account'}
+          {isLoading ? t('creatingAccount') : t('createAccount')}
         </Button>
       </form>
     </div>

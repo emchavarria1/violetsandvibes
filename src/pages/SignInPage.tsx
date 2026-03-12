@@ -10,6 +10,7 @@ import { Link, Navigate, useLocation } from 'react-router-dom';
 import { ResponsiveWrapper } from '@/components/ResponsiveWrapper';
 import { useProfileStatus } from '@/hooks/useProfileStatus';
 import { useToast } from '@/hooks/use-toast';
+import { useI18n } from '@/lib/i18n';
 
 const SignInPage: React.FC = () => {
   const location = useLocation();
@@ -19,6 +20,7 @@ const SignInPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { status } = useProfileStatus();
   const { toast } = useToast();
+  const { t } = useI18n();
 
   const params = new URLSearchParams(location.search);
   const redirect = params.get('redirect');
@@ -67,7 +69,7 @@ const SignInPage: React.FC = () => {
     const humanReason = socialError.replace(/_/g, ' ');
 
     toast({
-      title: `${provider} login failed`,
+      title: t('socialLoginFailed', { provider }),
       description: humanReason,
       variant: 'destructive',
     });
@@ -84,7 +86,7 @@ const SignInPage: React.FC = () => {
       <div className="page-calm min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-500 mx-auto mb-4"></div>
-          <p className="text-white">Loading...</p>
+          <p className="text-white">{t('loading')}</p>
         </div>
       </div>
     );
@@ -94,7 +96,7 @@ const SignInPage: React.FC = () => {
     if (status === "loading") {
       return (
         <div className="page-calm min-h-screen flex items-center justify-center">
-          <div className="text-white/80">Checking your profile…</div>
+          <div className="text-white/80">{t('checkingProfile')}</div>
         </div>
       );
     }
@@ -139,17 +141,17 @@ const SignInPage: React.FC = () => {
                   </div>
 
                   <h1 className="mx-auto max-w-[11ch] text-center text-4xl sm:text-5xl wedding-title leading-[0.98] vv-global-header-flow">
-                    Friendship, dating, and community with intention
+                    {t('friendshipDatingCommunityWithIntention')}
                   </h1>
                 </div>
 
                 <CardHeader className="pb-4 pt-5 text-center">
                 <CardTitle className="text-2xl text-white wedding-heading text-center">
-                  {showPasswordReset ? 'Reset Password' : 'Join the Community'}
+                  {showPasswordReset ? t('resetPassword') : t('joinTheCommunity')}
                 </CardTitle>
                 {showPasswordReset ? (
                   <CardDescription className="text-white/70 text-center">
-                    Enter your email to reset your password
+                    {t('enterYourEmailToReset')}
                   </CardDescription>
                 ) : null}
                 </CardHeader>
@@ -159,8 +161,8 @@ const SignInPage: React.FC = () => {
                   ) : (
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                       <TabsList className="mb-6 grid w-full grid-cols-2 rounded-xl bg-[#5a2386]/70 p-1">
-                        <TabsTrigger value="login" className="rounded-lg text-white data-[state=active]:bg-[#4f1f76] data-[state=active]:text-white">Sign In</TabsTrigger>
-                        <TabsTrigger value="register" className="rounded-lg text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-500 data-[state=active]:to-fuchsia-500 data-[state=active]:text-white">Create Account</TabsTrigger>
+                        <TabsTrigger value="login" className="rounded-lg text-white data-[state=active]:bg-[#4f1f76] data-[state=active]:text-white">{t('signIn')}</TabsTrigger>
+                        <TabsTrigger value="register" className="rounded-lg text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-500 data-[state=active]:to-fuchsia-500 data-[state=active]:text-white">{t('createAccount')}</TabsTrigger>
                       </TabsList>
                       
                       <TabsContent value="login">
@@ -176,18 +178,18 @@ const SignInPage: React.FC = () => {
 
                 <div className="border-t border-white/15 px-5 pb-5 pt-4 text-center sm:px-6">
                   <div className="wedding-title text-center text-4xl leading-[0.98] vv-global-header-flow">
-                    Women-centered • Inclusive • Safety-first
+                    {t('womenCenteredInclusiveSafetyFirst')}
                   </div>
 
                   <div className="mt-4 flex items-center justify-center gap-4 text-xs text-white/70 sm:text-sm">
                     <Link className="hover:text-white underline underline-offset-4" to="/privacy">
-                      Privacy Policy
+                      {t('privacyPolicy')}
                     </Link>
                     <Link className="hover:text-white underline underline-offset-4" to="/terms">
-                      Terms of Service
+                      {t('termsOfService')}
                     </Link>
                     <Link className="hover:text-white underline underline-offset-4" to="/data-deletion">
-                      Data Deletion
+                      {t('dataDeletion')}
                     </Link>
                   </div>
                 </div>
