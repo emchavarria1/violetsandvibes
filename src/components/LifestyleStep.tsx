@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, X } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 interface LifestyleStepProps {
   profile: any;
@@ -9,6 +10,7 @@ interface LifestyleStepProps {
 }
 
 const LifestyleStep: React.FC<LifestyleStepProps> = ({ profile, onUpdate }) => {
+  const { t } = useI18n();
   const [customInputs, setCustomInputs] = useState<Record<string, string>>({});
   const [openCustomFor, setOpenCustomFor] = useState<string | null>(null);
 
@@ -188,9 +190,9 @@ const LifestyleStep: React.FC<LifestyleStepProps> = ({ profile, onUpdate }) => {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Lifestyle & Values</h2>
-        <p className="text-sm text-white/70">Share what matters to you and how you like to spend your time</p>
+        <div className="text-center">
+        <h2 className="text-2xl font-bold mb-2">{t('lifestyleAndValues')}</h2>
+        <p className="text-sm text-white/70">{t('shareWhatMattersToYou')}</p>
       </div>
 
       {lifestyleCategories.map((category) => {
@@ -230,7 +232,7 @@ const LifestyleStep: React.FC<LifestyleStepProps> = ({ profile, onUpdate }) => {
             onClick={() => setOpenCustomFor((prev) => (prev === key ? null : key))}
           >
             <Plus className="w-4 h-4 mr-1" />
-            Add Custom {category.title}
+            {t('addCustomCategory', { category: category.title })}
           </Button>
           {openCustomFor === key && (
             <div className="mt-2 flex items-center gap-2">
@@ -239,7 +241,7 @@ const LifestyleStep: React.FC<LifestyleStepProps> = ({ profile, onUpdate }) => {
                 onChange={(e) =>
                   setCustomInputs((prev) => ({ ...prev, [key]: e.target.value }))
                 }
-                placeholder={`Add custom ${category.title.toLowerCase()}`}
+                placeholder={t('addCustomCategoryPlaceholder', { category: category.title.toLowerCase() })}
                 className="bg-black/20 border-white/25 text-white placeholder:text-white/50"
               />
               <Button
@@ -248,7 +250,7 @@ const LifestyleStep: React.FC<LifestyleStepProps> = ({ profile, onUpdate }) => {
                 onClick={() => addCustomOption(category.title, category.options)}
                 disabled={!(customInputs[key] ?? '').trim()}
               >
-                Add
+                {t('addAction')}
               </Button>
             </div>
           )}
@@ -264,7 +266,7 @@ const LifestyleStep: React.FC<LifestyleStepProps> = ({ profile, onUpdate }) => {
                     type="button"
                     className="ml-2 inline-flex h-4 w-4 items-center justify-center rounded-full text-white/70 hover:bg-white/15 hover:text-white"
                     onClick={() => removeCustomOption(category.title, option)}
-                    aria-label={`Remove custom ${category.title} option ${option}`}
+                    aria-label={t('removeCustomOption', { category: category.title, option })}
                   >
                     <X className="h-3 w-3" />
                   </button>

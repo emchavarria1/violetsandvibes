@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { getVerificationState, type VerificationStatus } from '@/lib/verification';
 import { useToast } from '@/hooks/use-toast';
 import { isAdminBypassUser, resolveSubscriptionTier } from '@/lib/subscriptionTier';
+import { useI18n } from '@/lib/i18n';
 
 const VERIFICATION_MEDIA_BUCKET =
   import.meta.env.VITE_VERIFICATION_MEDIA_BUCKET || 'verification-media';
@@ -36,6 +37,7 @@ const UserVerification: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useI18n();
 
   const [photoStatus, setPhotoStatus] = useState<VerificationStatus>('pending');
   const [idStatus, setIdStatus] = useState<VerificationStatus>('pending');
@@ -280,13 +282,13 @@ const UserVerification: React.FC = () => {
       await persistVioletsVerifiedSettings({ profile_theme: themeId });
       setProfileTheme(themeId);
       toast({
-        title: 'Theme updated',
-        description: 'Your custom profile theme preference has been saved.',
+        title: t('themeUpdated'),
+        description: t('themePreferenceSaved'),
       });
     } catch (error) {
       console.error('Failed to apply profile theme:', error);
       toast({
-        title: 'Could not save theme',
+        title: t('couldNotSaveTheme'),
         description: (error as Error)?.message || 'Please try again.',
         variant: 'destructive',
       });
@@ -308,13 +310,13 @@ const UserVerification: React.FC = () => {
       setVisibilityBoostUntil(nextUntil);
 
       toast({
-        title: 'Visibility boost enabled',
-        description: 'Your extra visibility perk is now active.',
+        title: t('visibilityBoostEnabled'),
+        description: t('visibilityBoostActiveDescription'),
       });
     } catch (error) {
       console.error('Failed to activate visibility boost:', error);
       toast({
-        title: 'Could not activate boost',
+        title: t('couldNotActivateBoost'),
         description: (error as Error)?.message || 'Please try again.',
         variant: 'destructive',
       });
@@ -472,14 +474,14 @@ const UserVerification: React.FC = () => {
       );
 
       toast({
-        title: 'Photo Submitted',
-        description: 'Your verification photo is now under review.',
+        title: t('photoSubmitted'),
+        description: t('verificationReviewTiming'),
       });
       closeCameraCapture();
     } catch (error) {
       console.error('Camera photo submit failed:', error);
       toast({
-        title: 'Upload failed',
+        title: t('error'),
         description: (error as Error)?.message || 'Could not submit verification photo.',
         variant: 'destructive',
       });
@@ -556,13 +558,13 @@ const UserVerification: React.FC = () => {
         uploaded.path
       );
       toast({
-        title: 'Photo Submitted',
-        description: 'Your verification photo is now under review.',
+        title: t('photoSubmitted'),
+        description: t('verificationReviewTiming'),
       });
     } catch (error) {
       console.error('Photo upload failed:', error);
       toast({
-        title: 'Upload failed',
+        title: t('error'),
         description: (error as Error)?.message || 'Could not submit verification photo.',
         variant: 'destructive',
       });
@@ -580,13 +582,13 @@ const UserVerification: React.FC = () => {
       const uploaded = await uploadVerificationFile('id', file);
       await updateVerificationStatus('id', 'submitted', uploaded.originalFileName, uploaded.path);
       toast({
-        title: 'ID Submitted',
-        description: 'Your ID verification is now under review.',
+        title: t('idSubmitted'),
+        description: t('verificationReviewTiming'),
       });
     } catch (error) {
       console.error('ID upload failed:', error);
       toast({
-        title: 'Upload failed',
+        title: t('error'),
         description: (error as Error)?.message || 'Could not submit ID document.',
         variant: 'destructive',
       });
@@ -598,22 +600,22 @@ const UserVerification: React.FC = () => {
   const verificationSteps = [
     {
       id: 'photo',
-      title: 'Photo Verification',
+      title: t('photoVerification'),
       completed: photoStatus === 'submitted' || photoStatus === 'approved',
     },
     {
       id: 'id',
-      title: 'ID Verification',
+      title: t('idVerification'),
       completed: idStatus === 'submitted' || idStatus === 'approved',
     },
-    { id: 'review', title: 'Under Review', completed: verificationState.submittedForReview }
+    { id: 'review', title: t('reviewStep'), completed: verificationState.submittedForReview }
   ];
 
   const getStepBadge = (type: 'photo' | 'id') => {
     const status = type === 'photo' ? photoStatus : idStatus;
-    if (status === 'approved') return <Badge variant="secondary" className="bg-green-100 text-green-700">Approved</Badge>;
-    if (status === 'submitted') return <Badge variant="secondary" className="bg-purple-100 text-purple-700">Submitted</Badge>;
-    if (status === 'rejected') return <Badge variant="secondary" className="bg-red-100 text-red-700">Rejected</Badge>;
+    if (status === 'approved') return <Badge variant="secondary" className="bg-green-100 text-green-700">{t('approved')}</Badge>;
+    if (status === 'submitted') return <Badge variant="secondary" className="bg-purple-100 text-purple-700">{t('submitted')}</Badge>;
+    if (status === 'rejected') return <Badge variant="secondary" className="bg-red-100 text-red-700">{t('rejected')}</Badge>;
     return null;
   };
   const visibilityBoostActive =
@@ -625,7 +627,7 @@ const UserVerification: React.FC = () => {
       <div className="p-4 space-y-6 max-w-md mx-auto">
         <Card className="border-2 border-purple-200">
           <CardContent className="p-6 text-center text-gray-700">
-            Checking verification status...
+            {t('verificationStatusChecking')}
           </CardContent>
         </Card>
       </div>
@@ -639,8 +641,8 @@ const UserVerification: React.FC = () => {
           <div className="mx-auto w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center mb-4">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <CardTitle className="text-xl text-purple-800">🌈💜 Get Verified 💜🌈</CardTitle>
-          <p className="text-sm text-gray-600">Build trust in the community</p>
+          <CardTitle className="text-xl text-purple-800">🌈💜 {t('getVerified')} 💜🌈</CardTitle>
+          <p className="text-sm text-gray-600">{t('buildTrustInTheCommunity')}</p>
         </CardHeader>
         <CardContent className="space-y-4">
           {verificationSteps.map((step) => (
@@ -660,14 +662,14 @@ const UserVerification: React.FC = () => {
                 : step.id === 'id'
                 ? getStepBadge('id')
                 : step.completed
-                ? <Badge variant="secondary" className="bg-purple-100 text-purple-700">In Review</Badge>
+                ? <Badge variant="secondary" className="bg-purple-100 text-purple-700">{t('inReview')}</Badge>
                 : null}
             </div>
           ))}
           
           {showCameraCapture && (
             <div className="rounded-lg border border-purple-200 bg-purple-50/70 p-3 space-y-3">
-              <div className="text-sm text-purple-700 font-medium">Camera Preview</div>
+              <div className="text-sm text-purple-700 font-medium">{t('cameraPreview')}</div>
               <div className="overflow-hidden rounded-md border border-purple-200 bg-black">
                 <video
                   ref={videoRef}
@@ -685,7 +687,7 @@ const UserVerification: React.FC = () => {
                   onClick={closeCameraCapture}
                   disabled={loading}
                 >
-                  Cancel
+                  {t('cancel')}
                 </Button>
                 <Button
                   type="button"
@@ -693,11 +695,11 @@ const UserVerification: React.FC = () => {
                   onClick={() => void submitCapturedPhoto()}
                   disabled={!cameraReady || loading}
                 >
-                  {loading ? 'Submitting…' : 'Use This Photo'}
+                  {loading ? `${t('submitting').replace('...', '')}...` : t('useThisPhoto')}
                 </Button>
               </div>
               <div className="text-xs text-purple-700/80">
-                Allow camera access, center your face, then use the capture button.
+                {t('cameraAccessInstructions')}
               </div>
             </div>
           )}
@@ -715,10 +717,10 @@ const UserVerification: React.FC = () => {
             >
               <Camera className="w-4 h-4 mr-2" />
               {photoStatus === 'approved'
-                ? 'Photo Verified ✓'
+                ? `${t('photoVerified')} ✓`
                 : photoStatus === 'submitted'
-                ? 'Photo Submitted ✓'
-                : 'Take Verification Photo'}
+                ? `${t('photoSubmitted')} ✓`
+                : t('takeVerificationPhoto')}
             </Button>
             
             <Button 
@@ -729,17 +731,17 @@ const UserVerification: React.FC = () => {
             >
               <Upload className="w-4 h-4 mr-2" />
               {idStatus === 'approved'
-                ? 'ID Verified ✓'
+                ? `${t('idVerified')} ✓`
                 : idStatus === 'submitted'
-                ? 'ID Submitted ✓'
-                : 'Upload ID Document'}
+                ? `${t('idSubmitted')} ✓`
+                : t('uploadIdDocument')}
             </Button>
           </div>
 
           {verificationState.submittedForReview && (
             <div className="mt-4 p-4 bg-purple-50 rounded-lg text-center">
-              <p className="text-purple-700 font-medium">Verification Submitted!</p>
-              <p className="text-sm text-purple-600 mt-1">Review typically takes 24-48 hours</p>
+              <p className="text-purple-700 font-medium">{t('verificationSubmitted')}</p>
+              <p className="text-sm text-purple-600 mt-1">{t('verificationReviewTiming')}</p>
             </div>
           )}
 
@@ -753,7 +755,7 @@ const UserVerification: React.FC = () => {
                 navigate(target, { replace: true });
               }}
             >
-              Continue
+              {t('continueAction')}
             </Button>
           )}
         </CardContent>
@@ -764,17 +766,17 @@ const UserVerification: React.FC = () => {
           <div className="mx-auto w-12 h-12 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center mb-2">
             <Lock className="w-6 h-6" />
           </div>
-          <CardTitle className="text-lg text-purple-800">💜 Violets Verified</CardTitle>
-          <p className="text-sm text-purple-700">Support and strengthen this protected space.</p>
+          <CardTitle className="text-lg text-purple-800">💜 {t('violetsVerified')}</CardTitle>
+          <p className="text-sm text-purple-700">{t('strengthenProtectedSpace')}</p>
         </CardHeader>
         <CardContent className="pt-0 space-y-3">
           {hasVioletsVerifiedAccess ? (
             <div className="rounded-lg border border-green-200 bg-green-50 text-green-700 text-sm px-3 py-2 text-center">
-              Access enabled for your upgraded account.
+              {t('accessEnabledForUpgradedAccount')}
             </div>
           ) : (
             <div className="rounded-lg border border-purple-200 bg-purple-50 text-purple-700 text-sm px-3 py-2 text-center">
-              Upgraded members only. This section is currently locked.
+              {t('upgradedMembersOnlyLocked')}
             </div>
           )}
 
@@ -786,7 +788,7 @@ const UserVerification: React.FC = () => {
               disabled={!hasVioletsVerifiedAccess}
               onClick={() => navigate('/filters')}
             >
-              Advanced filters
+              {t('advancedFilters')}
             </Button>
 
             <Button
@@ -796,12 +798,12 @@ const UserVerification: React.FC = () => {
               disabled={!hasVioletsVerifiedAccess || likesLoading}
               onClick={() => void loadLikesReceived()}
             >
-              {likesLoading ? 'Loading likes…' : 'See who liked you'}
+              {likesLoading ? t('loadingLikes') : t('seeWhoLikedYou')}
             </Button>
           </div>
 
           <div className="rounded-lg border border-purple-200 bg-purple-50/70 p-3 space-y-2">
-            <div className="text-sm font-medium text-purple-800">Custom profile themes</div>
+            <div className="text-sm font-medium text-purple-800">{t('customProfileThemes')}</div>
             <div className="grid grid-cols-2 gap-2">
               {PROFILE_THEME_OPTIONS.map((option) => (
                 <button
@@ -821,16 +823,16 @@ const UserVerification: React.FC = () => {
               ))}
             </div>
             <div className="text-xs text-purple-700/80">
-              Active theme: {activeTheme?.label || 'Prism Glow'}
+              {t('activeTheme', { theme: activeTheme?.label || 'Prism Glow' })}
             </div>
           </div>
 
           <div className="rounded-lg border border-purple-200 bg-purple-50/70 p-3 space-y-2">
-            <div className="text-sm font-medium text-purple-800">Extra visibility perks</div>
+            <div className="text-sm font-medium text-purple-800">{t('extraVisibilityPerks')}</div>
             <div className="text-xs text-purple-700">
               {visibilityBoostActive
-                ? `Boost active until ${new Date(visibilityBoostUntil as string).toLocaleString()}`
-                : 'No active boost right now.'}
+                ? t('boostActiveUntil', { date: new Date(visibilityBoostUntil as string).toLocaleString() })
+                : t('noActiveBoost')}
             </div>
             <Button
               type="button"
@@ -838,17 +840,17 @@ const UserVerification: React.FC = () => {
               disabled={!hasVioletsVerifiedAccess || premiumActionLoading}
               onClick={() => void activateVisibilityBoost()}
             >
-              {premiumActionLoading ? 'Saving…' : 'Activate 24h Visibility Boost'}
+              {premiumActionLoading ? `${t('saving')}...` : t('activateVisibilityBoost')}
             </Button>
           </div>
 
           {showLikesSection ? (
             <div className="rounded-lg border border-purple-200 bg-white p-3">
-              <div className="text-sm font-medium text-purple-800 mb-2">People who liked you</div>
+              <div className="text-sm font-medium text-purple-800 mb-2">{t('peopleWhoLikedYou')}</div>
               {likesError ? (
                 <div className="text-xs text-red-600">{likesError}</div>
               ) : likesReceived.length === 0 ? (
-                <div className="text-xs text-purple-700">No likes yet.</div>
+                <div className="text-xs text-purple-700">{t('noLikesYet')}</div>
               ) : (
                 <div className="space-y-2 max-h-48 overflow-auto pr-1">
                   {likesReceived.map((item) => (
@@ -866,7 +868,7 @@ const UserVerification: React.FC = () => {
                         className="shrink-0"
                         onClick={() => navigate(`/profile/${item.likerId}`)}
                       >
-                        View
+                        {t('view')}
                       </Button>
                     </div>
                   ))}
@@ -881,7 +883,7 @@ const UserVerification: React.FC = () => {
               className="w-full"
               onClick={() => navigate('/subscription')}
             >
-              Upgrade to Unlock
+              {t('upgradeToUnlock')}
             </Button>
           ) : null}
         </CardContent>

@@ -5,6 +5,7 @@ import { HeartHandshake, Share2, ShieldCheck, Sparkles, Users } from "lucide-rea
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { shareBadgeCard } from "@/lib/shareBadgeCard";
+import { useI18n } from "@/lib/i18n";
 
 const ENDORSEMENT_TYPES = [
   { key: "supportive", label: "Supportive", emoji: "💜" },
@@ -53,15 +54,12 @@ function normalizeKindnessEndorsements(privacySettings?: Record<string, any> | n
 }
 
 function getReputationLabel(totalCount: number) {
-  if (totalCount >= 10) return "Beloved in community";
-  if (totalCount >= 6) return "Kindness standout";
-  if (totalCount >= 3) return "Warm signal";
-  return "Growing trust";
+  return totalCount >= 10 ? "belovedInCommunity" : totalCount >= 6 ? "kindnessStandout" : totalCount >= 3 ? "warmSignal" : "growingTrust";
 }
 
 function getShareableKindnessBadge(totalCount: number, byType: Record<EndorsementKey, string[]>) {
-  if (byType.community_builder.length >= 3) return "Top Community Builder";
-  if (byType.safe_communicator.length >= 3) return "Verified Safe Communicator";
+  if (byType.community_builder.length >= 3) return "topCommunityBuilder";
+  if (byType.safe_communicator.length >= 3) return "verifiedSafeCommunicator";
   return getReputationLabel(totalCount);
 }
 
@@ -70,6 +68,7 @@ export function KindnessReputationPill({
 }: {
   privacySettings?: Record<string, any> | null;
 }) {
+  const { t } = useI18n();
   const summary = useMemo(
     () => normalizeKindnessEndorsements(privacySettings),
     [privacySettings]
@@ -81,7 +80,7 @@ export function KindnessReputationPill({
         <HeartHandshake className="mr-1.5 h-3.5 w-3.5" />
         Kindness {summary.totalCount}
       </Badge>
-      <span className="text-xs text-white/70">{getReputationLabel(summary.totalCount)}</span>
+      <span className="text-xs text-white/70">{t(getReputationLabel(summary.totalCount))}</span>
     </div>
   );
 }
@@ -95,6 +94,7 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
   compact = false,
   onUpdated,
 }) => {
+  const { t } = useI18n();
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState<EndorsementKey | null>(null);
   const summary = useMemo(
@@ -105,27 +105,28 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
     () => getShareableKindnessBadge(summary.totalCount, summary.byType),
     [summary]
   );
+  const shareBadgeLabel = t(shareBadge);
 
   const handleShare = async () => {
-    const text = `I earned the ${shareBadge} badge on Violets & Vibes.`;
+    const text = `I earned the ${shareBadgeLabel} badge on Violets & Vibes.`;
 
     try {
       const result = await shareBadgeCard({
-        badgeTitle: shareBadge,
+        badgeTitle: shareBadgeLabel,
         badgeSubtitle: text,
         profileName: displayName,
       });
       toast({
-        title: result === "shared" ? "Badge shared" : "Badge downloaded",
+        title: result === "shared" ? t("badgeShared") : t("badgeDownloaded"),
         description:
           result === "shared"
-            ? "Your community badge card is ready to post."
-            : "Your community badge card was saved as an image.",
+            ? t("communityBadgeReadyToPost")
+            : t("communityBadgeSavedAsImage"),
       });
     } catch (error: any) {
       console.error("Could not share kindness badge:", error);
       toast({
-        title: "Could not share badge",
+        title: t("couldNotShareBadge"),
         description: error?.message || "Please try again.",
         variant: "destructive",
       });
@@ -173,16 +174,22 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
       onUpdated?.(nextPrivacySettings);
       toast({
         title: currentTypeEntries.includes(currentUserId)
-          ? "Endorsement removed"
-          : "Kindness endorsed",
+          ? t("endorsementRemoved")
+          : t("kindnessEndorsed"),
         description: currentTypeEntries.includes(currentUserId)
-          ? `You removed your ${ENDORSEMENT_TYPES.find((item) => item.key === key)?.label.toLowerCase()} endorsement for ${displayName}.`
-          : `You endorsed ${displayName} as ${ENDORSEMENT_TYPES.find((item) => item.key === key)?.label.toLowerCase()}.`,
+          ? t("removedEndorsementFor", {
+              label: ENDORSEMENT_TYPES.find((item) => item.key === key)?.label.toLowerCase(),
+              name: displayName,
+            })
+          : t("endorsedAs", {
+              name: displayName,
+              label: ENDORSEMENT_TYPES.find((item) => item.key === key)?.label.toLowerCase(),
+            }),
       });
     } catch (error: any) {
       console.error("Could not update kindness endorsement:", error);
       toast({
-        title: "Could not update endorsement",
+        title: t("couldNotUpdateEndorsement"),
         description: error?.message || "Please try again.",
         variant: "destructive",
       });
@@ -201,26 +208,26 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-pink-300/25 bg-pink-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-pink-100">
             <Sparkles className="h-3.5 w-3.5" />
-            Kindness Reputation
+            {t("kindnessReputation")}
           </div>
           <div className="mt-3 flex items-center gap-3">
             <div className="text-3xl font-semibold text-white">{summary.totalCount}</div>
             <Badge className="border-pink-300/30 bg-pink-400/15 text-pink-50">
               <ShieldCheck className="mr-1.5 h-3.5 w-3.5" />
-              {getReputationLabel(summary.totalCount)}
+              {t(getReputationLabel(summary.totalCount))}
             </Badge>
           </div>
           <p className="mt-2 text-sm text-white/70">
-            Character compounds here. Endorsements reward respect, safety, and real community care.
+            {t("characterCompoundsHere")}
           </p>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-black/15 px-4 py-3 text-sm text-white/80">
           <div className="flex items-center gap-2 font-medium text-white">
             <Users className="h-4 w-4 text-pink-200" />
-            {summary.uniqueEndorsers.length} community endorsement{summary.uniqueEndorsers.length === 1 ? "" : "s"}
+            {t("communityEndorsementsCount", { count: summary.uniqueEndorsers.length })}
           </div>
-          <div className="mt-1 text-white/60">Respect becomes visible when other women vouch for it.</div>
+          <div className="mt-1 text-white/60">{t("respectVisibleWhenWomenVouch")}</div>
           <Button
             type="button"
             size="sm"
@@ -229,7 +236,7 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
             onClick={() => void handleShare()}
           >
             <Share2 className="mr-2 h-4 w-4" />
-            Share {shareBadge}
+            {t("shareBadge")} {shareBadgeLabel}
           </Button>
         </div>
       </div>
@@ -249,7 +256,7 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
               </div>
               <div className="mt-3">
                 {isOwnProfile ? (
-                  <div className="text-sm text-white/60">Earned through how people experience you in the community.</div>
+                  <div className="text-sm text-white/60">{t("earnedThroughCommunityExperience")}</div>
                 ) : (
                   <Button
                     type="button"
@@ -262,8 +269,8 @@ const KindnessEndorsements: React.FC<KindnessEndorsementsProps> = ({
                     {isSaving === item.key
                       ? "Saving..."
                       : endorsedByMe
-                        ? `Endorsed: ${item.label}`
-                        : `Endorse ${item.label}`}
+                        ? t("endorsedLabel", { label: item.label })
+                        : t("endorseLabel", { label: item.label })}
                   </Button>
                 )}
               </div>

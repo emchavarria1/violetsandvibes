@@ -17,11 +17,13 @@ import {
   saveSubscriptionTierForUser,
 } from '@/lib/subscriptionTier';
 import { supabase } from '@/lib/supabase';
+import { useI18n } from '@/lib/i18n';
 
 const SubscriptionPage: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useI18n();
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>('free');
   const [processingTier, setProcessingTier] = useState<SubscriptionTier | null>(null);
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
@@ -58,7 +60,7 @@ const SubscriptionPage: React.FC = () => {
       icon: <Zap className="h-6 w-6" />,
       color: 'bg-gray-100 text-gray-800',
       price: 0,
-      description: 'Core access to get started',
+      description: t('coreAccessToGetStarted'),
     },
     {
       id: 'premium' as SubscriptionTier,
@@ -66,7 +68,7 @@ const SubscriptionPage: React.FC = () => {
       icon: <Star className="h-6 w-6" />,
       color: 'bg-purple-100 text-purple-800',
       price: SUBSCRIPTION_PRICES.premium,
-      description: 'Enhanced matching and communication tools',
+      description: t('enhancedMatchingTools'),
       popular: true,
     },
     {
@@ -75,7 +77,7 @@ const SubscriptionPage: React.FC = () => {
       icon: <Crown className="h-6 w-6" />,
       color: 'bg-yellow-100 text-yellow-800',
       price: SUBSCRIPTION_PRICES.elite,
-      description: 'Maximum visibility and premium perks',
+      description: t('maximumVisibilityPerks'),
     },
   ];
 
@@ -87,7 +89,7 @@ const SubscriptionPage: React.FC = () => {
 
     if (tier === currentTier) {
       toast({
-        title: 'Current plan',
+        title: t('currentPlan'),
         description: `You are already on ${SUBSCRIPTION_TIER_LABELS[tier]}.`,
       });
       return;
@@ -100,7 +102,7 @@ const SubscriptionPage: React.FC = () => {
         setCurrentTier(tier);
 
         toast({
-          title: 'Plan updated',
+          title: t('save'),
           description: `You are now on ${SUBSCRIPTION_TIER_LABELS.free}.`,
         });
         return;
@@ -126,21 +128,21 @@ const SubscriptionPage: React.FC = () => {
         await saveSubscriptionTierForUser(user.id, tier);
         setCurrentTier(tier);
         toast({
-          title: 'Plan updated',
+          title: t('save'),
           description: data?.message || `You are now on ${SUBSCRIPTION_TIER_LABELS[tier]}.`,
         });
         return;
       }
 
       toast({
-        title: 'Checkout required',
+        title: t('payments'),
         description:
           'Subscription checkout is not configured yet. Paid tiers stay locked until payment is enabled.',
       });
     } catch (error: any) {
       console.error('Failed to start subscription checkout:', error);
       toast({
-        title: 'Subscription checkout failed',
+        title: t('error'),
         description:
           error?.message ||
           'Could not start checkout. Paid tiers remain locked.',
@@ -155,17 +157,17 @@ const SubscriptionPage: React.FC = () => {
     const features = SUBSCRIPTION_FEATURES[tier];
     const featureList = [
       `${features.maxPhotos} photos`,
-      features.unlimitedLikes ? 'Unlimited likes' : 'Limited likes',
-      features.advancedFilters ? 'Advanced filters' : null,
-      features.videoChat ? 'Video chat' : null,
-      features.priorityMatching ? 'Priority matching' : null,
-      features.readReceipts ? 'Read receipts' : null,
-      features.boostProfile ? 'Profile boost' : null,
-      features.hideAds ? 'No ads' : null,
-      features.incognitoMode ? 'Incognito mode' : null,
-      features.seeWhoLikedYou ? 'See who liked you' : null,
-      `${features.superLikes} super likes per day`,
-      features.rewindSwipes ? 'Rewind swipes' : null,
+      features.unlimitedLikes ? t('unlimitedLikes') : t('limitedLikes'),
+      features.advancedFilters ? t('advancedFilters') : null,
+      features.videoChat ? t('videoChat') : null,
+      features.priorityMatching ? t('priorityMatching') : null,
+      features.readReceipts ? t('readReceipts') : null,
+      features.boostProfile ? t('profileBoost') : null,
+      features.hideAds ? t('noAds') : null,
+      features.incognitoMode ? t('incognitoMode') : null,
+      features.seeWhoLikedYou ? t('seeWhoLikedYou') : null,
+      t('superLikesPerDay', { count: features.superLikes }),
+      features.rewindSwipes ? t('rewindSwipes') : null,
     ].filter(Boolean);
 
     return featureList;
@@ -175,8 +177,8 @@ const SubscriptionPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 p-4">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Choose Your Plan</h1>
-          <p className="text-gray-600">Choose the Violets Verified plan that fits you</p>
+          <h1 className="text-3xl font-bold mb-2">{t('chooseYourPlan')}</h1>
+          <p className="text-gray-600">{t('choosePlanFitsYou')}</p>
         </div>
 
         {/* Billing Toggle */}
@@ -187,15 +189,15 @@ const SubscriptionPage: React.FC = () => {
               size="sm"
               onClick={() => setBillingPeriod('monthly')}
             >
-              Monthly
+              {t('monthly')}
             </Button>
             <Button
               variant={billingPeriod === 'yearly' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setBillingPeriod('yearly')}
             >
-              Yearly
-              <Badge className="ml-2 bg-green-100 text-green-800">Save 17%</Badge>
+              {t('yearly')}
+              <Badge className="ml-2 bg-green-100 text-green-800">{t('savePercent', { percent: 17 })}</Badge>
             </Button>
           </div>
         </div>
@@ -211,7 +213,7 @@ const SubscriptionPage: React.FC = () => {
             >
               {tier.popular && (
                 <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-500">
-                  Most Popular
+                  {t('mostPopular')}
                 </Badge>
               )}
               
@@ -224,12 +226,12 @@ const SubscriptionPage: React.FC = () => {
                 
                 <div className="mt-4">
                   {tier.id === 'free' ? (
-                    <div className="text-3xl font-bold">$0<span className="text-sm font-normal text-gray-600">/month</span></div>
+                    <div className="text-3xl font-bold">$0<span className="text-sm font-normal text-gray-600">{t('perMonth')}</span></div>
                   ) : (
                     <div className="text-3xl font-bold">
                       ${tier.price[billingPeriod]}
                       <span className="text-sm font-normal text-gray-600">
-                        /{billingPeriod === 'monthly' ? 'month' : 'year'}
+                          {billingPeriod === 'monthly' ? t('perMonth') : t('perYear')}
                       </span>
                     </div>
                   )}
@@ -253,12 +255,12 @@ const SubscriptionPage: React.FC = () => {
                   disabled={!!processingTier || currentTier === tier.id}
                 >
                   {processingTier === tier.id
-                    ? 'Updating...'
+                    ? `${t('update')}...`
                     : currentTier === tier.id
-                    ? 'Current Plan'
+                    ? t('currentPlan')
                     : tier.id === 'free'
-                    ? `Switch to ${SUBSCRIPTION_TIER_LABELS.free}`
-                    : `Get ${tier.name}`}
+                    ? t('switchToPlan', { plan: SUBSCRIPTION_TIER_LABELS.free })
+                    : t('getPlan', { plan: tier.name })}
                 </Button>
               </CardContent>
             </Card>
@@ -267,7 +269,7 @@ const SubscriptionPage: React.FC = () => {
 
         <div className="text-center mt-8">
           <Button variant="ghost" onClick={() => navigate(-1)}>
-            ← Back
+            ← {t('back')}
           </Button>
         </div>
       </div>

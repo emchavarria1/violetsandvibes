@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 interface ValidationProps {
   profile: any;
@@ -8,36 +9,37 @@ interface ValidationProps {
 }
 
 const ProfileValidation: React.FC<ValidationProps> = ({ profile, currentStep }) => {
+  const { t } = useI18n();
   const validations = [
     {
       step: 0,
-      label: 'Basic Info',
+      label: t('basicInfo'),
       checks: [
-        { field: 'name', label: 'Name', valid: !!profile.name },
-        { field: 'age', label: 'Age', valid: !!profile.age && parseInt(profile.age) >= 18 },
-        { field: 'bio', label: 'Bio', valid: !!profile.bio && profile.bio.length >= 20 }
+        { field: 'name', label: t('name'), valid: !!profile.name },
+        { field: 'age', label: t('ageRequired').replace(' *', ''), valid: !!profile.age && parseInt(profile.age) >= 18 },
+        { field: 'bio', label: t('bioRequired').replace(' *', ''), valid: !!profile.bio && profile.bio.length >= 20 }
       ]
     },
     {
       step: 1,
-      label: 'Identity',
+      label: t('identity'),
       checks: [
-        { field: 'genderIdentity', label: 'Gender Identity', valid: !!profile.genderIdentity },
-        { field: 'sexualOrientation', label: 'Sexual Orientation', valid: !!profile.sexualOrientation }
+        { field: 'genderIdentity', label: t('genderIdentityRequired').replace(' *', ''), valid: !!profile.genderIdentity },
+        { field: 'sexualOrientation', label: t('sexualOrientationRequired').replace(' *', ''), valid: !!profile.sexualOrientation }
       ]
     },
     {
       step: 2,
-      label: 'Lifestyle',
+      label: t('interestsLabel'),
       checks: [
-        { field: 'interests', label: 'Interests', valid: profile.interests && profile.interests.length >= 3 }
+        { field: 'interests', label: t('interestsLabel'), valid: profile.interests && profile.interests.length >= 3 }
       ]
     },
     {
       step: 3,
-      label: 'Photos',
+      label: t('photosLabel'),
       checks: [
-        { field: 'photos', label: 'Profile Photos', valid: profile.photos && profile.photos.length >= 1 }
+        { field: 'photos', label: t('profilePhotos'), valid: profile.photos && profile.photos.length >= 1 }
       ]
     }
   ];
@@ -59,7 +61,7 @@ const ProfileValidation: React.FC<ValidationProps> = ({ profile, currentStep }) 
           <XCircle className="w-5 h-5 text-red-500" />
         )}
         <h3 className="font-medium">
-          {currentValidation.label} Validation
+          {currentValidation.label} {t('validation')}
         </h3>
       </div>
       
@@ -71,7 +73,7 @@ const ProfileValidation: React.FC<ValidationProps> = ({ profile, currentStep }) 
               variant={check.valid ? "default" : "destructive"}
               className="text-xs"
             >
-              {check.valid ? 'Complete' : 'Required'}
+              {check.valid ? t('completeLabel') : t('requiredLabel')}
             </Badge>
           </div>
         ))}
@@ -79,7 +81,7 @@ const ProfileValidation: React.FC<ValidationProps> = ({ profile, currentStep }) 
       
       {!allValid && (
         <p className="text-xs text-gray-500 mt-2">
-          Complete all required fields to continue to the next step.
+          {t('completeRequiredFieldsToContinue')}
         </p>
       )}
     </div>

@@ -3,29 +3,30 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Gift, Share2, ShieldCheck, Sparkles, Users } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 const inviteUrl = "https://violetsandvibes.com/signin";
 
-const rewardItems = [
-  "3 SuperLikes",
-  "24-hour profile boost",
-  "Trusted circle badge",
-];
-
 export const WomenInviteWomenCard: React.FC = () => {
   const { toast } = useToast();
+  const { t } = useI18n();
+  const rewardItems = [
+    t("superLikesReward"),
+    t("profileBoostReward"),
+    t("trustedCircleBadge"),
+  ];
 
   const handleCopyInvite = async () => {
     try {
       await navigator.clipboard.writeText(inviteUrl);
       toast({
-        title: "Invite link copied",
-        description: "Share it with women you trust.",
+        title: t("inviteLinkCopied"),
+        description: t("shareWithWomenYouTrust"),
       });
     } catch (error) {
       toast({
-        title: "Copy failed",
-        description: "Could not copy the invite link right now.",
+        title: t("copyFailed"),
+        description: t("couldNotCopyInviteLink"),
         variant: "destructive",
       });
     }
@@ -35,8 +36,8 @@ export const WomenInviteWomenCard: React.FC = () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Join me on Violets & Vibes",
-          text: "Help build a safe community. Invite 3 women you trust.",
+          title: t("joinMeOnVioletsAndVibes"),
+          text: t("helpBuildSafeCommunity"),
           url: inviteUrl,
         });
         return;
@@ -57,20 +58,19 @@ export const WomenInviteWomenCard: React.FC = () => {
         <div className="relative">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-100">
             <ShieldCheck className="h-3.5 w-3.5" />
-            Trust Growth Loop
+            {t("trustGrowthLoop")}
           </div>
 
           <div className="grid gap-5 lg:grid-cols-[1.3fr_0.9fr] lg:items-start">
             <div>
               <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
-                Women Invite Women
+                {t("womenInviteWomen")}
               </h3>
               <p className="mt-3 max-w-2xl text-sm sm:text-base text-white/85">
-                Help build a safe community. Invite 3 women you trust.
+                {t("helpBuildSafeCommunity")}
               </p>
               <p className="mt-3 max-w-2xl text-sm sm:text-base text-white/70">
-                Safe communities grow through trusted networks, not ads. One member invites three women,
-                those women invite three more, and the circle grows with trust built in.
+                {t("safeCommunitiesGrowTrustedNetworks")}
               </p>
 
               <div className="mt-4 flex flex-wrap gap-2">
@@ -91,7 +91,7 @@ export const WomenInviteWomenCard: React.FC = () => {
                   className="bg-pink-500 text-white hover:bg-pink-400"
                 >
                   <Share2 className="mr-2 h-4 w-4" />
-                  Invite 3 trusted women
+                  {t("inviteTrustedWomen")}
                 </Button>
                 <Button
                   variant="outline"
@@ -99,7 +99,7 @@ export const WomenInviteWomenCard: React.FC = () => {
                   className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
                 >
                   <Copy className="mr-2 h-4 w-4" />
-                  Copy Invite Link
+                  {t("copyInviteLink")}
                 </Button>
               </div>
             </div>
@@ -107,21 +107,21 @@ export const WomenInviteWomenCard: React.FC = () => {
             <div className="rounded-[24px] border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
               <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white/90">
                 <Users className="h-4 w-4 text-pink-300" />
-                Why it grows
+                {t("whyItGrows")}
               </div>
               <div className="space-y-3 text-sm text-white/75">
                 <div className="rounded-2xl border border-white/10 bg-black/15 p-3">
-                  User joins
+                  {t("userJoins")}
                 </div>
                 <div className="flex items-center gap-2 text-pink-200">
                   <Sparkles className="h-4 w-4" />
-                  invites 3 trusted friends
+                  {t("invites3TrustedFriends")}
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-black/15 p-3">
-                  Those friends invite 3 more
+                  {t("thoseFriendsInvite3More")}
                 </div>
                 <div className="text-white/65">
-                  Exponential growth, but through trusted networks instead of cold acquisition.
+                  {t("exponentialGrowthTrustedNetworks")}
                 </div>
               </div>
             </div>

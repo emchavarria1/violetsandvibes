@@ -73,43 +73,43 @@ function buildSafetyScore(data: ScoreInput) {
   );
 
   const badgeLabel =
-    score >= 85 ? "Trusted Member" : score >= 70 ? "Respect Verified" : score >= 50 ? "Safety Building" : "New Member";
+    score >= 85 ? "trustedMember" : score >= 70 ? "respectVerified" : score >= 50 ? "safetyBuilding" : "newMember";
 
   return {
     score,
     badgeLabel,
     breakdown: [
       {
-        label: "Verification",
+        label: "verificationLabel",
         value: verificationPoints,
         icon: ShieldCheck,
         detail:
           verificationPoints >= 45
-            ? "Photo and ID checks approved"
+            ? "photoAndIdChecksApproved"
             : verificationPoints >= 25
-              ? "Photo verification complete"
-              : "Verification still in progress",
+              ? "photoVerificationComplete"
+              : "verificationInProgress",
       },
       {
-        label: "Respectful messaging",
+        label: "respectfulMessaging",
         value: respectfulMessaging,
         icon: HeartHandshake,
-        detail: reports === 0 ? "No issues on record" : "Signals need review",
+        detail: reports === 0 ? "noIssuesOnRecord" : "signalsNeedReview",
       },
       {
-        label: "Community endorsements",
+        label: "communityEndorsements",
         value: endorsementPoints,
         icon: UserCheck,
         detail:
           endorsements > 0
-            ? `${endorsements} endorsement${endorsements === 1 ? "" : "s"} from the community`
-            : "Endorsements unlock over time",
+            ? ["communityEndorsementsCount", endorsements] as const
+            : "endorsementsUnlockOverTime",
       },
       {
-        label: "Reports",
+        label: "reportsLabel",
         value: reportPoints,
         icon: AlertTriangle,
-        detail: reports === 0 ? "No reports on record" : `${reports} report${reports === 1 ? "" : "s"} logged`,
+        detail: reports === 0 ? "noIssuesOnRecord" : ["reportsLogged", reports] as const,
       },
     ],
   };
@@ -124,30 +124,31 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
   const { toast } = useToast();
   const result = buildSafetyScore(data);
   const shareLabel =
-    result.badgeLabel === "Trusted Member"
-      ? "Verified Safe Communicator"
+    result.badgeLabel === "trustedMember"
+      ? "verifiedSafeCommunicator"
       : result.badgeLabel;
 
   const handleShare = async () => {
-    const text = `I earned the ${shareLabel} badge on Violets & Vibes.`;
+    const shareLabelText = t(shareLabel);
+    const text = `I earned the ${shareLabelText} badge on Violets & Vibes.`;
 
     try {
       const result = await shareBadgeCard({
-        badgeTitle: shareLabel,
+        badgeTitle: shareLabelText,
         badgeSubtitle: text,
         profileName: displayName,
       });
       toast({
-        title: result === "shared" ? "Badge shared" : "Badge downloaded",
+        title: result === "shared" ? t("badgeShared") : t("badgeDownloaded"),
         description:
           result === "shared"
-            ? "Your trust badge card is ready to post."
-            : "Your trust badge card was saved as an image.",
+            ? t("trustBadgeReadyToPost")
+            : t("trustBadgeSavedAsImage"),
       });
     } catch (error) {
       console.error("Could not share safety badge:", error);
       toast({
-        title: "Could not share badge",
+        title: t("couldNotShareBadge"),
         description: "Please try again.",
         variant: "destructive",
       });
@@ -159,7 +160,7 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
       <div className="flex items-center gap-2">
         <Badge className="border-emerald-300/30 bg-emerald-400/15 text-emerald-50">
           <ShieldCheck className="mr-1.5 h-3.5 w-3.5" />
-          {result.badgeLabel}
+          {t(result.badgeLabel)}
         </Badge>
         <span className="text-xs text-white/70">{t("safetyScore")} {result.score}</span>
       </div>
@@ -178,11 +179,11 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
             <div className="text-3xl font-semibold text-white">{result.score}</div>
             <Badge className="border-emerald-300/30 bg-emerald-400/15 text-emerald-50">
               <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-              {result.badgeLabel}
+              {t(result.badgeLabel)}
             </Badge>
           </div>
           <p className="mt-2 text-sm text-white/70">
-            Trust is earned here through verification, kindness, and steady community signals.
+            {t("trustEarnedThroughSignals")}
           </p>
         </div>
         <Button
@@ -205,11 +206,15 @@ export const ProfileSafetyScore: React.FC<ProfileSafetyScoreProps> = ({
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 text-white">
                   <Icon className="h-4 w-4 text-emerald-200" />
-                  <span className="font-medium">{item.label}</span>
+                  <span className="font-medium">{t(item.label)}</span>
                 </div>
                 <span className="text-sm font-semibold text-emerald-100">{item.value}</span>
               </div>
-              <div className="mt-2 text-sm text-white/65">{item.detail}</div>
+              <div className="mt-2 text-sm text-white/65">
+                {Array.isArray(item.detail)
+                  ? t(item.detail[0], { count: item.detail[1] })
+                  : t(item.detail)}
+              </div>
             </div>
           );
         })}

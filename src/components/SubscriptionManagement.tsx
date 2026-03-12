@@ -8,6 +8,7 @@ import { Calendar, CreditCard, Crown, Star, Zap } from 'lucide-react';
 import { SubscriptionTier, SUBSCRIPTION_TIER_LABELS } from '@/types/subscription';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
+import { useI18n } from '@/lib/i18n';
 
 interface SubscriptionManagementProps {
   currentTier: SubscriptionTier;
@@ -21,6 +22,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
   onTierChange,
 }) => {
   const { toast } = useToast();
+  const { t } = useI18n();
   const [isCancelling, setIsCancelling] = useState(false);
   const [isUpdatingPaymentMethod, setIsUpdatingPaymentMethod] = useState(false);
   const isIOS = Capacitor.getPlatform() === 'ios';
@@ -44,7 +46,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
   };
 
   const handleCancelSubscription = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription?')) return;
+    if (!confirm(t('cancelSubscription'))) return;
     
     setIsCancelling(true);
     try {
@@ -56,14 +58,14 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
 
       onTierChange?.('free');
       toast({
-        title: 'Subscription cancelled',
+        title: t('cancelSubscription'),
         description:
           data?.message || 'Your plan has been switched to 💜 Violets Verified Free.',
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to cancel subscription. Please try again.",
+        title: t('error'),
+        description: t('failedToCancelSubscription'),
         variant: "destructive"
       });
     } finally {
@@ -80,13 +82,13 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
       if (error) throw error;
 
       toast({
-        title: 'Payment method',
+        title: t('paymentMethod'),
         description: data?.message || 'Payment method flow is available.',
       });
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'Failed to open payment method flow. Please try again.',
+        title: t('error'),
+        description: t('failedToOpenPaymentFlow'),
         variant: 'destructive',
       });
     } finally {
@@ -100,7 +102,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             {tierInfo[currentTier].icon}
-            Current Subscription
+            {t('currentSubscription')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -111,17 +113,17 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
               </Badge>
               {currentTier !== 'free' && (
                 <p className="text-sm text-gray-600 mt-1">
-                  Renews on {subscriptionData.nextBillingDate}
+                  {t('renewsOn', { date: subscriptionData.nextBillingDate })}
                 </p>
               )}
             </div>
             {currentTier === 'free' ? (
               <Button onClick={onUpgrade} className="bg-pink-500 hover:bg-pink-600">
-                Upgrade Now
+                {t('upgradeNow')}
               </Button>
             ) : (
               <Button variant="outline" onClick={onUpgrade}>
-                Change Plan
+                {t('changePlan')}
               </Button>
             )}
           </div>
@@ -131,7 +133,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
               <div className="flex items-center gap-2 mb-2">
                 <Calendar className="w-4 h-4" />
                 <span className="text-sm font-medium">
-                  {subscriptionData.daysRemaining} days remaining
+                  {t('daysRemaining', { count: subscriptionData.daysRemaining })}
                 </span>
               </div>
               <Progress 
@@ -146,7 +148,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
       {currentTier !== 'free' && (
         <Card>
           <CardHeader>
-            <CardTitle>Usage This Month</CardTitle>
+            <CardTitle>{t('usageThisMonth')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {Object.entries(subscriptionData.usageStats).map(([key, stats]) => (
@@ -167,17 +169,17 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CreditCard className="w-5 h-5" />
-              Payment Method
+              {t('paymentMethod')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">
-                  {isIOS ? 'Managed through App Store' : `Card ending in ${subscriptionData.paymentMethod}`}
+                  {isIOS ? t('managedThroughAppStore') : `Card ending in ${subscriptionData.paymentMethod}`}
                 </p>
                 <p className="text-sm text-gray-600">
-                  {isIOS ? 'Subscription and billing are managed by Apple.' : 'Auto-renew enabled'}
+                  {isIOS ? t('subscriptionBillingManagedByApple') : t('autoRenewEnabled')}
                 </p>
               </div>
               <Button
@@ -185,7 +187,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
                 onClick={() => void handleUpdatePaymentMethod()}
                 disabled={isUpdatingPaymentMethod}
               >
-                {isUpdatingPaymentMethod ? 'Opening...' : 'Update'}
+                {isUpdatingPaymentMethod ? `${t('opening')}...` : t('update')}
               </Button>
             </div>
           </CardContent>
@@ -201,7 +203,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
               onClick={() => void handleCancelSubscription()}
               disabled={isCancelling}
             >
-              {isCancelling ? 'Cancelling...' : 'Cancel Subscription'}
+              {isCancelling ? `${t('cancelling')}...` : t('cancelSubscription')}
             </Button>
           </CardContent>
         </Card>

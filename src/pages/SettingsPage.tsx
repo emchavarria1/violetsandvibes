@@ -175,7 +175,7 @@ const SettingsPage: React.FC = () => {
   const { toast } = useToast();
   const { user, signOut } = useAuth();
   const { setTheme } = useTheme();
-  const { t } = useI18n();
+  const { t, localePreference, setLocalePreference } = useI18n();
   
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>('free');
   
@@ -529,6 +529,31 @@ const SettingsPage: React.FC = () => {
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+                  <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
+                    <Globe className="h-4 w-4" />
+                    {t('language')}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {([
+                      { key: 'system', label: t('systemDefault') },
+                      { key: 'en', label: t('english') },
+                      { key: 'es', label: t('spanish') },
+                    ] as const).map((option) => (
+                      <Button
+                        key={option.key}
+                        type="button"
+                        variant={localePreference === option.key ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setLocalePreference(option.key)}
+                      >
+                        {option.label}
+                      </Button>
+                    ))}
+                  </div>
+                  <div className="text-xs text-gray-600">{t('languageFollowsPhone')}</div>
+                </div>
+
                 {APP_PREFERENCE_ITEMS.map(({ key, label }) => (
                   <div key={key} className="flex justify-between items-center">
                     <span>{appPreferenceLabel(label)}</span>

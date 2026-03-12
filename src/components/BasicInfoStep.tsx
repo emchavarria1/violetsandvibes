@@ -2,6 +2,7 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { MapPin, Briefcase } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 interface BasicInfoStepProps {
   profile: any;
@@ -9,26 +10,27 @@ interface BasicInfoStepProps {
 }
 
 const BasicInfoStep: React.FC<BasicInfoStepProps> = ({ profile, onUpdate }) => {
+  const { t } = useI18n();
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Basic Information</h2>
+        <h2 className="text-2xl font-bold mb-2">{t('basicInformation')}</h2>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Name *</label>
+          <label className="block text-sm font-medium mb-2">{t('nameRequired')}</label>
           <Input
-            placeholder="Your name"
+            placeholder={t('yourName')}
             value={profile.name}
             onChange={(e) => onUpdate({ name: e.target.value })}
             className="bg-white text-black placeholder:text-gray-500"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Age *</label>
+          <label className="block text-sm font-medium mb-2">{t('ageRequired')}</label>
           <Input
-            placeholder="Your age"
+            placeholder={t('yourAge')}
             type="number"
             value={profile.age}
             onChange={(e) => onUpdate({ age: e.target.value })}
@@ -41,10 +43,10 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({ profile, onUpdate }) => {
         <div>
           <label className="block text-sm font-medium mb-2 flex items-center gap-2">
             <MapPin className="w-4 h-4" />
-            Location
+            {t('location')}
           </label>
           <Input
-            placeholder="City, State"
+            placeholder={t('cityState')}
             value={profile.location}
             onChange={(e) => onUpdate({ location: e.target.value })}
             className="bg-white text-black placeholder:text-gray-500"
@@ -53,10 +55,10 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({ profile, onUpdate }) => {
         <div>
           <label className="block text-sm font-medium mb-2 flex items-center gap-2">
             <Briefcase className="w-4 h-4" />
-            Occupation
+            {t('occupation')}
           </label>
           <Input
-            placeholder="Your job"
+            placeholder={t('yourJob')}
             value={profile.occupation}
             onChange={(e) => onUpdate({ occupation: e.target.value })}
             className="bg-white text-black placeholder:text-gray-500"
@@ -65,9 +67,9 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({ profile, onUpdate }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">Bio *</label>
+        <label className="block text-sm font-medium mb-2">{t('bioRequired')}</label>
         <Textarea
-          placeholder="Tell us about yourself... What makes you unique?"
+          placeholder={t('bioPrompt')}
           value={profile.bio}
           onChange={(e) => onUpdate({ bio: e.target.value })}
           rows={4}

@@ -17,6 +17,7 @@ import LifestyleStep from './LifestyleStep';
 import SafetyStep from './SafetyStep';
 import PrivacyStep from './PrivacyStep';
 import ProfileValidation from './ProfileValidation';
+import { useI18n } from '@/lib/i18n';
 
 interface EnhancedProfileCreationFlowProps {
   onComplete?: (profile: any) => void;
@@ -94,6 +95,7 @@ const EnhancedProfileCreationFlow = forwardRef<
   const { profile: existingProfile, loading: profileLoading } = useProfile();
   const location = useLocation();
   const { toast } = useToast();
+  const { t } = useI18n();
   // /edit-profile should behave as edit mode by default, even without navigation state.
   const isEditing = location.state?.isEditing ?? true;
   
@@ -168,13 +170,13 @@ const EnhancedProfileCreationFlow = forwardRef<
   }, [isEditing, existingProfile, profileLoading]);
 
   const steps = [
-    { title: 'Basic Info', component: BasicInfoStep },
-    { title: 'Identity', component: IdentityStep },
-    { title: 'Interests', component: InterestsSelector },
-    { title: 'Lifestyle', component: LifestyleStep },
-    { title: 'Photos', component: PhotosStep },
-    { title: 'Privacy', component: PrivacyStep },
-    { title: 'Safety', component: SafetyStep }
+    { title: t('basicInfo'), component: BasicInfoStep },
+    { title: t('identity'), component: IdentityStep },
+    { title: t('interestsLabel'), component: InterestsSelector },
+    { title: t('lifestyle'), component: LifestyleStep },
+    { title: t('photosLabel'), component: PhotosStep },
+    { title: t('privacy'), component: PrivacyStep },
+    { title: t('safety'), component: SafetyStep }
   ];
 
   const updateProfile = (updates: any) => {
@@ -256,16 +258,16 @@ const EnhancedProfileCreationFlow = forwardRef<
       if (error) throw error;
       
       toast({
-        title: "Profile Saved",
-        description: "Your profile has been updated successfully.",
+        title: t('save'),
+        description: t('profileUpdatedSuccessfully'),
       });
       
       onComplete?.(profileData);
     } catch (error) {
       console.error('Error saving profile:', error);
       toast({
-        title: "Error",
-        description: "Failed to save profile. Please try again.",
+        title: t('error'),
+        description: t('failedToSaveProfile'),
         variant: "destructive",
       });
     } finally {
@@ -303,7 +305,7 @@ const EnhancedProfileCreationFlow = forwardRef<
       <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 mx-auto mb-4"></div>
-          <p>Loading profile...</p>
+          <p>{t('loadingProfile')}</p>
         </div>
       </div>
     );
@@ -318,7 +320,7 @@ const EnhancedProfileCreationFlow = forwardRef<
       <div className="max-w-2xl mx-auto">
         <Card>
           <CardContent className="p-6">
-            <h2 className="text-xl font-bold mb-4">Profile Preview</h2>
+            <h2 className="text-xl font-bold mb-4">{t('profilePreview')}</h2>
             <div className="space-y-4">
               <div>
                 <h3 className="font-semibold">{profile.name}, {profile.age}</h3>
@@ -329,7 +331,7 @@ const EnhancedProfileCreationFlow = forwardRef<
                 <p className="text-sm">{profile.bio}</p>
               </div>
               <div>
-                <p className="text-sm font-medium">Interests:</p>
+                <p className="text-sm font-medium">{t('interestsLabel')}:</p>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {profile.interests.map((interest, index) => (
                     <Badge key={index} variant="secondary">{interest}</Badge>
@@ -348,14 +350,14 @@ const EnhancedProfileCreationFlow = forwardRef<
       <div className="bg-white rounded-lg shadow-lg p-6">
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
-            <Badge variant="outline">{currentStep + 1} of {steps.length}</Badge>
+            <Badge variant="outline">{t('stepOf', { current: currentStep + 1, total: steps.length })}</Badge>
             <h1 className="text-lg font-semibold">
-              {isEditing ? `Edit ${steps[currentStep].title}` : steps[currentStep].title}
+              {isEditing ? t('editStep', { step: steps[currentStep].title }) : steps[currentStep].title}
             </h1>
             {autoSaving && (
               <Badge variant="secondary" className="text-xs">
                 <Save className="w-3 h-3 mr-1" />
-                Saving...
+                {t('autoSaving')}
               </Badge>
             )}
           </div>
@@ -380,7 +382,7 @@ const EnhancedProfileCreationFlow = forwardRef<
             disabled={saving}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            {currentStep === 0 && onCancel ? 'Cancel' : 'Back'}
+            {currentStep === 0 && onCancel ? t('cancel') : t('back')}
           </Button>
           
           <Button
@@ -388,8 +390,8 @@ const EnhancedProfileCreationFlow = forwardRef<
             disabled={!isValid || saving}
             className="bg-pink-500 hover:bg-pink-600"
           >
-            {saving ? 'Saving...' : currentStep === steps.length - 1 ? 
-              (isEditing ? 'Save Changes' : 'Complete Profile') : 'Continue'}
+            {saving ? t('saving') : currentStep === steps.length - 1 ?
+              (isEditing ? t('saveChanges') : t('completeProfile')) : t('continueAction')}
             {currentStep < steps.length - 1 && <ArrowRight className="w-4 h-4 ml-2" />}
           </Button>
         </div>

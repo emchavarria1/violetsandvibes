@@ -10,11 +10,13 @@ import { useToast } from '@/hooks/use-toast';
 import { SubscriptionTier } from '@/types/subscription';
 import { useAuth } from '@/hooks/useAuth';
 import { loadEffectiveSubscriptionTierForUser } from '@/lib/subscriptionTier';
+import { useI18n } from '@/lib/i18n';
 
 const ProfileEditPage: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useI18n();
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>('free');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,15 +53,15 @@ const ProfileEditPage: React.FC = () => {
     try {
       console.log('Profile updated:', profile);
       toast({
-        title: "Profile Updated",
-        description: "Your profile has been saved successfully.",
+        title: t('profileUpdated'),
+        description: t('profileUpdatedSuccessfully'),
       });
       setHasUnsavedChanges(false);
       navigate('/profile');
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to save profile. Please try again.",
+        title: t('error'),
+        description: t('failedToSaveProfile'),
         variant: "destructive",
       });
     } finally {
@@ -69,7 +71,7 @@ const ProfileEditPage: React.FC = () => {
 
   const handleCancel = () => {
     if (hasUnsavedChanges) {
-      if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
+      if (confirm(t('unsavedChangesLeaveConfirm'))) {
         navigate('/profile');
       }
     } else {
@@ -82,8 +84,8 @@ const ProfileEditPage: React.FC = () => {
 
     setIsLoading(true);
     toast({
-      title: "Saving Profile",
-      description: "Your changes are being saved...",
+      title: t('savingProfile'),
+      description: t('yourChangesAreBeingSaved'),
     });
 
     try {
@@ -97,16 +99,16 @@ const ProfileEditPage: React.FC = () => {
   const handlePreview = () => {
     setShowPreview(!showPreview);
     toast({
-      title: showPreview ? "Edit Mode" : "Preview Mode",
-      description: showPreview ? "Back to editing" : "Viewing as others see you",
+      title: showPreview ? t('editMode') : t('previewMode'),
+      description: showPreview ? t('backToEditing') : t('viewingAsOthersSeeYou'),
     });
   };
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.origin + '/profile');
     toast({
-      title: "Profile Link Copied",
-      description: "Share your profile with others!",
+      title: t('profileLinkCopied'),
+      description: t('shareYourProfileWithOthers'),
     });
   };
 
@@ -123,23 +125,23 @@ const ProfileEditPage: React.FC = () => {
     flowRef.current?.goToStep(4);
 
     toast({
-      title: "Photo Upload",
-      description: "Jumped to the Photos step.",
+      title: t('photoUpload'),
+      description: t('jumpedToPhotosStep'),
     });
   };
 
   const handleBoostProfile = () => {
     if (currentTier === 'free') {
       toast({
-        title: "Upgrade Required",
-        description: "Profile boost is available with 💜 Violets Verified Plus!",
+        title: t('upgradeRequired'),
+        description: t('profileBoostUpgradeRequired'),
         variant: "destructive",
       });
       return;
     }
     toast({
-      title: "Profile Boosted!",
-      description: "Your profile will be shown to more people.",
+      title: t('profileBoosted'),
+      description: t('profileShownToMorePeople'),
     });
   };
 
@@ -148,7 +150,7 @@ const ProfileEditPage: React.FC = () => {
       {/* Header with dropdown */}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b p-4">
         <div className="flex items-center justify-between max-w-md mx-auto">
-          <h1 className="text-xl font-bold">Edit Profile</h1>
+          <h1 className="text-xl font-bold">{t('editProfile')}</h1>
           <ProfileEditDropdown
             onSave={handleSave}
             onPreview={handlePreview}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useI18n } from '@/lib/i18n';
 
 interface IdentityStepProps {
   profile: any;
@@ -9,6 +10,7 @@ interface IdentityStepProps {
 }
 
 const IdentityStep: React.FC<IdentityStepProps> = ({ profile, onUpdate }) => {
+  const { t } = useI18n();
   const genderOptions = ['Woman', 'Man', 'Non-binary', 'Genderfluid', 'Transgender', 'Questioning'];
   const orientationOptions = ['Lesbian', 'Gay', 'Bisexual', 'Pansexual', 'Queer', 'Questioning', 'Asexual'];
   const prideFlags = [
@@ -31,15 +33,33 @@ const IdentityStep: React.FC<IdentityStepProps> = ({ profile, onUpdate }) => {
     onUpdate({ pridePins: nextPins });
   };
 
+  const genderLabelMap: Record<string, string> = {
+    Woman: 'Woman',
+    Man: 'Man',
+    'Non-binary': 'Non-binary',
+    Genderfluid: 'Genderfluid',
+    Transgender: 'Transgender',
+    Questioning: 'Questioning',
+  };
+  const orientationLabelMap: Record<string, string> = {
+    Lesbian: 'Lesbian',
+    Gay: 'Gay',
+    Bisexual: 'Bisexual',
+    Pansexual: 'Pansexual',
+    Queer: 'Queer',
+    Questioning: 'Questioning',
+    Asexual: 'Asexual',
+  };
+
   const addCustomGenderIdentity = () => {
-    const value = window.prompt('Enter your custom gender identity:');
+    const value = window.prompt(t('enterCustomGenderIdentity'));
     const trimmed = value?.trim();
     if (!trimmed) return;
     onUpdate({ genderIdentity: trimmed });
   };
 
   const addCustomOrientation = () => {
-    const value = window.prompt('Enter your custom sexual orientation:');
+    const value = window.prompt(t('enterCustomOrientation'));
     const trimmed = value?.trim();
     if (!trimmed) return;
     onUpdate({ sexualOrientation: trimmed });
@@ -58,11 +78,11 @@ const IdentityStep: React.FC<IdentityStepProps> = ({ profile, onUpdate }) => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Identity & Expression</h2>
+        <h2 className="text-2xl font-bold mb-2">{t('identityAndExpression')}</h2>
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-3">Gender Identity *</label>
+        <label className="block text-sm font-medium mb-3">{t('genderIdentityRequired')}</label>
         <div className="grid grid-cols-2 gap-2">
           {genderOptions.map((option) => (
             <Button
@@ -71,23 +91,23 @@ const IdentityStep: React.FC<IdentityStepProps> = ({ profile, onUpdate }) => {
               className="justify-start"
               onClick={() => onUpdate({ genderIdentity: option })}
             >
-              {option}
+              {t(genderLabelMap[option] || option)}
             </Button>
           ))}
         </div>
         <Button variant="ghost" className="mt-2 text-sm" onClick={addCustomGenderIdentity} type="button">
           <Plus className="w-4 h-4 mr-1" />
-          Add custom identity
+          {t('addCustomIdentity')}
         </Button>
         {customGenderIdentity ? (
           <p className="text-xs text-white/70 mt-1">
-            Selected custom identity: {customGenderIdentity}
+            {t('selectedCustomIdentity', { value: customGenderIdentity })}
           </p>
         ) : null}
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-3">Sexual Orientation *</label>
+        <label className="block text-sm font-medium mb-3">{t('sexualOrientationRequired')}</label>
         <div className="grid grid-cols-2 gap-2">
           {orientationOptions.map((option) => (
             <Button
@@ -96,40 +116,40 @@ const IdentityStep: React.FC<IdentityStepProps> = ({ profile, onUpdate }) => {
               className="justify-start"
               onClick={() => onUpdate({ sexualOrientation: option })}
             >
-              {option}
+              {t(orientationLabelMap[option] || option)}
             </Button>
           ))}
         </div>
         <Button variant="ghost" className="mt-2 text-sm" onClick={addCustomOrientation} type="button">
           <Plus className="w-4 h-4 mr-1" />
-          Add custom identity
+          {t('addCustomOrientation')}
         </Button>
         {customOrientation ? (
           <p className="text-xs text-white/70 mt-1">
-            Selected custom orientation: {customOrientation}
+            {t('selectedCustomOrientation', { value: customOrientation })}
           </p>
         ) : null}
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-3">Pronouns (Optional)</label>
+        <label className="block text-sm font-medium mb-3">{t('pronounsOptional')}</label>
         <div className="flex items-center space-x-2">
           <Checkbox 
             id="show-pronouns"
             checked={profile.showPronouns}
             onCheckedChange={(checked) => onUpdate({ showPronouns: checked })}
           />
-          <label htmlFor="show-pronouns" className="text-sm">Show pronouns on my profile</label>
+          <label htmlFor="show-pronouns" className="text-sm">{t('showPronounsOnProfile')}</label>
         </div>
       </div>
 
       <div>
-        <h3 className="font-semibold mb-3">Pride Pins & Community Labels</h3>
+        <h3 className="font-semibold mb-3">{t('pridePinsAndCommunityLabels')}</h3>
         <p className="text-sm text-white/70 mb-4">
-          Select pins that represent your identity, community, and what you're looking for. These help you connect with like-minded people!
+          {t('pridePinsDescription')}
         </p>
         <p className="text-xs text-white/55 mb-4">
-          Tap to select or unselect.
+          {t('tapToSelectOrUnselect')}
         </p>
         <div className="grid grid-cols-2 gap-2">
           {prideFlags.map((flag) => (

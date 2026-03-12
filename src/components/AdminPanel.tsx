@@ -6,6 +6,7 @@ import { Shield, CheckCircle2, XCircle, RefreshCw, Eye, MessagesSquare } from 'l
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { FunctionsHttpError } from '@supabase/supabase-js';
+import { useI18n } from '@/lib/i18n';
 
 interface AdminPanelProps {
   user: any;
@@ -62,6 +63,7 @@ const resolveFunctionErrorMessage = async (error: unknown) => {
 };
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
+  const { t } = useI18n();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [queueLoading, setQueueLoading] = useState(true);
   const [queueError, setQueueError] = useState<string | null>(null);
@@ -228,7 +230,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
       if (error) throw error;
 
       toast({
-        title: decision === 'approved' ? 'Circle approved' : 'Circle rejected',
+        title: decision === 'approved' ? t('approve') : t('reject'),
         description: `${suggestion.name} was ${decision}.`,
       });
     } catch (error) {
@@ -262,7 +264,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
       if (error) throw error;
 
       toast({
-        title: decision === 'approve' ? 'Verification approved' : 'Verification rejected',
+        title: decision === 'approve' ? t('approved') : t('rejected'),
         description:
           data?.targetUserId === item.userId
             ? `${item.name} was updated successfully.`
@@ -290,7 +292,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
   if (isAdmin === false) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-muted-foreground">Access denied. Admin privileges required.</p>
+        <p className="text-muted-foreground">{t('adminAccessDenied')}</p>
       </div>
     );
   }
@@ -299,14 +301,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
     <div className="space-y-6">
       <div className="flex items-center space-x-2">
         <Shield className="h-6 w-6 text-primary" />
-        <h1 className="wedding-title text-2xl font-bold rainbow-header">Admin Verification Queue</h1>
-        <Badge variant="secondary">{queue.length} pending</Badge>
+        <h1 className="wedding-title text-2xl font-bold rainbow-header">{t('adminVerificationQueue')}</h1>
+        <Badge variant="secondary">{queue.length} {t('pending')}</Badge>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Profiles</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('pendingProfiles')}</CardTitle>
             <Shield className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -316,7 +318,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Photo Decisions Needed</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('photoDecisionsNeeded')}</CardTitle>
             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -326,7 +328,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">ID Decisions Needed</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('idDecisionsNeeded')}</CardTitle>
             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -336,7 +338,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Circle Suggestions</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('circleSuggestions')}</CardTitle>
             <MessagesSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -348,7 +350,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between gap-3">
-            <CardTitle>Pending Verification Submissions</CardTitle>
+            <CardTitle>{t('pendingVerificationSubmissions')}</CardTitle>
             <Button
               variant="outline"
               size="sm"
@@ -356,13 +358,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
               disabled={queueLoading}
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${queueLoading ? 'animate-spin' : ''}`} />
-              Refresh
+              {t('refresh')}
             </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {queueLoading ? (
-            <div className="text-sm text-muted-foreground">Loading verification queue…</div>
+            <div className="text-sm text-muted-foreground">{t('loadingVerificationQueue')}</div>
           ) : null}
 
           {queueError ? (
@@ -370,7 +372,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
           ) : null}
 
           {!queueLoading && !queueError && queue.length === 0 ? (
-            <div className="text-sm text-muted-foreground">No pending verification submissions.</div>
+            <div className="text-sm text-muted-foreground">{t('noPendingVerificationSubmissions')}</div>
           ) : null}
 
           {queue.map((item) => {
@@ -390,20 +392,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                       {item.username ? `@${item.username}` : item.userId}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      Submitted: {new Date(item.submittedAt).toLocaleString()}
+                      {t('submittedAt')}: {new Date(item.submittedAt).toLocaleString()}
                     </div>
                   </div>
                   <Badge variant="secondary">
-                    {item.underReview ? 'Under Review' : 'Pending'}
+                    {item.underReview ? t('underReview') : t('pending')}
                   </Badge>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
                   <Badge variant={item.photoStatus === 'submitted' ? 'default' : 'secondary'}>
-                    Photo: {item.photoStatus}
+                    {t('photoShort')}: {item.photoStatus}
                   </Badge>
                   <Badge variant={item.idStatus === 'submitted' ? 'default' : 'secondary'}>
-                    ID: {item.idStatus}
+                    {t('idShort')}: {item.idStatus}
                   </Badge>
                 </div>
 
@@ -415,7 +417,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     onClick={() => openPreview(item.photoUrl)}
                   >
                     <Eye className="h-4 w-4 mr-1" />
-                    Photo
+                    {t('photoShort')}
                   </Button>
                   <Button
                     size="sm"
@@ -424,7 +426,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     onClick={() => openPreview(item.idUrl)}
                   >
                     <Eye className="h-4 w-4 mr-1" />
-                    ID
+                    {t('idShort')}
                   </Button>
                 </div>
 
@@ -435,7 +437,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     disabled={item.photoStatus !== 'submitted' || decisionLoadingKey !== null}
                     onClick={() => void handleDecision(item, 'photo', 'approve')}
                   >
-                    {decisionLoadingKey === approvePhotoKey ? 'Saving…' : 'Approve Photo'}
+                    {decisionLoadingKey === approvePhotoKey ? `${t('saving')}...` : t('approvePhoto')}
                   </Button>
                   <Button
                     size="sm"
@@ -443,7 +445,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     disabled={item.photoStatus !== 'submitted' || decisionLoadingKey !== null}
                     onClick={() => void handleDecision(item, 'photo', 'reject')}
                   >
-                    {decisionLoadingKey === rejectPhotoKey ? 'Saving…' : 'Reject Photo'}
+                    {decisionLoadingKey === rejectPhotoKey ? `${t('saving')}...` : t('rejectPhoto')}
                   </Button>
                   <Button
                     size="sm"
@@ -451,7 +453,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     disabled={item.idStatus !== 'submitted' || decisionLoadingKey !== null}
                     onClick={() => void handleDecision(item, 'id', 'approve')}
                   >
-                    {decisionLoadingKey === approveIdKey ? 'Saving…' : 'Approve ID'}
+                    {decisionLoadingKey === approveIdKey ? `${t('saving')}...` : t('approveId')}
                   </Button>
                   <Button
                     size="sm"
@@ -459,7 +461,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     disabled={item.idStatus !== 'submitted' || decisionLoadingKey !== null}
                     onClick={() => void handleDecision(item, 'id', 'reject')}
                   >
-                    {decisionLoadingKey === rejectIdKey ? 'Saving…' : 'Reject ID'}
+                    {decisionLoadingKey === rejectIdKey ? `${t('saving')}...` : t('rejectId')}
                   </Button>
                 </div>
 
@@ -474,7 +476,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     onClick={() => void handleDecision(item, 'both', 'approve')}
                   >
                     <CheckCircle2 className="h-4 w-4 mr-1" />
-                    {decisionLoadingKey === approveBothKey ? 'Saving…' : 'Approve Both'}
+                    {decisionLoadingKey === approveBothKey ? `${t('saving')}...` : t('approveBoth')}
                   </Button>
                   <Button
                     size="sm"
@@ -486,7 +488,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     onClick={() => void handleDecision(item, 'both', 'reject')}
                   >
                     <XCircle className="h-4 w-4 mr-1" />
-                    {decisionLoadingKey === rejectBothKey ? 'Saving…' : 'Reject Both'}
+                    {decisionLoadingKey === rejectBothKey ? `${t('saving')}...` : t('rejectBoth')}
                   </Button>
                 </div>
               </div>
@@ -498,7 +500,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between gap-3">
-            <CardTitle>Pending Circle Suggestions</CardTitle>
+            <CardTitle>{t('pendingCircleSuggestions')}</CardTitle>
             <Button
               variant="outline"
               size="sm"
@@ -506,13 +508,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
               disabled={suggestionsLoading}
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${suggestionsLoading ? 'animate-spin' : ''}`} />
-              Refresh
+              {t('refresh')}
             </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {suggestionsLoading ? (
-            <div className="text-sm text-muted-foreground">Loading circle suggestions…</div>
+            <div className="text-sm text-muted-foreground">{t('loadingCircleSuggestions')}</div>
           ) : null}
 
           {suggestionsError ? (
@@ -520,7 +522,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
           ) : null}
 
           {!suggestionsLoading && !suggestionsError && suggestions.length === 0 ? (
-            <div className="text-sm text-muted-foreground">No pending circle suggestions.</div>
+            <div className="text-sm text-muted-foreground">{t('noPendingCircleSuggestions')}</div>
           ) : null}
 
           {suggestions.map((item) => {
@@ -533,14 +535,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                   <div>
                     <div className="font-semibold">{item.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      Submitted by {item.submitterName}
-                      {item.submitterUsername ? ` (@${item.submitterUsername})` : ''}
+                      {t('submittedBy', {
+                        name: item.submitterName,
+                        username: item.submitterUsername ?? '',
+                      })}
                     </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      Submitted: {new Date(item.createdAt).toLocaleString()}
-                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">{t('submittedAt')}: {new Date(item.createdAt).toLocaleString()}</div>
                   </div>
-                  <Badge variant="secondary">Pending</Badge>
+                  <Badge variant="secondary">{t('pending')}</Badge>
                 </div>
 
                 {item.note ? (
@@ -548,7 +550,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     {item.note}
                   </div>
                 ) : (
-                  <div className="text-sm text-muted-foreground">No moderator note included.</div>
+                  <div className="text-sm text-muted-foreground">{t('noModeratorNoteIncluded')}</div>
                 )}
 
                 <div className="flex flex-wrap gap-2">
@@ -559,7 +561,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     onClick={() => void handleSuggestionDecision(item, 'approved')}
                   >
                     <CheckCircle2 className="h-4 w-4 mr-1" />
-                    {decisionLoadingKey === approveKey ? 'Saving…' : 'Approve'}
+                    {decisionLoadingKey === approveKey ? `${t('saving')}...` : t('approve')}
                   </Button>
                   <Button
                     size="sm"
@@ -568,7 +570,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     onClick={() => void handleSuggestionDecision(item, 'rejected')}
                   >
                     <XCircle className="h-4 w-4 mr-1" />
-                    {decisionLoadingKey === rejectKey ? 'Saving…' : 'Reject'}
+                    {decisionLoadingKey === rejectKey ? `${t('saving')}...` : t('reject')}
                   </Button>
                 </div>
               </div>

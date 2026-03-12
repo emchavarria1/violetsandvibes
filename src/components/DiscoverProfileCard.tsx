@@ -5,12 +5,14 @@ import { useNavigate } from "react-router-dom";
 import type { ProfileRow } from "@/lib/profiles";
 import ProfileSafetyScore from "./ProfileSafetyScore";
 import { KindnessReputationPill } from "./KindnessEndorsements";
+import { useI18n } from "@/lib/i18n";
 
 export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [imageFailed, setImageFailed] = React.useState(false);
 
-  const name = profile.full_name || "Member";
+  const name = profile.full_name || t("memberFallback");
   const bio = (profile.bio || "").trim();
   const photo = profile.photos?.[0];
   const showPhoto = !!photo && !imageFailed;
@@ -26,12 +28,12 @@ export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
         : 0;
   const socialProofItems = [
     socialCircles[0]
-      ? { label: "Circle Member", value: `${socialCircles[0]} Circle` }
+      ? { label: t("circleMember"), value: `${socialCircles[0]} Circle` }
       : null,
     trustCount > 0
       ? {
-          label: "Trusted Connection",
-          value: trustCount >= 5 ? "Community-endorsed" : "Trust growing",
+          label: t("trustedConnection"),
+          value: trustCount >= 5 ? t("communityEndorsed") : t("trustGrowing"),
         }
       : null,
   ].filter(Boolean) as Array<{ label: string; value: string }>;
@@ -50,7 +52,7 @@ export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
         </div>
       ) : (
         <div className="h-44 w-full bg-white/5 flex items-center justify-center text-white/60">
-          No photo yet
+          {t("noPhotoYet")}
         </div>
       )}
 
@@ -92,14 +94,14 @@ export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
         {bio ? (
           <div className="text-sm text-white/85 line-clamp-3">{bio}</div>
         ) : (
-          <div className="text-sm text-white/50">No bio yet.</div>
+          <div className="text-sm text-white/50">{t("noBioYet")}</div>
         )}
 
         <Button
           className="w-full mt-2"
           onClick={() => navigate(`/profile/${profile.id}`)}
         >
-          View profile
+          {t("viewProfile")}
         </Button>
       </CardContent>
     </Card>

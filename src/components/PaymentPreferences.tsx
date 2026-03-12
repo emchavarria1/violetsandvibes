@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
 import PaymentForm from './PaymentForm';
 import { SUBSCRIPTION_TIER_LABELS, SubscriptionTier } from '@/types/subscription';
+import { useI18n } from '@/lib/i18n';
 
 interface PaymentMethod {
   id: string;
@@ -39,6 +40,7 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
   onUpgrade 
 }) => {
   const { toast } = useToast();
+  const { t } = useI18n();
   const isIOS = Capacitor.getPlatform() === 'ios';
   const currentTierKey: SubscriptionTier =
     currentTier === 'premium' || currentTier === 'elite' ? currentTier : 'free';
@@ -71,7 +73,7 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
       if (error) throw error;
 
       toast({
-        title: "Success",
+        title: t('success'),
         description: result.message,
       });
 
@@ -80,7 +82,7 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
       }
     } catch (error) {
       toast({
-        title: "Error",
+        title: t('error'),
         description: error.message,
         variant: "destructive",
       });
@@ -89,8 +91,8 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
 
   const addPaymentMethod = () => {
     toast({
-      title: "Add Payment Method",
-      description: "Redirecting to secure payment setup...",
+      title: t('addPaymentMethod'),
+      description: t('redirectingToSecurePaymentSetup'),
     });
   };
 
@@ -118,15 +120,15 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <CreditCard className="w-5 h-5" />
-            {isIOS ? 'Billing' : 'Payment Methods'}
+            {isIOS ? t('billing') : t('paymentMethods')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {isIOS ? (
             <div className="rounded-lg border p-4">
-              <p className="font-medium">Managed through App Store</p>
+              <p className="font-medium">{t('managedThroughAppStore')}</p>
               <p className="mt-1 text-sm text-gray-500">
-                Subscription billing and renewals are handled by Apple on iOS.
+                {t('subscriptionBillingManagedByApple')}
               </p>
             </div>
           ) : (
@@ -140,11 +142,11 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
                         {method.brand?.toUpperCase()} •••• {method.last4}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Expires {method.expiryMonth}/{method.expiryYear}
+                        {t('expires', { month: method.expiryMonth, year: method.expiryYear })}
                       </p>
                     </div>
                     {method.isDefault && (
-                      <Badge variant="secondary">Default</Badge>
+                      <Badge variant="secondary">{t('defaultLabel')}</Badge>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
@@ -154,7 +156,7 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
                         size="sm"
                         onClick={() => setDefaultPaymentMethod(method.id)}
                       >
-                        Set Default
+                        {t('setDefault')}
                       </Button>
                     )}
                     <Button 
@@ -174,7 +176,7 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
                 onClick={addPaymentMethod}
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Add Payment Method
+                {t('addPaymentMethod')}
               </Button>
             </>
           )}
@@ -186,14 +188,14 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <DollarSign className="w-5 h-5" />
-            Billing Preferences
+            {t('billingPreferences')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-medium">Auto-renewal</p>
-              <p className="text-sm text-gray-500">Automatically renew subscription</p>
+              <p className="font-medium">{t('autoRenewal')}</p>
+              <p className="text-sm text-gray-500">{t('automaticallyRenewSubscription')}</p>
             </div>
             <Switch 
               checked={preferences.autoRenew}
@@ -207,8 +209,8 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
           
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-medium">Email receipts</p>
-              <p className="text-sm text-gray-500">Receive payment confirmations via email</p>
+              <p className="font-medium">{t('emailReceipts')}</p>
+              <p className="text-sm text-gray-500">{t('receivePaymentConfirmations')}</p>
             </div>
             <Switch 
               checked={preferences.emailReceipts}
@@ -220,8 +222,8 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
           
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-medium">SMS notifications</p>
-              <p className="text-sm text-gray-500">Receive billing alerts via SMS</p>
+              <p className="font-medium">{t('smsNotifications')}</p>
+              <p className="text-sm text-gray-500">{t('receiveBillingAlertsViaSms')}</p>
             </div>
             <Switch 
               checked={preferences.smsNotifications}
@@ -233,8 +235,8 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
           
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-medium">Billing reminders</p>
-              <p className="text-sm text-gray-500">Get notified before renewal</p>
+              <p className="font-medium">{t('billingReminders')}</p>
+              <p className="text-sm text-gray-500">{t('getNotifiedBeforeRenewal')}</p>
             </div>
             <Switch 
               checked={preferences.billingReminders}
@@ -251,13 +253,13 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="w-5 h-5" />
-            Violets Verified Services
+            {t('violetsVerifiedServices')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {currentTier === 'free' ? (
             <div className="text-center py-6">
-              <p className="text-gray-600 mb-4">Unlock Violets Verified upgrades to enhance your experience</p>
+              <p className="text-gray-600 mb-4">{t('unlockUpgrades')}</p>
               <Button 
                 onClick={() => handlePayment('create_subscription', { tier: 'premium' })} 
                 className="bg-pink-500 hover:bg-pink-600"
@@ -280,7 +282,7 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
                 onClick={() => handlePayment('update_payment_method')}
               >
                 <Calendar className="w-4 h-4 mr-2" />
-                Manage Subscription
+                {t('manageSubscription')}
               </Button>
               
               <Button 
@@ -288,7 +290,7 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
                 className="w-full"
                 onClick={() => handlePayment('cancel_subscription')}
               >
-                Cancel Subscription
+                {t('cancelSubscription')}
               </Button>
             </div>
           )}

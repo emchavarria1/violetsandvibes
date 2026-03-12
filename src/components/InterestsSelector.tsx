@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge } from './ui/badge';
 import { Card } from './ui/card';
+import { useI18n } from '@/lib/i18n';
 
 const INTERESTS = [
   // LGBTQ+ & Activism
@@ -39,6 +40,7 @@ export const InterestsSelector: React.FC<InterestsSelectorProps> = ({
   onSelectionChange,
   maxSelections = 10
 }) => {
+  const { t } = useI18n();
   const toggleInterest = (interest: string) => {
     if (selectedInterests.includes(interest)) {
       onSelectionChange(selectedInterests.filter(i => i !== interest));
@@ -49,8 +51,8 @@ export const InterestsSelector: React.FC<InterestsSelectorProps> = ({
 
   return (
     <Card className="p-4 glass-card">
-      <h3 className="text-lg font-semibold mb-4 text-white">Interests</h3>
-      <p className="text-sm text-gray-300 mb-4">Select up to {maxSelections} interests</p>
+      <h3 className="text-lg font-semibold mb-4 text-white">{t('interestsLabel')}</h3>
+      <p className="text-sm text-gray-300 mb-4">{t('selectUpToInterests', { count: maxSelections })}</p>
       <div className="flex flex-wrap gap-2">
         {INTERESTS.map((interest) => {
           const isSelected = selectedInterests.includes(interest);
