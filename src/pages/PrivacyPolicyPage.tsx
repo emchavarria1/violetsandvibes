@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const PrivacyPolicyPage: React.FC = () => {
-  const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || "chava@violetsandvibes.com";
+  const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || "contactus@violetsandvibes.com";
 
   return (
     <div className="page-gradient min-h-screen relative">

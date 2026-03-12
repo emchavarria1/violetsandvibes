@@ -195,9 +195,12 @@ const HeroesPage: React.FC = () => {
               <Link className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white" to="/data-deletion">
                 {t("dataDeletion")}
               </Link>
-              <Link className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white" to="/contact">
+              <a
+                className="text-white/70 underline decoration-white/30 underline-offset-4 hover:text-white"
+                href="mailto:contactus@violetsandvibes.com"
+              >
                 {t("contactUs")}
-              </Link>
+              </a>
             </div>
           </div>
         </div>

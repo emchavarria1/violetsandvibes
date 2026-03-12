@@ -15,7 +15,7 @@ type PublicReview = {
 };
 
 const LandingPreviewPage: React.FC = () => {
-  const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || "chava@violetsandvibes.com";
+  const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || "contactus@violetsandvibes.com";
   const canonicalUrl = "https://www.violetsandvibes.com/";
   const shareMessage =
     "Violets & Vibes: a safer, women-centered space for meaningful connection.";
