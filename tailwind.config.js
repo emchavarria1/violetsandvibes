@@ -3,7 +3,7 @@ import animate from "tailwindcss-animate";
 import typography from "@tailwindcss/typography";
 
 /** @type {import('tailwindcss').Config} */
-const rootDir = "/Users/edna.chavarria/404 page fixed/violetsandvibes";
+const rootDir = process.cwd();
 
 export default {
   darkMode: ["class"],
