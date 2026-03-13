@@ -43,28 +43,39 @@ export function useNotifications() {
       .channel("vv-unread-dot")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "notifications" },
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `recipient_id=eq.${user.id}`,
+        },
         (payload) => {
           const row = (payload as any).new as NotificationRow;
-          if (!row || row.recipient_id !== user.id) return;
-          if (row.read_at == null) setUnreadCount((c) => c + 1);
+          if (!row) return;
+          void fetchUnread();
         }
       )
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "notifications" },
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "notifications",
+          filter: `recipient_id=eq.${user.id}`,
+        },
         (payload) => {
           const rowNew = (payload as any).new as NotificationRow;
-          const rowOld = (payload as any).old as NotificationRow;
-
-          if (!rowNew || rowNew.recipient_id !== user.id) return;
-
-          // If it transitioned from unread -> read, decrement
-          const wasUnread = rowOld?.read_at == null;
-          const isUnread = rowNew?.read_at == null;
-
-          if (wasUnread && !isUnread) setUnreadCount((c) => Math.max(0, c - 1));
-          if (!wasUnread && isUnread) setUnreadCount((c) => c + 1);
+          if (!rowNew) return;
+          void fetchUnread();
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "notifications" },
+        (payload) => {
+          const rowOld = (payload as any).old as NotificationRow | undefined;
+          if (rowOld?.recipient_id && rowOld.recipient_id !== user.id) return;
+          void fetchUnread();
         }
       )
       .subscribe((status) => {

@@ -285,7 +285,7 @@ const NotificationCenter: React.FC = () => {
       .select("id, recipient_id, actor_id, type, post_id, comment_id, created_at, read_at")
       .eq("recipient_id", user.id)
       .order("created_at", { ascending: false })
-      .limit(50);
+      .limit(200);
 
     if (loadError) {
       console.error("loadNotifications error:", loadError);
@@ -341,7 +341,11 @@ const NotificationCenter: React.FC = () => {
     if (updateError) {
       console.error("markAllRead error:", updateError);
       await loadNotifications();
+      return;
     }
+
+    // Ensure the persisted state matches after optimistic updates.
+    await loadNotifications();
   };
 
   const clearRead = async () => {
@@ -362,8 +366,12 @@ const NotificationCenter: React.FC = () => {
     if (deleteError) {
       console.error("clearRead error:", deleteError);
       setNotifications(previous);
+      setError(deleteError.message);
       return;
     }
+
+    // Re-sync from DB so refreshed view matches exactly what was deleted.
+    await loadNotifications();
   };
 
   const openNotification = async (n: any) => {
@@ -401,25 +409,53 @@ const NotificationCenter: React.FC = () => {
       .channel("vv-notifications")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "notifications" },
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `recipient_id=eq.${user.id}`,
+        },
         async (payload) => {
           const row = (payload as any).new as HydratedNotification;
-          if (!row || row.recipient_id !== user.id) return;
+          if (!row) return;
           (async () => {
             const hydrated = await hydrateNotifications([row as NotificationRow]);
-            setNotifications((prev) => [hydrated[0], ...prev]);
+            if (!hydrated[0]) return;
+            setNotifications((prev) => {
+              if (prev.some((n) => n.id === hydrated[0].id)) return prev;
+              return [hydrated[0], ...prev];
+            });
           })();
         }
       )
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "notifications" },
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "notifications",
+          filter: `recipient_id=eq.${user.id}`,
+        },
         async (payload) => {
           const row = (payload as any).new as HydratedNotification;
-          if (!row || row.recipient_id !== user.id) return;
+          if (!row) return;
           const hydrated = await hydrateNotifications([row as NotificationRow]);
           if (!hydrated[0]) return;
           setNotifications((prev) => prev.map((n) => (n.id === row.id ? hydrated[0] : n)));
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "notifications",
+          filter: `recipient_id=eq.${user.id}`,
+        },
+        (payload) => {
+          const row = (payload as any).old as { id?: string } | undefined;
+          if (!row?.id) return;
+          setNotifications((prev) => prev.filter((n) => n.id !== row.id));
         }
       )
       .subscribe((status) => console.log("vv-notifications status:", status));
