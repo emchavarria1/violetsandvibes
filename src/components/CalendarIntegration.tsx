@@ -241,15 +241,50 @@ const downloadIcs = (event: CalendarEventRow) => {
   window.URL.revokeObjectURL(url);
 };
 
-const getCalendarFunctionErrorMessage = (error: unknown, action: "connect" | "sync" | "status") => {
-  const rawMessage =
+const getCalendarFunctionErrorMessage = async (
+  error: unknown,
+  action: "connect" | "sync" | "status"
+) => {
+  let rawMessage =
     error instanceof Error
       ? error.message
       : typeof error === "string"
         ? error
         : "";
 
+  // Supabase FunctionsHttpError may carry a Response in `context`.
+  const context = (error as any)?.context;
+  if (context && typeof context.clone === "function" && typeof context.json === "function") {
+    try {
+      const payload = await context.clone().json();
+      const contextMessage =
+        typeof payload?.error === "string"
+          ? payload.error
+          : typeof payload?.message === "string"
+            ? payload.message
+            : null;
+      if (contextMessage) {
+        rawMessage = contextMessage;
+      }
+    } catch {
+      // Ignore parse failures and fall back to default message handling.
+    }
+  }
+
   const normalized = rawMessage.toLowerCase();
+
+  if (
+    normalized.includes("missing authorization header") ||
+    normalized.includes("invalid authorization header format") ||
+    normalized.includes("unauthorized") ||
+    normalized.includes("jwt")
+  ) {
+    return "Your session expired. Please sign out and sign back in, then connect your calendar again.";
+  }
+
+  if (normalized.includes("missing required environment variable")) {
+    return "Calendar provider keys are not configured yet. Finish the Supabase Edge Function secrets setup, then try again.";
+  }
 
   if (
     normalized.includes("failed to send a request to the edge function") ||
@@ -287,8 +322,22 @@ const CalendarIntegration: React.FC = () => {
   const [autoSynced, setAutoSynced] = useState(false);
   const [joinedCircles, setJoinedCircles] = useState<string[]>([]);
 
+  const getAccessToken = useCallback(async () => {
+    const { data } = await supabase.auth.getSession();
+    const accessToken = data.session?.access_token;
+    if (!accessToken) {
+      throw new Error("Unauthorized");
+    }
+    return accessToken;
+  }, []);
+
   const loadStatus = useCallback(async () => {
-    const { data, error } = await supabase.functions.invoke("calendar-status");
+    const accessToken = await getAccessToken();
+    const { data, error } = await supabase.functions.invoke("calendar-status", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     if (error) throw error;
 
     const result = data as Partial<CalendarStatusResponse>;
@@ -308,7 +357,7 @@ const CalendarIntegration: React.FC = () => {
       connectedCount: Number(result?.connectedCount || 0),
       hasAnyConnection: !!result?.hasAnyConnection,
     });
-  }, []);
+  }, [getAccessToken]);
 
   const loadJoinedCircles = useCallback(async () => {
     if (!user?.id) {
@@ -366,7 +415,7 @@ const CalendarIntegration: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Calendar unavailable",
-        description: getCalendarFunctionErrorMessage(error, "status"),
+        description: await getCalendarFunctionErrorMessage(error, "status"),
       });
     } finally {
       setLoading(false);
@@ -379,8 +428,12 @@ const CalendarIntegration: React.FC = () => {
 
       setSyncing(true);
       try {
+        const accessToken = await getAccessToken();
         const { data, error } = await supabase.functions.invoke("calendar-sync", {
           body: payload || {},
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         });
 
         if (error) throw error;
@@ -415,14 +468,14 @@ const CalendarIntegration: React.FC = () => {
           toast({
             variant: "destructive",
             title: "Sync failed",
-            description: getCalendarFunctionErrorMessage(error, "sync"),
+            description: await getCalendarFunctionErrorMessage(error, "sync"),
           });
         }
       } finally {
         setSyncing(false);
       }
     },
-    [loadAll, toast, user]
+    [getAccessToken, loadAll, toast, user]
   );
 
   useEffect(() => {
@@ -506,10 +559,14 @@ const CalendarIntegration: React.FC = () => {
   const connectProvider = async (provider: Provider) => {
     setConnectingProvider(provider);
     try {
+      const accessToken = await getAccessToken();
       const { data, error } = await supabase.functions.invoke("calendar-oauth-start", {
         body: {
           provider,
           returnPath: "/calendar",
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -531,7 +588,7 @@ const CalendarIntegration: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Connection failed",
-        description: getCalendarFunctionErrorMessage(error, "connect"),
+        description: await getCalendarFunctionErrorMessage(error, "connect"),
       });
     } finally {
       setConnectingProvider(null);
