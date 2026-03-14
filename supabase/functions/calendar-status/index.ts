@@ -47,9 +47,12 @@ serve(async (req) => {
   const now = Math.floor(Date.now() / 1000);
   const url = new URL(req.url);
   const authHeader = req.headers.get("authorization") || req.headers.get("Authorization");
+  const customAccessToken =
+    req.headers.get("x-vv-access-token") || req.headers.get("X-VV-Access-Token");
   const hasAuth = !!authHeader;
+  const hasCustomAuth = !!customAccessToken;
   const scheme = hasAuth ? authHeader!.split(" ")[0] ?? null : null;
-  const token = hasAuth ? authHeader!.split(" ")[1] ?? null : null;
+  const token = hasAuth ? authHeader!.split(" ")[1] ?? null : customAccessToken ?? null;
   const decoded = safeDecodeJwtExp(token);
   const isExpired = decoded.exp ? decoded.exp < now : null;
 
@@ -57,6 +60,7 @@ serve(async (req) => {
     method: req.method,
     path: url.pathname,
     hasAuth,
+    hasCustomAuth,
     scheme,
     exp: decoded.exp,
     isExpired,
@@ -70,6 +74,7 @@ serve(async (req) => {
       method: req.method,
       path: url.pathname,
       hasAuth,
+      hasCustomAuth,
       scheme,
       exp: decoded.exp,
       isExpired,

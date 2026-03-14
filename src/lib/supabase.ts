@@ -15,6 +15,7 @@ type EdgeInvokeAuthOptions = {
   requireAuth?: boolean;
   forceRefresh?: boolean;
   includeAccessTokenInBody?: boolean;
+  authTransport?: "authorization" | "custom" | "both";
 };
 
 const SESSION_REFRESH_BUFFER_SECONDS = 60;
@@ -89,6 +90,7 @@ export async function invokeEdgeFunction<TData = unknown>(
     requireAuth = true,
     forceRefresh = false,
     includeAccessTokenInBody = false,
+    authTransport = "authorization",
   } = authOptions;
 
   let accessToken: string | null = null;
@@ -114,7 +116,12 @@ export async function invokeEdgeFunction<TData = unknown>(
 
   const headers = {
     ...(options.headers ?? {}),
-    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    ...(accessToken && (authTransport === "authorization" || authTransport === "both")
+      ? { Authorization: `Bearer ${accessToken}` }
+      : {}),
+    ...(accessToken && (authTransport === "custom" || authTransport === "both")
+      ? { "X-VV-Access-Token": accessToken }
+      : {}),
   };
 
   return supabase.functions.invoke<TData>(functionName, {

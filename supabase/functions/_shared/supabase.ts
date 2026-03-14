@@ -34,20 +34,23 @@ export async function requireUser(req: Request): Promise<{
   errorResponse?: Response;
 }> {
   const authHeader = req.headers.get("Authorization");
-  if (!authHeader) {
+  const customAccessToken =
+    req.headers.get("X-VV-Access-Token") || req.headers.get("x-vv-access-token");
+
+  if (!authHeader && !customAccessToken) {
     return {
       user: null,
-      errorResponse: jsonResponse({ error: "Missing Authorization header" }, 401),
+      errorResponse: jsonResponse({ error: "Missing access token" }, 401),
     };
   }
 
-  const match = authHeader.match(/^Bearer\s+(.+)$/i);
-  const accessToken = match?.[1]?.trim();
+  const match = authHeader?.match(/^Bearer\s+(.+)$/i);
+  const accessToken = match?.[1]?.trim() || customAccessToken?.trim() || null;
 
   if (!accessToken) {
     return {
       user: null,
-      errorResponse: jsonResponse({ error: "Invalid Authorization header format" }, 401),
+      errorResponse: jsonResponse({ error: "Invalid access token format" }, 401),
     };
   }
 

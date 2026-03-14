@@ -335,7 +335,11 @@ const CalendarIntegration: React.FC = () => {
   const [deletingEventId, setDeletingEventId] = useState<string | null>(null);
 
   const loadStatus = useCallback(async () => {
-    const { data, error } = await invokeEdgeFunction("calendar-status");
+    const { data, error } = await invokeEdgeFunction(
+      "calendar-status",
+      {},
+      { authTransport: "custom" }
+    );
     if (error) throw error;
 
     const result = data as Partial<CalendarStatusResponse>;
@@ -426,9 +430,13 @@ const CalendarIntegration: React.FC = () => {
 
       setSyncing(true);
       try {
-        const { data, error } = await invokeEdgeFunction("calendar-sync", {
-          body: payload || {},
-        });
+        const { data, error } = await invokeEdgeFunction(
+          "calendar-sync",
+          {
+            body: payload || {},
+          },
+          { authTransport: "custom" }
+        );
 
         if (error) throw error;
 
@@ -553,12 +561,16 @@ const CalendarIntegration: React.FC = () => {
     const connectProvider = async (provider: Provider) => {
     setConnectingProvider(provider);
     try {
-      const { data, error } = await invokeEdgeFunction("calendar-oauth-start", {
-        body: {
-          provider,
-          returnPath: "/calendar",
+      const { data, error } = await invokeEdgeFunction(
+        "calendar-oauth-start",
+        {
+          body: {
+            provider,
+            returnPath: "/calendar",
+          },
         },
-      });
+        { authTransport: "custom" }
+      );
 
       if (error) throw error;
       if (!data?.url) throw new Error("No OAuth URL returned.");
