@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Users, Heart, Sparkles, Share2 } from 'lucide-react';
+import { Calendar, MapPin, Users, Heart, Sparkles, Share2, MessageCirclePlus, Pencil, Trash2 } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 
 interface EventCardProps {
@@ -19,14 +19,32 @@ interface EventCardProps {
     organizer: string;
     image?: string;
     isAttending?: boolean;
+    infoRequestCount?: number;
+    latestInfoRequestMessage?: string | null;
+    requestedByMe?: boolean;
   };
   onJoin?: (eventId: string) => void;
   onLike?: (eventId: string) => void;
   onInvite?: (eventId: string) => void;
+  onEdit?: (eventId: string) => void;
+  onDelete?: (eventId: string) => void;
+  onRequestInfo?: (eventId: string) => void;
+  actionBusy?: boolean;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike, onInvite }) => {
+const EventCard: React.FC<EventCardProps> = ({
+  event,
+  onJoin,
+  onLike,
+  onInvite,
+  onEdit,
+  onDelete,
+  onRequestInfo,
+  actionBusy = false,
+}) => {
   const { t } = useI18n();
+  const showingOwnerTools = !!onEdit || !!onDelete;
+  const showingRequestInfo = !!onRequestInfo;
 
   return (
     <Card className="glass-pride mb-4 overflow-hidden border-white/10 hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 group relative text-white">
@@ -147,6 +165,66 @@ const EventCard: React.FC<EventCardProps> = ({ event, onJoin, onLike, onInvite }
             >
               <Share2 className="w-4 h-4 mr-2" />
               {t('inviteFriend')}
+            </Button>
+          </div>
+        ) : null}
+
+        {showingOwnerTools ? (
+          <div className="mt-4 rounded-2xl border border-white/12 bg-white/5 p-3 text-sm text-white/85">
+            <div className="flex items-center justify-between gap-2 flex-wrap text-xs text-white/70">
+              <span>Organizer tools</span>
+              <span>{event.infoRequestCount ?? 0} info request{event.infoRequestCount === 1 ? "" : "s"}</span>
+            </div>
+
+            {event.latestInfoRequestMessage ? (
+              <div className="mt-2 rounded-xl border border-white/10 bg-black/15 px-3 py-2 text-xs text-white/75">
+                Latest request:{" "}
+                {event.latestInfoRequestMessage.length > 120
+                  ? `${event.latestInfoRequestMessage.slice(0, 120)}...`
+                  : event.latestInfoRequestMessage}
+              </div>
+            ) : null}
+
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => onEdit?.(event.id)}
+                disabled={actionBusy}
+                className="border-white/15 bg-white/5 text-white hover:bg-white/10"
+              >
+                <Pencil className="w-4 h-4 mr-2" />
+                Edit
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => onDelete?.(event.id)}
+                disabled={actionBusy}
+                className="border-rose-300/25 bg-rose-500/10 text-rose-100 hover:bg-rose-500/20"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
+        {showingRequestInfo ? (
+          <div className="mt-4 rounded-2xl border border-violet-300/15 bg-violet-400/10 p-3 text-sm text-white">
+            <div className="text-white/80">Need details before joining? Ask the organizer to add more information.</div>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => onRequestInfo?.(event.id)}
+              disabled={actionBusy || !!event.requestedByMe}
+              className="mt-3 w-full border-violet-300/25 bg-white/5 text-white hover:bg-white/10"
+            >
+              <MessageCirclePlus className="w-4 h-4 mr-2" />
+              {event.requestedByMe ? "Requested" : "Request Info"}
             </Button>
           </div>
         ) : null}

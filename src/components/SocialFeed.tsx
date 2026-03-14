@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import EventCard from "./EventCard";
 import CommunityCirclesCard, { communityCircles } from "./CommunityCirclesCard";
-import { MessageCirclePlus, Pencil, Plus, ShieldAlert, Trash2 } from "lucide-react";
+import { Plus, ShieldAlert } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { Link, useLocation } from "react-router-dom";
@@ -2405,66 +2405,19 @@ const SocialFeed: React.FC = () => {
                 <div className="inline-flex rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] font-medium text-white/75">
                   {event.circleName ?? t("openCommunity")}
                 </div>
-                <EventCard event={event} onJoin={handleJoinEvent} onInvite={handleInviteEvent} />
+                <EventCard
+                  event={event}
+                  onJoin={handleJoinEvent}
+                  onInvite={handleInviteEvent}
+                  onEdit={event.ownerId === user?.id ? beginEditEvent : undefined}
+                  onDelete={event.ownerId === user?.id ? (eventId) => void deleteEvent(eventId) : undefined}
+                  onRequestInfo={event.ownerId !== user?.id ? (eventId) => void requestEventInfo(eventId) : undefined}
+                  actionBusy={!!eventActionById[event.id]}
+                />
 
-                <Card className="bg-black/30 border-white/15 text-white">
-                  <CardContent className="p-3 space-y-3">
-                    {event.ownerId === user?.id ? (
-                      <>
-                        <div className="flex items-center justify-between gap-2 flex-wrap text-xs text-white/75">
-                          <span>Organizer tools</span>
-                          <span>{event.infoRequestCount} info request{event.infoRequestCount === 1 ? "" : "s"}</span>
-                        </div>
-                        {event.latestInfoRequestMessage ? (
-                          <div className="text-xs text-white/70 rounded-md border border-white/10 bg-white/5 px-2 py-1">
-                            Latest request:{" "}
-                            {event.latestInfoRequestMessage.length > 120
-                              ? `${event.latestInfoRequestMessage.slice(0, 120)}...`
-                              : event.latestInfoRequestMessage}
-                          </div>
-                        ) : null}
-                        <div className="grid grid-cols-2 gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-white/20 text-white hover:bg-white/10"
-                            onClick={() => beginEditEvent(event.id)}
-                            disabled={!!eventActionById[event.id]}
-                          >
-                            <Pencil className="w-3.5 h-3.5 mr-1" />
-                            Edit
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-rose-300/30 text-rose-100 hover:bg-rose-500/20"
-                            onClick={() => void deleteEvent(event.id)}
-                            disabled={!!eventActionById[event.id]}
-                          >
-                            <Trash2 className="w-3.5 h-3.5 mr-1" />
-                            Delete
-                          </Button>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="space-y-2">
-                        <div className="text-xs text-white/75">
-                          Need details before joining? Ask the organizer to add more information.
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="w-full border-violet-300/30 text-white hover:bg-violet-500/20"
-                          onClick={() => void requestEventInfo(event.id)}
-                          disabled={!!eventActionById[event.id] || event.requestedByMe}
-                        >
-                          <MessageCirclePlus className="w-3.5 h-3.5 mr-1" />
-                          {event.requestedByMe ? "Requested" : "Request Info"}
-                        </Button>
-                      </div>
-                    )}
-
-                    {editingEventId === event.id && editingEvent ? (
+                {editingEventId === event.id && editingEvent ? (
+                  <Card className="bg-black/30 border-white/15 text-white">
+                    <CardContent className="p-3 space-y-3">
                       <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-2">
                         <Input
                           value={editingEvent.title}
@@ -2517,9 +2470,9 @@ const SocialFeed: React.FC = () => {
                           </Button>
                         </div>
                       </div>
-                    ) : null}
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                ) : null}
               </div>
             ))
           )}

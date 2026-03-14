@@ -15,10 +15,8 @@ import {
   ExternalLink,
   Link2,
   Loader2,
-  Pencil,
   RefreshCw,
   Share2,
-  Trash2,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -1043,7 +1041,12 @@ const CalendarIntegration: React.FC = () => {
           ) : (
             upcomingEvents.map((event) => (
               <div key={event.id} className="space-y-2">
-                <EventCard event={toEventCardModel(event)} />
+                <EventCard
+                  event={toEventCardModel(event)}
+                  onEdit={event.source === "local" ? () => startEditingEvent(event) : undefined}
+                  onDelete={event.source === "local" ? () => void deleteEvent(event) : undefined}
+                  actionBusy={deletingEventId === event.id}
+                />
 
                 <Card className="bg-black/30 border-white/15">
                   <CardContent className="p-3 space-y-3">
@@ -1100,31 +1103,6 @@ const CalendarIntegration: React.FC = () => {
                         Apple (.ics)
                       </Button>
                     </div>
-
-                    {event.source === "local" ? (
-                      <div className="grid grid-cols-2 gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="border-white/20 text-white hover:bg-white/10"
-                          onClick={() => startEditingEvent(event)}
-                          disabled={deletingEventId === event.id}
-                        >
-                          <Pencil className="w-3.5 h-3.5 mr-1" />
-                          Edit
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="border-rose-300/35 text-rose-100 hover:bg-rose-500/20"
-                          onClick={() => void deleteEvent(event)}
-                          disabled={deletingEventId === event.id}
-                        >
-                          <Trash2 className="w-3.5 h-3.5 mr-1" />
-                          {deletingEventId === event.id ? "Deleting..." : "Delete"}
-                        </Button>
-                      </div>
-                    ) : null}
 
                     {editingEventId === event.id && editingEventForm ? (
                       <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-2">
