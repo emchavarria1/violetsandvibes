@@ -4,10 +4,11 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { extractBlockedUserIds } from "@/lib/safety";
+import { getOrCreateCircleConversation } from "@/lib/messaging";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, Flag, Heart, Lightbulb, Loader2, MessageCircle } from "lucide-react";
+import { ChevronLeft, Flag, Heart, Lightbulb, Loader2, MessageCircle, Users } from "lucide-react";
 
 type ConversationMemberRow = {
   conversation_id: string;
@@ -19,6 +20,15 @@ type ConversationMemberRow = {
     updated_at: string;
     last_message_at: string | null;
   } | null;
+};
+
+type ConversationRow = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  last_message_at: string | null;
+  kind?: "direct" | "circle" | null;
+  circle_name?: string | null;
 };
 
 type OtherMemberRow = {
@@ -35,9 +45,12 @@ type ProfileRow = {
 
 type ConversationListItem = {
   conversationId: string;
-  otherUserId: string;
+  kind: "direct" | "circle";
+  circleName: string | null;
+  otherUserId: string | null;
   otherName: string;
   otherPhoto?: string | null;
+  memberCount: number;
   lastMessageAt: string | null;
   lastReadAt: string | null;
   hasUnread: boolean;
@@ -87,6 +100,11 @@ function previewText(s?: string | null, max = 60) {
   const t = (s ?? "").replace(/\s+/g, " ").trim();
   if (!t) return null;
   return t.length > max ? t.slice(0, max - 1) + "…" : t;
+}
+
+function isMissingCircleConversationMetadata(error: { message?: string } | null | undefined) {
+  const message = (error?.message || "").toLowerCase();
+  return message.includes("kind") || message.includes("circle_name");
 }
 
 const EMPTY_CHAT_PROMPTS = [
@@ -168,6 +186,10 @@ const ChatView: React.FC = () => {
     const params = new URLSearchParams(location.search);
     return params.get("c");
   }, [location.search]);
+  const queryCircleName = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get("circle");
+  }, [location.search]);
   const blockedUserIdsKey = useMemo(
     () => Array.from(blockedUserIds).sort().join(","),
     [blockedUserIds]
@@ -180,7 +202,10 @@ const ChatView: React.FC = () => {
     if (listLoading) return;
 
     const convo = conversations.find((c) => c.conversationId === queryConversationId);
-    if (!convo || blockedUserIds.has(convo.otherUserId)) {
+    if (
+      !convo ||
+      (convo.kind === "direct" && convo.otherUserId && blockedUserIds.has(convo.otherUserId))
+    ) {
       setActiveConversationId(null);
       navigate("/chat", { replace: true });
       return;
@@ -193,10 +218,17 @@ const ChatView: React.FC = () => {
       void markConversationRead(queryConversationId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryConversationId, safetyLoaded, listLoading, conversations, blockedUserIdsKey, navigate]);
+  }, [
+    queryConversationId,
+    safetyLoaded,
+    listLoading,
+    conversations,
+    blockedUserIdsKey,
+    navigate,
+  ]);
 
   useEffect(() => {
-    if (queryConversationId) return;
+    if (queryConversationId || queryCircleName) return;
     if (!activeConversationId && conversations.length > 0) {
       const first = conversations[0];
       const firstId = first.conversationId;
@@ -209,7 +241,7 @@ const ChatView: React.FC = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryConversationId, conversations, activeConversationId]);
+  }, [queryConversationId, queryCircleName, conversations, activeConversationId]);
 
   const isNearBottom = () => {
     const el = threadContainerRef.current;
@@ -303,15 +335,31 @@ const ChatView: React.FC = () => {
       }
 
       // 2) Convo metadata
-      const { data: convoRows, error: convoErr } = await supabase
+      const convoWithCircleMetadata = await supabase
         .from("conversations")
-        .select("id, last_message_at, updated_at, created_at")
+        .select("id, last_message_at, updated_at, created_at, kind, circle_name")
         .in("id", convoIds);
+      let convoRows = convoWithCircleMetadata.data as ConversationRow[] | null;
+      let convoErr = convoWithCircleMetadata.error;
+
+      if (convoErr && isMissingCircleConversationMetadata(convoErr)) {
+        const fallbackConvos = await supabase
+          .from("conversations")
+          .select("id, last_message_at, updated_at, created_at")
+          .in("id", convoIds);
+
+        convoRows = ((fallbackConvos.data ?? []) as ConversationRow[]).map((row) => ({
+          ...row,
+          kind: "direct",
+          circle_name: null,
+        }));
+        convoErr = fallbackConvos.error;
+      }
 
       if (convoErr) throw convoErr;
 
-      const convoById = new Map<string, any>();
-      (convoRows ?? []).forEach((c: any) => convoById.set(c.id, c));
+      const convoById = new Map<string, ConversationRow>();
+      ((convoRows ?? []) as ConversationRow[]).forEach((c) => convoById.set(c.id, c));
 
       // 3) Find the "other" member per conversation
       const { data: otherRows, error: otherErr } = await supabase
@@ -323,7 +371,24 @@ const ChatView: React.FC = () => {
       if (otherErr) throw otherErr;
 
       const others = (otherRows ?? []) as OtherMemberRow[];
-      const otherUserIds = Array.from(new Set(others.map((r) => r.user_id)));
+      const othersByConversationId = new Map<string, OtherMemberRow[]>();
+      others.forEach((row) => {
+        const existing = othersByConversationId.get(row.conversation_id) ?? [];
+        existing.push(row);
+        othersByConversationId.set(row.conversation_id, existing);
+      });
+      const directConversationIds = new Set(
+        Array.from(convoById.values())
+          .filter((row) => (row.kind ?? "direct") !== "circle")
+          .map((row) => row.id)
+      );
+      const otherUserIds = Array.from(
+        new Set(
+          others
+            .filter((row) => directConversationIds.has(row.conversation_id))
+            .map((row) => row.user_id)
+        )
+      );
 
       // 4) Latest message preview per conversation
       const { data: msgRows, error: msgErr } = await supabase
@@ -380,14 +445,22 @@ const ChatView: React.FC = () => {
       });
 
       const items: ConversationListItem[] = convoIds.map((cid) => {
-        const otherUserId = others.find((o) => o.conversation_id === cid)?.user_id || "";
-        const prof = otherUserId ? profileById.get(otherUserId) : undefined;
+        const meta = convoById.get(cid);
+        const kind = meta?.kind === "circle" ? "circle" : "direct";
+        const circleName = meta?.circle_name ?? null;
+        const otherMembers = othersByConversationId.get(cid) ?? [];
+        const primaryOtherUserId =
+          kind === "direct" ? otherMembers[0]?.user_id ?? null : null;
+        const prof = primaryOtherUserId ? profileById.get(primaryOtherUserId) : undefined;
 
-        const otherName = (prof?.full_name || prof?.username || "Member") as string;
-        const otherPhoto = prof?.photos?.[0] ?? null;
+        const otherName =
+          kind === "circle"
+            ? circleName || "Circle Chat"
+            : ((prof?.full_name || prof?.username || "Member") as string);
+        const otherPhoto = kind === "circle" ? null : prof?.photos?.[0] ?? null;
+        const memberCount = kind === "circle" ? otherMembers.length + 1 : 2;
 
         const lastReadAt = lastReadByConvo.get(cid) ?? null;
-        const meta = convoById.get(cid);
         const lastMessageAt = meta?.last_message_at ?? null;
         const latest = latestOtherByConvo.get(cid) ?? latestByConvo.get(cid);
         const lastMessagePreview = previewText(latest?.body ?? null);
@@ -401,9 +474,12 @@ const ChatView: React.FC = () => {
 
         return {
           conversationId: cid,
-          otherUserId,
+          kind,
+          circleName,
+          otherUserId: primaryOtherUserId,
           otherName,
           otherPhoto,
+          memberCount,
           lastMessageAt,
           lastReadAt,
           hasUnread,
@@ -412,8 +488,8 @@ const ChatView: React.FC = () => {
         };
       });
 
-      const visibleItems = items.filter(
-        (item) => !blockedUserIds.has(item.otherUserId)
+      const visibleItems = items.filter((item) =>
+        item.kind === "circle" ? true : !item.otherUserId || !blockedUserIds.has(item.otherUserId)
       );
 
       // Sort by lastMessageAt desc (fallback to updated order)
@@ -431,6 +507,40 @@ const ChatView: React.FC = () => {
       setListLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!user?.id || !queryCircleName) return;
+
+    let cancelled = false;
+
+    const openCircleConversation = async () => {
+      try {
+        const conversationId = await getOrCreateCircleConversation(queryCircleName);
+        if (cancelled) return;
+
+        await loadConversationList();
+        if (cancelled) return;
+
+        setActiveConversationId(conversationId);
+        navigate(`/chat?c=${conversationId}`, { replace: true });
+      } catch (error: any) {
+        if (cancelled) return;
+        console.error("Failed to open circle conversation:", error);
+        toast({
+          title: "Could not open circle chat",
+          description: error?.message || "Please try again.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    void openCircleConversation();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, queryCircleName, toast, user?.id]);
 
   const markConversationRead = async (conversationId: string) => {
     if (!user) return;
@@ -461,7 +571,12 @@ const ChatView: React.FC = () => {
     if (!user) return;
 
     const activeConvo = conversations.find((c) => c.conversationId === conversationId);
-    if (!activeConvo || blockedUserIds.has(activeConvo.otherUserId)) {
+    if (
+      !activeConvo ||
+      (activeConvo.kind === "direct" &&
+        activeConvo.otherUserId &&
+        blockedUserIds.has(activeConvo.otherUserId))
+    ) {
       setMessages([]);
       setHeartCountsByMessageId({});
       setHeartedMessageIds(new Set());
@@ -653,8 +768,11 @@ const ChatView: React.FC = () => {
   const reportConversation = async () => {
     if (!user || !active) return;
 
+    const reportTarget =
+      active.kind === "circle" ? `${active.otherName} circle` : active.otherName;
+
     const confirmed = window.confirm(
-      `Report ${active.otherName}? This will open an email draft to the safety team.`
+      `Report ${reportTarget}? This will open an email draft to the safety team.`
     );
     if (!confirmed) return;
 
@@ -678,30 +796,35 @@ const ChatView: React.FC = () => {
         ? currentSafety.reported_user_ids
         : [];
 
-      const nextReportedIds = Array.from(new Set([...reportedIds, active.otherUserId]));
+      const nextReportedIds =
+        active.kind === "direct" && active.otherUserId
+          ? Array.from(new Set([...reportedIds, active.otherUserId]))
+          : reportedIds;
 
-      await supabase
-        .from("profiles")
-        .update({
-          safety_settings: {
-            ...currentSafety,
-            reported_user_ids: nextReportedIds,
-            last_reported_at: nowIso,
-          },
-          updated_at: nowIso,
-        })
-        .eq("id", user.id);
+      await supabase.from("profiles").update({
+        safety_settings: {
+          ...currentSafety,
+          reported_user_ids: nextReportedIds,
+          last_reported_at: nowIso,
+          last_reported_conversation_id: active.conversationId,
+        },
+        updated_at: nowIso,
+      }).eq("id", user.id);
     } catch (error) {
       console.warn("Could not persist report metadata:", error);
     }
 
-    const subject = encodeURIComponent(`Safety report: chat with ${active.otherName}`);
+    const subject = encodeURIComponent(`Safety report: ${reportTarget}`);
     const body = encodeURIComponent(
       [
         "I want to report a conversation for review.",
         "",
         `Reporter user id: ${user.id}`,
-        `Reported user id: ${active.otherUserId || "unknown"}`,
+        `Reported user id: ${
+          active.kind === "direct" ? active.otherUserId || "unknown" : "circle conversation"
+        }`,
+        `Conversation type: ${active.kind}`,
+        `Circle name: ${active.circleName || "n/a"}`,
         `Conversation id: ${active.conversationId}`,
         `Timestamp: ${nowIso}`,
         "",
@@ -1139,7 +1262,11 @@ const ChatView: React.FC = () => {
                     <div className="flex items-center gap-3">
                       {/* Avatar */}
                       <div className="relative">
-                        {c.otherPhoto ? (
+                        {c.kind === "circle" ? (
+                          <div className="w-10 h-10 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white font-semibold">
+                            <Users className="w-5 h-5 text-pink-200" />
+                          </div>
+                        ) : c.otherPhoto ? (
                           <img
                             src={c.otherPhoto}
                             alt={c.otherName}
@@ -1168,7 +1295,11 @@ const ChatView: React.FC = () => {
                         <div className="text-xs text-white/55 mt-0.5 truncate">
                           {c.lastMessagePreview
                             ? c.lastMessagePreview
-                            : c.hasUnread
+                            : c.kind === "circle"
+                              ? c.memberCount === 1
+                                ? "You are the first member here."
+                                : `${c.memberCount} members`
+                              : c.hasUnread
                               ? "New messages"
                               : "—"}
                         </div>
@@ -1203,7 +1334,9 @@ const ChatView: React.FC = () => {
                 {active ? active.otherName : "Select a conversation"}
               </div>
               {active ? (
-                otherOnline ? (
+                active.kind === "circle" ? (
+                  <div className="text-xs text-white/60">{active.memberCount} members</div>
+                ) : otherOnline ? (
                   <div className="text-xs text-green-300">Online</div>
                 ) : (
                   <div className="text-xs text-white/50">Offline</div>
@@ -1211,7 +1344,9 @@ const ChatView: React.FC = () => {
               ) : null}
               {active ? (
                 otherTyping ? (
-                  <div className="text-xs text-white/70">Typing…</div>
+                  <div className="text-xs text-white/70">
+                    {active.kind === "circle" ? "Someone is typing…" : "Typing…"}
+                  </div>
                 ) : null
               ) : null}
               </div>

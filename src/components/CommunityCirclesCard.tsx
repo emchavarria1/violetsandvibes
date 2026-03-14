@@ -1,13 +1,31 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CalendarDays, HeartHandshake, MessageCircleMore, PawPrint, Sparkles, Users, BookOpen, Mountain, Briefcase, Rainbow, Laptop, Palette, Baby, Leaf, Flame } from "lucide-react";
+import {
+  CalendarDays,
+  HeartHandshake,
+  MessageCircleMore,
+  PawPrint,
+  Sparkles,
+  Users,
+  BookOpen,
+  Mountain,
+  Briefcase,
+  Rainbow,
+  Laptop,
+  Palette,
+  Baby,
+  Leaf,
+  Flame,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/lib/i18n";
+import { getOrCreateCircleConversation } from "@/lib/messaging";
 
 export type Circle = {
   name: string;
@@ -26,6 +44,16 @@ export type Circle = {
     activeChats: number;
     meetupNote: string;
   };
+};
+
+type CircleRuntimeStats = {
+  posts: number;
+  meetups: number;
+  chats: number;
+  members: number;
+  postsToday: number;
+  activeChats: number;
+  meetupNote: string;
 };
 
 export const communityCircles: Circle[] = [
@@ -135,6 +163,23 @@ type CommunityCirclesCardProps = {
   onToggleJoin: (circleName: string) => void;
 };
 
+const EMPTY_MEETUP_NOTE = "No meetup scheduled yet";
+
+const createEmptyRuntimeStats = (): CircleRuntimeStats => ({
+  posts: 0,
+  meetups: 0,
+  chats: 0,
+  members: 0,
+  postsToday: 0,
+  activeChats: 0,
+  meetupNote: EMPTY_MEETUP_NOTE,
+});
+
+const isMissingCircleConversationColumns = (error: { message?: string } | null | undefined) => {
+  const message = (error?.message || "").toLowerCase();
+  return message.includes("kind") || message.includes("circle_name");
+};
+
 export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
   activeCircle,
   joinedCircleNames,
@@ -144,13 +189,193 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
   const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useI18n();
+  const navigate = useNavigate();
   const [showSuggestForm, setShowSuggestForm] = useState(false);
   const [suggestedCircleName, setSuggestedCircleName] = useState("");
   const [suggestionNote, setSuggestionNote] = useState("");
   const [submittingSuggestion, setSubmittingSuggestion] = useState(false);
-  const trendingCircles = communityCircles.filter((circle) =>
-    trendingCircleNames.includes(circle.name)
+  const [liveStatsByCircle, setLiveStatsByCircle] = useState<Record<string, CircleRuntimeStats>>({});
+
+  const trendingCircles = useMemo(
+    () => communityCircles.filter((circle) => trendingCircleNames.includes(circle.name)),
+    []
   );
+  const circleNames = useMemo(() => communityCircles.map((circle) => circle.name), []);
+
+  const formatMeetupNote = useCallback((title: string, startsAt: string) => {
+    const dateText = new Intl.DateTimeFormat(undefined, {
+      month: "short",
+      day: "numeric",
+    }).format(new Date(startsAt));
+    return `${title} • ${dateText}`;
+  }, []);
+
+  const loadLiveStats = useCallback(async () => {
+    const seeded = Object.fromEntries(
+      communityCircles.map((circle) => [circle.name, createEmptyRuntimeStats()])
+    ) as Record<string, CircleRuntimeStats>;
+
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const [postResult, eventResult, profileResult, convoResult] = await Promise.all([
+      supabase.from("posts").select("circle_name, created_at").in("circle_name", circleNames),
+      supabase
+        .from("calendar_events")
+        .select("circle_name, title, starts_at")
+        .in("circle_name", circleNames),
+      supabase.from("profiles").select("privacy_settings"),
+      supabase
+        .from("conversations")
+        .select("id, circle_name")
+        .eq("kind", "circle")
+        .in("circle_name", circleNames),
+    ]);
+
+    if (postResult.error) throw postResult.error;
+    if (eventResult.error) throw eventResult.error;
+    if (profileResult.error) throw profileResult.error;
+    if (convoResult.error && !isMissingCircleConversationColumns(convoResult.error)) {
+      throw convoResult.error;
+    }
+
+    const nextMeetupByCircle = new Map<string, { title: string; startsAt: string }>();
+
+    (postResult.data ?? []).forEach((row: any) => {
+      const circleName = row.circle_name as string | null;
+      if (!circleName || !seeded[circleName]) return;
+
+      seeded[circleName].posts += 1;
+      if (new Date(row.created_at).getTime() >= startOfToday.getTime()) {
+        seeded[circleName].postsToday += 1;
+      }
+    });
+
+    (eventResult.data ?? []).forEach((row: any) => {
+      const circleName = row.circle_name as string | null;
+      if (!circleName || !seeded[circleName]) return;
+
+      seeded[circleName].meetups += 1;
+      const startsAt = row.starts_at as string;
+      const startsAtTime = new Date(startsAt).getTime();
+      if (startsAtTime < Date.now()) return;
+
+      const existing = nextMeetupByCircle.get(circleName);
+      if (!existing || startsAtTime < new Date(existing.startsAt).getTime()) {
+        nextMeetupByCircle.set(circleName, {
+          title: (row.title as string) || "Upcoming meetup",
+          startsAt,
+        });
+      }
+    });
+
+    (profileResult.data ?? []).forEach((row: any) => {
+      const privacy =
+        row?.privacy_settings && typeof row.privacy_settings === "object"
+          ? (row.privacy_settings as Record<string, unknown>)
+          : {};
+
+      const circles = Array.isArray(privacy.social_circles)
+        ? privacy.social_circles.filter((value): value is string => typeof value === "string")
+        : [];
+
+      circles.forEach((circleName) => {
+        if (seeded[circleName]) {
+          seeded[circleName].members += 1;
+        }
+      });
+    });
+
+    const circleConversationRows = ((convoResult.error && isMissingCircleConversationColumns(convoResult.error))
+      ? []
+      : convoResult.data ?? []) as Array<{
+      id: string;
+      circle_name: string | null;
+    }>;
+    const conversationIds = circleConversationRows.map((row) => row.id);
+    const circleNameByConversationId = new Map<string, string>();
+    circleConversationRows.forEach((row) => {
+      if (row.circle_name) {
+        circleNameByConversationId.set(row.id, row.circle_name);
+      }
+    });
+
+    if (conversationIds.length > 0) {
+      const { data: messageRows, error: messageError } = await supabase
+        .from("messages")
+        .select("conversation_id, created_at")
+        .in("conversation_id", conversationIds)
+        .order("created_at", { ascending: false })
+        .limit(5000);
+
+      if (messageError) throw messageError;
+
+      (messageRows ?? []).forEach((row: any) => {
+        const circleName = circleNameByConversationId.get(row.conversation_id as string);
+        if (!circleName || !seeded[circleName]) return;
+
+        seeded[circleName].chats += 1;
+        if (new Date(row.created_at).getTime() >= last24Hours.getTime()) {
+          seeded[circleName].activeChats += 1;
+        }
+      });
+    }
+
+    Object.entries(seeded).forEach(([circleName, stats]) => {
+      const nextMeetup = nextMeetupByCircle.get(circleName);
+      stats.meetupNote = nextMeetup
+        ? formatMeetupNote(nextMeetup.title, nextMeetup.startsAt)
+        : EMPTY_MEETUP_NOTE;
+    });
+
+    setLiveStatsByCircle(seeded);
+  }, [circleNames, formatMeetupNote]);
+
+  useEffect(() => {
+    void loadLiveStats();
+  }, [loadLiveStats]);
+
+  useEffect(() => {
+    let reloadTimer: number | null = null;
+
+    const scheduleReload = () => {
+      if (reloadTimer) return;
+      reloadTimer = window.setTimeout(() => {
+        reloadTimer = null;
+        void loadLiveStats();
+      }, 350);
+    };
+
+    const channel = supabase
+      .channel("vv-circle-live-stats")
+      .on("postgres_changes", { event: "*", schema: "public", table: "posts" }, scheduleReload)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "calendar_events" },
+        scheduleReload
+      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, scheduleReload)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "conversations" },
+        scheduleReload
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "conversation_members" },
+        scheduleReload
+      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, scheduleReload)
+      .subscribe();
+
+    return () => {
+      if (reloadTimer) {
+        window.clearTimeout(reloadTimer);
+      }
+      supabase.removeChannel(channel);
+    };
+  }, [loadLiveStats]);
 
   const handleInviteFriends = async (circleName: string) => {
     const text = `I just joined the ${circleName} circle on Violets & Vibes. Invite friends to grow this circle.`;
@@ -216,6 +441,74 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
     }
   };
 
+  const persistJoinedCircles = useCallback(
+    async (nextJoinedCircles: string[]) => {
+      if (!user?.id) return;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("privacy_settings")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      const privacy =
+        data?.privacy_settings && typeof data.privacy_settings === "object"
+          ? (data.privacy_settings as Record<string, unknown>)
+          : {};
+
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({
+          privacy_settings: {
+            ...privacy,
+            social_circles: nextJoinedCircles,
+          },
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", user.id);
+
+      if (updateError) throw updateError;
+    },
+    [user?.id]
+  );
+
+  const handleOpenCircle = useCallback(
+    async (circleName: string, isJoined: boolean) => {
+      if (!user?.id) {
+        toast({
+          title: "Sign in required",
+          description: "Sign in to join a circle and open its chat.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      try {
+        if (!isJoined) {
+          const nextJoinedCircles = Array.from(new Set([...joinedCircleNames, circleName]));
+          await persistJoinedCircles(nextJoinedCircles);
+          onToggleJoin(circleName);
+        }
+
+        onSelectCircle(circleName);
+        const conversationId = await getOrCreateCircleConversation(circleName);
+        navigate(`/chat?c=${conversationId}`, { replace: false });
+      } catch (error: any) {
+        console.error("Could not open circle chat:", error);
+        toast({
+          title: "Could not open circle",
+          description:
+            error?.message ||
+            "The circle feed is available, but the circle chat is not ready yet.",
+          variant: "destructive",
+        });
+      }
+    },
+    [joinedCircleNames, navigate, onSelectCircle, onToggleJoin, persistJoinedCircles, toast, user?.id]
+  );
+
   return (
     <Card className="overflow-hidden border-white/12 bg-[linear-gradient(135deg,rgba(24,12,50,0.94),rgba(12,18,42,0.94))] text-white shadow-2xl backdrop-blur-md">
       <CardContent className="p-4 sm:p-5">
@@ -256,9 +549,7 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
         {showSuggestForm ? (
           <div className="mb-4 rounded-2xl border border-white/12 bg-white/5 p-4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.16)]">
             <div className="text-sm font-semibold text-white">{t("suggestCircle")}</div>
-            <div className="mt-1 text-sm text-white/70">
-              {t("suggestCircleHelp")}
-            </div>
+            <div className="mt-1 text-sm text-white/70">{t("suggestCircleHelp")}</div>
             <div className="mt-3 flex flex-col gap-2 sm:flex-row">
               <Input
                 value={suggestedCircleName}
@@ -282,9 +573,7 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
               </Button>
             </div>
             {!user ? (
-              <div className="mt-2 text-xs text-white/55">
-                {t("signInToSubmitCircleSuggestion")}
-              </div>
+              <div className="mt-2 text-xs text-white/55">{t("signInToSubmitCircleSuggestion")}</div>
             ) : null}
           </div>
         ) : null}
@@ -312,7 +601,11 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
         <div className="mb-4 flex flex-wrap gap-2">
           <Button
             variant={activeCircle === null ? "secondary" : "outline"}
-            className={activeCircle === null ? "bg-white text-violet-950 hover:bg-white/90" : "border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"}
+            className={
+              activeCircle === null
+                ? "bg-white text-violet-950 hover:bg-white/90"
+                : "border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+            }
             onClick={() => onSelectCircle(null)}
           >
             {t("allCircles")}
@@ -321,7 +614,11 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
             <Button
               key={`filter-${circle.name}`}
               variant={activeCircle === circle.name ? "secondary" : "outline"}
-              className={activeCircle === circle.name ? "bg-pink-200 text-violet-950 hover:bg-pink-100" : "border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"}
+              className={
+                activeCircle === circle.name
+                  ? "bg-pink-200 text-violet-950 hover:bg-pink-100"
+                  : "border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+              }
               onClick={() => onSelectCircle(circle.name)}
             >
               {circle.name}
@@ -333,103 +630,104 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
           {communityCircles.map((circle) => {
             const isJoined = joinedCircleNames.includes(circle.name);
             const isActive = activeCircle === circle.name;
+            const runtimeStats = liveStatsByCircle[circle.name] ?? createEmptyRuntimeStats();
+
             return (
-            <div
-              key={circle.name}
-              className={`space-y-6 rounded-[24px] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] bg-gradient-to-br ${circle.tone} p-4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.2)] ${circle.glow} transition duration-200 hover:-translate-y-1 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] hover:shadow-[0_18px_40px_rgba(0,0,0,0.25)] ${isActive ? "ring-2 ring-pink-300/70" : ""}`}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-violet-100">
-                    {circle.icon}
-                    {t("circle")}
-                  </div>
-                  <h4 className="mt-3 text-lg font-semibold text-white">{circle.name}</h4>
-                  <p className="mt-2 text-sm text-white/78">{circle.description}</p>
-                  <div className="mt-3 space-y-1.5 text-sm text-white/78">
-                    <div className="flex items-center gap-2">
-                      <Flame className="h-4 w-4 text-pink-300" />
-                      <span>{t("newPostsToday", { count: circle.activity.postsToday })}</span>
+              <div
+                key={circle.name}
+                className={`space-y-6 rounded-[24px] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] bg-gradient-to-br ${circle.tone} p-4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.2)] ${circle.glow} transition duration-200 hover:-translate-y-1 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] hover:shadow-[0_18px_40px_rgba(0,0,0,0.25)] ${isActive ? "ring-2 ring-pink-300/70" : ""}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-violet-100">
+                      {circle.icon}
+                      {t("circle")}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <MessageCircleMore className="h-4 w-4 text-sky-300" />
-                      <span>{t("activeChats", { count: circle.activity.activeChats })}</span>
+                    <h4 className="mt-3 text-lg font-semibold text-white">{circle.name}</h4>
+                    <p className="mt-2 text-sm text-white/78">{circle.description}</p>
+                    <div className="mt-3 space-y-1.5 text-sm text-white/78">
+                      <div className="flex items-center gap-2">
+                        <Flame className="h-4 w-4 text-pink-300" />
+                        <span>{t("newPostsToday", { count: runtimeStats.postsToday })}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MessageCircleMore className="h-4 w-4 text-sky-300" />
+                        <span>{t("activeChats", { count: runtimeStats.activeChats })}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CalendarDays className="h-4 w-4 text-amber-300" />
+                        <span>{runtimeStats.meetupNote}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <CalendarDays className="h-4 w-4 text-amber-300" />
-                      <span>{circle.activity.meetupNote}</span>
+                  </div>
+                  <Badge className="border-white/14 bg-white/8 text-white">
+                    {runtimeStats.members} {t("members")}
+                  </Badge>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="rounded-2xl border border-white/10 bg-white/4 p-3 shadow-[0_10px_30px_rgba(0,0,0,0.12)] backdrop-blur-md">
+                    <div className="flex items-center gap-2 text-white/70">
+                      <MessageCircleMore className="h-4 w-4 text-white/70" />
+                      {t("chats")}
                     </div>
+                    <div className="mt-1 text-lg font-semibold text-white">{runtimeStats.chats}</div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/4 p-3 shadow-[0_10px_30px_rgba(0,0,0,0.12)] backdrop-blur-md">
+                    <div className="flex items-center gap-2 text-white/70">
+                      <CalendarDays className="h-4 w-4 text-white/70" />
+                      {t("meetups")}
+                    </div>
+                    <div className="mt-1 text-lg font-semibold text-white">{runtimeStats.meetups}</div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/4 p-3 shadow-[0_10px_30px_rgba(0,0,0,0.12)] backdrop-blur-md">
+                    <div className="flex items-center gap-2 text-white/70">
+                      <Sparkles className="h-4 w-4 text-white/70" />
+                      {t("posts")}
+                    </div>
+                    <div className="mt-1 text-lg font-semibold text-white">{runtimeStats.posts}</div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/4 p-3 shadow-[0_10px_30px_rgba(0,0,0,0.12)] backdrop-blur-md">
+                    <div className="flex items-center gap-2 text-white/70">
+                      <Users className="h-4 w-4 text-white/70" />
+                      {t("memberList")}
+                    </div>
+                    <div className="mt-1 text-lg font-semibold text-white">{runtimeStats.members}</div>
                   </div>
                 </div>
-                <Badge className="border-white/14 bg-white/8 text-white">
-                  {circle.stats.members} {t("members")}
-                </Badge>
-              </div>
 
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div className="rounded-2xl border border-white/10 bg-white/4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)] p-3">
-                  <div className="flex items-center gap-2 text-white/70">
-                    <MessageCircleMore className="h-4 w-4 text-white/70" />
-                    {t("chats")}
-                  </div>
-                  <div className="mt-1 text-lg font-semibold text-white">{circle.stats.chats}</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)] p-3">
-                  <div className="flex items-center gap-2 text-white/70">
-                    <CalendarDays className="h-4 w-4 text-white/70" />
-                    {t("meetups")}
-                  </div>
-                  <div className="mt-1 text-lg font-semibold text-white">{circle.stats.meetups}</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)] p-3">
-                  <div className="flex items-center gap-2 text-white/70">
-                    <Sparkles className="h-4 w-4 text-white/70" />
-                    {t("posts")}
-                  </div>
-                  <div className="mt-1 text-lg font-semibold text-white">{circle.stats.posts}</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/4 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)] p-3">
-                  <div className="flex items-center gap-2 text-white/70">
-                    <Users className="h-4 w-4 text-white/70" />
-                    {t("memberList")}
-                  </div>
-                  <div className="mt-1 text-lg font-semibold text-white">{circle.stats.members}</div>
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <Button
-                  className={isJoined ? "flex-1 bg-emerald-300 text-emerald-950 hover:bg-emerald-200" : "flex-1 bg-white text-violet-950 hover:bg-white/90"}
-                  onClick={() => {
-                    if (isJoined) {
-                      onSelectCircle(circle.name);
-                      return;
-                    }
-
-                    onToggleJoin(circle.name);
-                  }}
-                >
-                  {isJoined ? t("openCircle") : t("joinCircle")}
-                </Button>
-              </div>
-              {isJoined ? (
-                <div className="rounded-2xl border border-pink-300/15 bg-pink-400/10 p-3">
-                  <div className="text-sm font-medium text-pink-50">
-                    {t("inviteFriendsToGrowThisCircle")}
-                  </div>
+                <div className="flex gap-2">
                   <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    className="mt-3 w-full border-pink-300/20 bg-white/5 text-pink-50 hover:bg-white/10"
-                    onClick={() => void handleInviteFriends(circle.name)}
+                    className={
+                      isJoined
+                        ? "flex-1 bg-emerald-300 text-emerald-950 hover:bg-emerald-200"
+                        : "flex-1 bg-white text-violet-950 hover:bg-white/90"
+                    }
+                    onClick={() => void handleOpenCircle(circle.name, isJoined)}
                   >
-                    {t("inviteFriends")}
+                    {isJoined ? t("openCircle") : t("joinCircle")}
                   </Button>
                 </div>
-              ) : null}
-            </div>
-          )})}
+
+                {isJoined ? (
+                  <div className="rounded-2xl border border-pink-300/15 bg-pink-400/10 p-3">
+                    <div className="text-sm font-medium text-pink-50">
+                      {t("inviteFriendsToGrowThisCircle")}
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="mt-3 w-full border-pink-300/20 bg-white/5 text-pink-50 hover:bg-white/10"
+                      onClick={() => void handleInviteFriends(circle.name)}
+                    >
+                      {t("inviteFriends")}
+                    </Button>
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
         </div>
       </CardContent>
     </Card>

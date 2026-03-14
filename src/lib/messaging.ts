@@ -60,3 +60,21 @@ export async function getOrCreateDirectConversation(myId: string, otherUserId: s
 
   return conversationId;
 }
+
+export async function getOrCreateCircleConversation(circleName: string) {
+  const trimmedName = circleName.trim();
+  if (!trimmedName) {
+    throw new Error("Circle name is required.");
+  }
+
+  const { data, error } = await supabase.rpc("get_or_create_circle_conversation", {
+    p_circle_name: trimmedName,
+  });
+
+  if (error) throw error;
+  if (!data) {
+    throw new Error("Could not open the circle chat.");
+  }
+
+  return data as string;
+}
