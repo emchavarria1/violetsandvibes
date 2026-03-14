@@ -10,7 +10,7 @@ import {
   SUBSCRIPTION_TIER_LABELS,
 } from '@/types/subscription';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { invokeEdgeFunction } from '@/lib/supabase';
 
 interface PricingTiersProps {
   currentTier: SubscriptionTier;
@@ -67,7 +67,7 @@ const PricingTiers: React.FC<PricingTiersProps> = ({ currentTier, onTierSelect }
     setIsLoading(tier);
     try {
       const action = tier === 'free' ? 'cancel_subscription' : 'create_subscription';
-      const { data, error } = await supabase.functions.invoke('handle-payment', {
+      const { data, error } = await invokeEdgeFunction('handle-payment', {
         body:
           tier === 'free'
             ? { action }

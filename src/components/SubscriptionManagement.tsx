@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Calendar, CreditCard, Crown, Star, Zap } from 'lucide-react';
 import { SubscriptionTier, SUBSCRIPTION_TIER_LABELS } from '@/types/subscription';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { invokeEdgeFunction } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
 
 interface SubscriptionManagementProps {
@@ -50,7 +50,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
     
     setIsCancelling(true);
     try {
-      const { data, error } = await supabase.functions.invoke('handle-payment', {
+      const { data, error } = await invokeEdgeFunction('handle-payment', {
         body: { action: 'cancel_subscription' },
       });
 
@@ -76,7 +76,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
   const handleUpdatePaymentMethod = async () => {
     setIsUpdatingPaymentMethod(true);
     try {
-      const { data, error } = await supabase.functions.invoke('handle-payment', {
+      const { data, error } = await invokeEdgeFunction('handle-payment', {
         body: { action: 'update_payment_method' },
       });
       if (error) throw error;

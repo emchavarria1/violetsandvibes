@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Receipt, Calendar, CreditCard, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { invokeEdgeFunction } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
 
 interface BillingTransaction {
@@ -136,7 +136,7 @@ const BillingHistory: React.FC = () => {
     let lastError: any = null;
 
     for (const action of actions) {
-      const { data, error: invokeError } = await supabase.functions.invoke('handle-payment', {
+      const { data, error: invokeError } = await invokeEdgeFunction('handle-payment', {
         body: { action },
       });
 
@@ -187,7 +187,7 @@ const BillingHistory: React.FC = () => {
       let lastError: any = null;
 
       for (const action of actions) {
-        const { data, error: invokeError } = await supabase.functions.invoke('handle-payment', {
+        const { data, error: invokeError } = await invokeEdgeFunction('handle-payment', {
           body: {
             action,
             invoiceId: transaction.id,

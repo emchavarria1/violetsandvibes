@@ -37,7 +37,7 @@ import PaymentPreferences from '@/components/PaymentPreferences';
 import SubscriptionManagement from '@/components/SubscriptionManagement';
 import BillingHistory from '@/components/BillingHistory';
 import PricingTiers from '@/components/PricingTiers';
-import { supabase } from '@/lib/supabase';
+import { invokeEdgeFunction, supabase } from '@/lib/supabase';
 import { useTheme } from '@/components/theme-provider';
 import { applyAppPreferences, DEFAULT_APP_PREFERENCES, normalizeAppPreferences } from '@/lib/appPreferences';
 import { useI18n } from '@/lib/i18n';
@@ -385,7 +385,7 @@ const SettingsPage: React.FC = () => {
 
     setDeletingAccount(true);
     try {
-      const { error } = await supabase.functions.invoke('delete-account', {
+      const { error } = await invokeEdgeFunction('delete-account', {
         body: { confirm: true },
       });
       if (error) throw error;

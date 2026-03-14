@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { invokeEdgeFunction, supabase } from '@/lib/supabase';
 
 export interface AuthUser {
   id: string;
@@ -209,9 +209,13 @@ export const authService = {
     };
 
     const functionName = functionNameByProvider[provider];
-    const { data, error } = await supabase.functions.invoke(functionName, {
-      body: { returnPath: safeRedirectPath },
-    });
+    const { data, error } = await invokeEdgeFunction(
+      functionName,
+      {
+        body: { returnPath: safeRedirectPath },
+      },
+      { requireAuth: false }
+    );
     if (error) throw error;
 
     const url = data?.url as string | undefined;

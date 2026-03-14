@@ -9,7 +9,24 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+type EdgeInvokeOptions = NonNullable<Parameters<typeof supabase.functions.invoke>[1]>;
+
+type EdgeInvokeAuthOptions = {
+  requireAuth?: boolean;
+  forceRefresh?: boolean;
+  includeAccessTokenInBody?: boolean;
+};
+
 const SESSION_REFRESH_BUFFER_SECONDS = 60;
+
+const isPlainObjectBody = (value: unknown): value is Record<string, unknown> => {
+  if (!value || typeof value !== "object") return false;
+  if (value instanceof FormData) return false;
+  if (value instanceof Blob) return false;
+  if (value instanceof ArrayBuffer) return false;
+  if (ArrayBuffer.isView(value)) return false;
+  return Object.prototype.toString.call(value) === "[object Object]";
+};
 
 const sessionNeedsRefresh = (session: Session | null) => {
   if (!session?.access_token) return true;
@@ -61,4 +78,48 @@ export async function getFreshAccessToken(options?: { forceRefresh?: boolean }) 
   }
 
   return accessToken;
+}
+
+export async function invokeEdgeFunction<TData = unknown>(
+  functionName: string,
+  options: EdgeInvokeOptions = {},
+  authOptions: EdgeInvokeAuthOptions = {}
+) {
+  const {
+    requireAuth = true,
+    forceRefresh = false,
+    includeAccessTokenInBody = false,
+  } = authOptions;
+
+  let accessToken: string | null = null;
+
+  if (requireAuth) {
+    accessToken = await getFreshAccessToken({ forceRefresh });
+  } else {
+    try {
+      accessToken = await getFreshAccessToken({ forceRefresh });
+    } catch {
+      accessToken = null;
+    }
+  }
+
+  let body = options.body;
+  if (accessToken && includeAccessTokenInBody) {
+    if (isPlainObjectBody(body)) {
+      body = { ...body, accessToken };
+    } else if (body == null) {
+      body = { accessToken };
+    }
+  }
+
+  const headers = {
+    ...(options.headers ?? {}),
+    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+  };
+
+  return supabase.functions.invoke<TData>(functionName, {
+    ...options,
+    body,
+    headers,
+  });
 }

@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { getFreshAccessToken, supabase } from "@/lib/supabase";
+import { invokeEdgeFunction, supabase } from "@/lib/supabase";
 import EventCard from "./EventCard";
 import { communityCircles } from "./CommunityCirclesCard";
 import { Link } from "react-router-dom";
@@ -334,15 +334,8 @@ const CalendarIntegration: React.FC = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [deletingEventId, setDeletingEventId] = useState<string | null>(null);
 
-  const getAccessToken = useCallback(async () => getFreshAccessToken(), []);
-
   const loadStatus = useCallback(async () => {
-    const accessToken = await getAccessToken();
-    const { data, error } = await supabase.functions.invoke("calendar-status", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const { data, error } = await invokeEdgeFunction("calendar-status");
     if (error) throw error;
 
     const result = data as Partial<CalendarStatusResponse>;
@@ -362,7 +355,7 @@ const CalendarIntegration: React.FC = () => {
       connectedCount: Number(result?.connectedCount || 0),
       hasAnyConnection: !!result?.hasAnyConnection,
     });
-  }, [getAccessToken]);
+  }, []);
 
   const loadJoinedCircles = useCallback(async () => {
     if (!user?.id) {
@@ -433,12 +426,8 @@ const CalendarIntegration: React.FC = () => {
 
       setSyncing(true);
       try {
-        const accessToken = await getAccessToken();
-        const { data, error } = await supabase.functions.invoke("calendar-sync", {
+        const { data, error } = await invokeEdgeFunction("calendar-sync", {
           body: payload || {},
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
         });
 
         if (error) throw error;
@@ -480,7 +469,7 @@ const CalendarIntegration: React.FC = () => {
         setSyncing(false);
       }
     },
-    [getAccessToken, loadAll, toast, user]
+    [loadAll, toast, user]
   );
 
   useEffect(() => {
@@ -561,17 +550,13 @@ const CalendarIntegration: React.FC = () => {
     window.history.replaceState({}, "", `${url.pathname}${url.search}`);
   }, [loadAll, toast]);
 
-  const connectProvider = async (provider: Provider) => {
+    const connectProvider = async (provider: Provider) => {
     setConnectingProvider(provider);
     try {
-      const accessToken = await getAccessToken();
-      const { data, error } = await supabase.functions.invoke("calendar-oauth-start", {
+      const { data, error } = await invokeEdgeFunction("calendar-oauth-start", {
         body: {
           provider,
           returnPath: "/calendar",
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
         },
       });
 

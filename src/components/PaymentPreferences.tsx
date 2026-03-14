@@ -15,7 +15,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { invokeEdgeFunction } from '@/lib/supabase';
 import PaymentForm from './PaymentForm';
 import { SUBSCRIPTION_TIER_LABELS, SubscriptionTier } from '@/types/subscription';
 import { useI18n } from '@/lib/i18n';
@@ -66,7 +66,7 @@ const PaymentPreferences: React.FC<PaymentPreferencesProps> = ({
 
   const handlePayment = async (action: string, data?: any) => {
     try {
-      const { data: result, error } = await supabase.functions.invoke('handle-payment', {
+      const { data: result, error } = await invokeEdgeFunction('handle-payment', {
         body: { action, ...data }
       });
 

@@ -16,7 +16,7 @@ import {
   loadEffectiveSubscriptionTierForUser,
   saveSubscriptionTierForUser,
 } from '@/lib/subscriptionTier';
-import { supabase } from '@/lib/supabase';
+import { invokeEdgeFunction } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
 
 const SubscriptionPage: React.FC = () => {
@@ -108,7 +108,7 @@ const SubscriptionPage: React.FC = () => {
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke('handle-payment', {
+      const { data, error } = await invokeEdgeFunction('handle-payment', {
         body: {
           action: 'create_subscription',
           tier,

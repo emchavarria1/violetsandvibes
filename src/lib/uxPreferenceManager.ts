@@ -1,4 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
+import { invokeEdgeFunction } from '@/lib/supabase';
 
 export interface UXPreferences {
   ux_preference: 'interactive_animated' | 'minimalist_simple' | 'default';
@@ -18,7 +19,7 @@ export class UXPreferenceManager {
 
   async setUXPreference(preferences: UXPreferences) {
     try {
-      const { data, error } = await this.supabase.functions.invoke('update-ux-preferences', {
+      const { data, error } = await invokeEdgeFunction('update-ux-preferences', {
         body: JSON.stringify(preferences)
       });
 

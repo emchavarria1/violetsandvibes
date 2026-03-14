@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, X, Camera, Plus, AlertCircle } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { invokeEdgeFunction } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import { compressImage, validateImageFile } from './ImageCompressor';
 
@@ -56,7 +56,7 @@ export const AlternativePhotoUpload: React.FC<AlternativePhotoUploadProps> = ({
         formData.append('file', compressedFile);
         formData.append('userId', user.id);
 
-        supabase.functions.invoke('upload-profile-photo', {
+        invokeEdgeFunction('upload-profile-photo', {
           body: formData,
         }).then(({ data, error: uploadError }) => {
           if (!uploadError && data?.success && data?.url) {
