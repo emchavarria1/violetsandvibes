@@ -25,7 +25,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/lib/i18n";
-import { getOrCreateCircleConversation } from "@/lib/messaging";
 
 export type Circle = {
   name: string;
@@ -493,8 +492,7 @@ export const CommunityCirclesCard: React.FC<CommunityCirclesCardProps> = ({
         }
 
         onSelectCircle(circleName);
-        const conversationId = await getOrCreateCircleConversation(circleName);
-        navigate(`/chat?c=${conversationId}`, { replace: false });
+        navigate(`/chat?circle=${encodeURIComponent(circleName)}`, { replace: false });
       } catch (error: any) {
         console.error("Could not open circle chat:", error);
         toast({
