@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
+import { getFreshAccessToken, supabase } from "@/lib/supabase";
 import EventCard from "./EventCard";
 import { communityCircles } from "./CommunityCirclesCard";
 import { Link } from "react-router-dom";
@@ -334,37 +334,7 @@ const CalendarIntegration: React.FC = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [deletingEventId, setDeletingEventId] = useState<string | null>(null);
 
-  const getAccessToken = useCallback(async () => {
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.getSession();
-
-    if (error) {
-      throw error;
-    }
-
-    const nowInSeconds = Math.floor(Date.now() / 1000);
-    const expiresAt = session?.expires_at ?? 0;
-    const needsRefresh =
-      !session?.access_token || !session.refresh_token || expiresAt <= nowInSeconds + 60;
-
-    if (!needsRefresh && session.access_token) {
-      return session.access_token;
-    }
-
-    const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession();
-    if (refreshError) {
-      throw refreshError;
-    }
-
-    const refreshedAccessToken = refreshed.session?.access_token;
-    if (!refreshedAccessToken) {
-      throw new Error("Unauthorized");
-    }
-
-    return refreshedAccessToken;
-  }, []);
+  const getAccessToken = useCallback(async () => getFreshAccessToken(), []);
 
   const loadStatus = useCallback(async () => {
     const accessToken = await getAccessToken();

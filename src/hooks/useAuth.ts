@@ -1,18 +1,40 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { useState, useEffect, useCallback } from 'react';
+import { getFreshSession, supabase } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const syncUserFromSession = useCallback(
+    async (options?: { forceRefresh?: boolean; keepLoading?: boolean }) => {
+      if (options?.keepLoading) {
+        setLoading(true);
+      }
+
+      try {
+        const session = await getFreshSession({ forceRefresh: options?.forceRefresh });
+        setUser(session?.user ?? null);
+      } catch (error) {
+        console.error('Error refreshing session:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     let active = true;
 
-    const initSession = async () => {
+    const syncIfActive = async (options?: { forceRefresh?: boolean; keepLoading?: boolean }) => {
+      if (options?.keepLoading && active) {
+        setLoading(true);
+      }
+
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) throw error;
+        const session = await getFreshSession({ forceRefresh: options?.forceRefresh });
         if (!active) return;
         setUser(session?.user ?? null);
       } catch (error) {
@@ -23,26 +45,44 @@ export const useAuth = () => {
       }
     };
 
-    void initSession();
+    void syncIfActive({ keepLoading: true });
 
-    // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (!active) return;
+
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
+    const handleForegroundRefresh = () => {
+      if (!active) return;
+      if (document.visibilityState !== 'visible') return;
+      void syncIfActive();
+    };
+
+    window.addEventListener('focus', handleForegroundRefresh);
+    document.addEventListener('visibilitychange', handleForegroundRefresh);
+
     return () => {
       active = false;
       subscription.unsubscribe();
+      window.removeEventListener('focus', handleForegroundRefresh);
+      document.removeEventListener('visibilitychange', handleForegroundRefresh);
     };
   }, []);
 
   return {
     user,
     loading,
+    refreshSession: syncUserFromSession,
     signOut: () => supabase.auth.signOut(),
   };
 };
