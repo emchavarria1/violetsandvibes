@@ -721,6 +721,7 @@ const CalendarIntegration: React.FC = () => {
       tags,
       organizer: "You",
       isAttending: true,
+      isOwnedByMe: true,
     };
   }, []);
 
@@ -1080,8 +1081,7 @@ const CalendarIntegration: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                        className="justify-center bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white shadow-lg shadow-pink-500/20 hover:from-pink-400 hover:to-fuchsia-400"
                         onClick={() => void handleInviteEvent(event)}
                       >
                         <Share2 className="w-3.5 h-3.5 mr-1" />
@@ -1089,8 +1089,7 @@ const CalendarIntegration: React.FC = () => {
                       </Button>
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                        className="justify-center bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-500/20 hover:from-emerald-400 hover:to-green-500"
                         onClick={() => window.open(buildGoogleUrl(event), "_blank", "noopener,noreferrer")}
                       >
                         <ExternalLink className="w-3.5 h-3.5 mr-1" />
@@ -1098,8 +1097,7 @@ const CalendarIntegration: React.FC = () => {
                       </Button>
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                        className="justify-center bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/20 hover:from-sky-400 hover:to-blue-500"
                         onClick={() => window.open(buildOutlookUrl(event), "_blank", "noopener,noreferrer")}
                       >
                         <ExternalLink className="w-3.5 h-3.5 mr-1" />
@@ -1107,8 +1105,7 @@ const CalendarIntegration: React.FC = () => {
                       </Button>
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                        className="justify-center bg-gradient-to-r from-slate-500 to-zinc-700 text-white shadow-lg shadow-slate-500/20 hover:from-slate-400 hover:to-zinc-600"
                         onClick={() => downloadIcs(event)}
                       >
                         <Download className="w-3.5 h-3.5 mr-1" />

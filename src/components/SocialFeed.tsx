@@ -76,6 +76,7 @@ type FeedEvent = {
   tags: string[];
   organizer: string;
   isAttending: boolean;
+  isOwnedByMe: boolean;
   circleName?: string | null;
   requestedByMe: boolean;
   infoRequestCount: number;
@@ -613,6 +614,7 @@ const SocialFeed: React.FC = () => {
           tags,
           organizer: event.user_id === user.id ? "You" : ownerNameById.get(event.user_id) || "Member",
           isAttending: event.user_id === user.id,
+          isOwnedByMe: event.user_id === user.id,
           circleName: event.circle_name ?? null,
           requestedByMe: requestedEventIds.has(event.id),
           infoRequestCount: requestCountByEvent.get(event.id) ?? 0,

@@ -19,6 +19,7 @@ interface EventCardProps {
     organizer: string;
     image?: string;
     isAttending?: boolean;
+    isOwnedByMe?: boolean;
     infoRequestCount?: number;
     latestInfoRequestMessage?: string | null;
     requestedByMe?: boolean;
@@ -85,6 +86,22 @@ const EventCard: React.FC<EventCardProps> = ({
         </div>
         
         <div className="flex flex-wrap gap-2 mt-3">
+          {event.isOwnedByMe ? (
+            <Badge
+              variant="outline"
+              className="text-xs border-emerald-300/40 bg-emerald-500/15 text-emerald-100"
+            >
+              Your event
+            </Badge>
+          ) : null}
+          {!event.isOwnedByMe && showingRequestInfo ? (
+            <Badge
+              variant="outline"
+              className="text-xs border-violet-300/35 bg-violet-500/15 text-violet-100"
+            >
+              Community event
+            </Badge>
+          ) : null}
           {event.tags.map((tag, index) => (
             <Badge 
               key={tag} 
