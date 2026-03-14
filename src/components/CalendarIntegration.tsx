@@ -1078,13 +1078,19 @@ const CalendarIntegration: React.FC = () => {
                     ) : null}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-                      <Button size="sm" variant="outline" onClick={() => void handleInviteEvent(event)}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                        onClick={() => void handleInviteEvent(event)}
+                      >
                         <Share2 className="w-3.5 h-3.5 mr-1" />
                         Invite
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
+                        className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
                         onClick={() => window.open(buildGoogleUrl(event), "_blank", "noopener,noreferrer")}
                       >
                         <ExternalLink className="w-3.5 h-3.5 mr-1" />
@@ -1093,12 +1099,18 @@ const CalendarIntegration: React.FC = () => {
                       <Button
                         size="sm"
                         variant="outline"
+                        className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
                         onClick={() => window.open(buildOutlookUrl(event), "_blank", "noopener,noreferrer")}
                       >
                         <ExternalLink className="w-3.5 h-3.5 mr-1" />
                         Outlook
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => downloadIcs(event)}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                        onClick={() => downloadIcs(event)}
+                      >
                         <Download className="w-3.5 h-3.5 mr-1" />
                         Apple (.ics)
                       </Button>
