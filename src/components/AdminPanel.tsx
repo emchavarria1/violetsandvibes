@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Shield, CheckCircle2, XCircle, RefreshCw, Eye, MessagesSquare } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { getFreshAccessToken, supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 import { useI18n } from '@/lib/i18n';
@@ -95,8 +95,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
   );
 
   const invokeVerificationReview = async (body: Record<string, unknown>) => {
+    const accessToken = await getFreshAccessToken();
+
     return supabase.functions.invoke('verification-review', {
-      body,
+      body: {
+        ...body,
+        accessToken,
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     });
   };
 
