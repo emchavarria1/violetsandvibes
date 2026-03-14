@@ -41,7 +41,17 @@ const redirect = (location: string) =>
     headers: { Location: location },
   });
 
+const sanitizeReason = (value: unknown, fallback = "callback_failed") => {
+  if (typeof value !== "string") return fallback;
+  const normalized = value.trim().replace(/\s+/g, "_").replace(/[^a-zA-Z0-9._:-]/g, "");
+  if (!normalized) return fallback;
+  return normalized.slice(0, 180);
+};
+
 serve(async (req) => {
+  let providerForRedirect: Provider | "google" | "outlook" = "google";
+  let returnPathForRedirect = "/calendar";
+
   try {
     const url = new URL(req.url);
     const stateRaw = url.searchParams.get("state");
@@ -60,6 +70,8 @@ serve(async (req) => {
 
     const provider = state?.provider || "google";
     const returnPath = sanitizeReturnPath(state?.returnPath);
+    providerForRedirect = provider;
+    returnPathForRedirect = returnPath;
 
     if (!state || state.v !== 1 || Date.now() - state.ts > STATE_TTL_MS) {
       return redirect(
@@ -135,10 +147,10 @@ serve(async (req) => {
   } catch (error) {
     console.error("calendar-oauth-callback failed:", error);
     return redirect(
-      buildAppRedirect("/calendar", {
+      buildAppRedirect(returnPathForRedirect, {
         calendar_connect: "error",
-        provider: "google",
-        reason: "callback_failed",
+        provider: providerForRedirect,
+        reason: sanitizeReason((error as Error)?.message),
       })
     );
   }
