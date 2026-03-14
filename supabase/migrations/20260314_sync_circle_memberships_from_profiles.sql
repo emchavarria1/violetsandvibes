@@ -1,6 +1,27 @@
 -- Keep circle chat memberships aligned with profile privacy_settings.social_circles
 -- and backfill existing users so joined circles already have memberships.
 
+do $$
+begin
+  if not exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'conversations'
+      and column_name = 'kind'
+  ) or not exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'conversations'
+      and column_name = 'circle_name'
+  ) then
+    raise exception
+      'public.conversations circle columns are missing. Run 20260314_add_circle_conversations.sql first.';
+  end if;
+end
+$$;
+
 create or replace function public.sync_circle_memberships_for_user(
   p_user_id uuid,
   p_privacy_settings jsonb
