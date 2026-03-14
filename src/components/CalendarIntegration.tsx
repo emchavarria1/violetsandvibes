@@ -335,12 +335,35 @@ const CalendarIntegration: React.FC = () => {
   const [deletingEventId, setDeletingEventId] = useState<string | null>(null);
 
   const getAccessToken = useCallback(async () => {
-    const { data } = await supabase.auth.getSession();
-    const accessToken = data.session?.access_token;
-    if (!accessToken) {
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+
+    if (error) {
+      throw error;
+    }
+
+    const nowInSeconds = Math.floor(Date.now() / 1000);
+    const expiresAt = session?.expires_at ?? 0;
+    const needsRefresh =
+      !session?.access_token || !session.refresh_token || expiresAt <= nowInSeconds + 60;
+
+    if (!needsRefresh && session.access_token) {
+      return session.access_token;
+    }
+
+    const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession();
+    if (refreshError) {
+      throw refreshError;
+    }
+
+    const refreshedAccessToken = refreshed.session?.access_token;
+    if (!refreshedAccessToken) {
       throw new Error("Unauthorized");
     }
-    return accessToken;
+
+    return refreshedAccessToken;
   }, []);
 
   const loadStatus = useCallback(async () => {
