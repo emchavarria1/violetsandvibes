@@ -62,7 +62,7 @@ export function buildAuthorizeUrl(provider: Provider, state: string) {
       access_type: "offline",
       prompt: "consent",
       include_granted_scopes: "true",
-      scope: "openid email https://www.googleapis.com/auth/calendar",
+      scope: "openid email https://www.googleapis.com/auth/calendar.events",
       state,
     });
     return `${GOOGLE_AUTH_URL}?${params.toString()}`;
