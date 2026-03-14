@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import EventCard from "./EventCard";
 import CommunityCirclesCard, { communityCircles } from "./CommunityCirclesCard";
-import { Plus, ShieldAlert } from "lucide-react";
+import { MessageCirclePlus, Pencil, Plus, ShieldAlert, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { Link, useLocation } from "react-router-dom";
@@ -49,6 +49,7 @@ type HydratedComment = CommentRow & {
 
 type CalendarEventRow = {
   id: string;
+  user_id: string;
   title: string;
   description: string | null;
   location: string | null;
@@ -61,6 +62,10 @@ type CalendarEventRow = {
 
 type FeedEvent = {
   id: string;
+  ownerId: string;
+  startsAt: string;
+  endsAt: string;
+  source: "local" | "google" | "outlook";
   title: string;
   description: string;
   date: string;
@@ -72,6 +77,25 @@ type FeedEvent = {
   organizer: string;
   isAttending: boolean;
   circleName?: string | null;
+  requestedByMe: boolean;
+  infoRequestCount: number;
+  latestInfoRequestMessage: string | null;
+};
+
+type EventInfoRequestRow = {
+  id: string;
+  event_id: string;
+  requester_id: string;
+  owner_id: string;
+  message: string | null;
+};
+
+type EventEditForm = {
+  title: string;
+  description: string;
+  location: string;
+  startsAt: string;
+  endsAt: string;
 };
 
 const CIRCLE_STORAGE_KEY = "vv_joined_circles_v1";
@@ -160,6 +184,14 @@ function formatEventTimeRange(startIso: string, endIso: string) {
   return `${formatter.format(new Date(startIso))} - ${formatter.format(new Date(endIso))}`;
 }
 
+function toDateTimeLocalValue(iso: string) {
+  const date = new Date(iso);
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
+    date.getHours()
+  )}:${pad(date.getMinutes())}`;
+}
+
 const SocialFeed: React.FC = () => {
   const { t } = useI18n();
   const { user } = useAuth();
@@ -212,6 +244,10 @@ const SocialFeed: React.FC = () => {
   const [eventsLoading, setEventsLoading] = useState(true);
   const [eventsError, setEventsError] = useState<string | null>(null);
   const [creatingEvent, setCreatingEvent] = useState(false);
+  const [editingEventId, setEditingEventId] = useState<string | null>(null);
+  const [editingEvent, setEditingEvent] = useState<EventEditForm | null>(null);
+  const [updatingEvent, setUpdatingEvent] = useState(false);
+  const [eventActionById, setEventActionById] = useState<Record<string, boolean>>({});
   const [activeCircle, setActiveCircle] = useState<string | null>(null);
   const [joinedCircles, setJoinedCircles] = useState<string[]>(() => {
     try {
@@ -468,15 +504,88 @@ const SocialFeed: React.FC = () => {
       const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from("calendar_events")
-        .select("id, title, description, location, circle_name, starts_at, ends_at, source, sync_state")
-        .eq("user_id", user.id)
+        .select("id, user_id, title, description, location, circle_name, starts_at, ends_at, source, sync_state")
+        .eq("source", "local")
         .gte("ends_at", nowIso)
         .order("starts_at", { ascending: true })
-        .limit(50);
+        .limit(100);
 
       if (error) throw error;
 
-      const mapped = ((data ?? []) as CalendarEventRow[]).map((event) => {
+      const eventRows = (data ?? []) as CalendarEventRow[];
+      const ownerIds = Array.from(new Set(eventRows.map((event) => event.user_id)));
+      const eventIds = eventRows.map((event) => event.id);
+
+      let profileRows: Array<{ id: string; full_name: string | null; username: string | null }> = [];
+      if (ownerIds.length > 0) {
+        const { data: profilesData, error: profilesError } = await supabase
+          .from("profiles")
+          .select("id, full_name, username")
+          .in("id", ownerIds);
+
+        if (profilesError) {
+          console.warn("Could not hydrate event owner names:", profilesError.message);
+        } else {
+          profileRows = (profilesData ?? []) as Array<{
+            id: string;
+            full_name: string | null;
+            username: string | null;
+          }>;
+        }
+      }
+
+      const ownerNameById = new Map<string, string>();
+      profileRows.forEach((profile) => {
+        ownerNameById.set(profile.id, profile.full_name || profile.username || "Member");
+      });
+
+      let requestedEventIds = new Set<string>();
+      if (eventIds.length > 0) {
+        const { data: myRequests, error: myRequestsError } = await supabase
+          .from("calendar_event_info_requests")
+          .select("event_id")
+          .eq("requester_id", user.id)
+          .in("event_id", eventIds);
+
+        if (myRequestsError) {
+          console.warn("Could not load info request state:", myRequestsError.message);
+        } else {
+          requestedEventIds = new Set(
+            ((myRequests ?? []) as Array<{ event_id: string }>).map((request) => request.event_id)
+          );
+        }
+      }
+
+      let requestCountByEvent = new Map<string, number>();
+      let latestRequestMessageByEvent = new Map<string, string | null>();
+      const ownerEventIds = eventRows.filter((event) => event.user_id === user.id).map((event) => event.id);
+      if (ownerEventIds.length > 0) {
+        const { data: ownerRequests, error: ownerRequestsError } = await supabase
+          .from("calendar_event_info_requests")
+          .select("event_id, message, created_at")
+          .eq("owner_id", user.id)
+          .in("event_id", ownerEventIds)
+          .order("created_at", { ascending: false });
+
+        if (ownerRequestsError) {
+          console.warn("Could not load owner request counts:", ownerRequestsError.message);
+        } else {
+          requestCountByEvent = (ownerRequests ?? []).reduce((map, row: any) => {
+            const current = map.get(row.event_id) ?? 0;
+            map.set(row.event_id, current + 1);
+            return map;
+          }, new Map<string, number>());
+
+          latestRequestMessageByEvent = (ownerRequests ?? []).reduce((map, row: any) => {
+            if (!map.has(row.event_id)) {
+              map.set(row.event_id, typeof row.message === "string" ? row.message : null);
+            }
+            return map;
+          }, new Map<string, string | null>());
+        }
+      }
+
+      const mapped = eventRows.map((event) => {
         const tags = [
           event.source === "local"
             ? "Community"
@@ -490,6 +599,10 @@ const SocialFeed: React.FC = () => {
 
         return {
           id: event.id,
+          ownerId: event.user_id,
+          startsAt: event.starts_at,
+          endsAt: event.ends_at,
+          source: event.source,
           title: event.title,
           description: event.description || "No description provided.",
           date: formatEventDate(event.starts_at),
@@ -498,9 +611,12 @@ const SocialFeed: React.FC = () => {
           attendees: 1,
           maxAttendees: 10,
           tags,
-          organizer: "You",
-          isAttending: true,
+          organizer: event.user_id === user.id ? "You" : ownerNameById.get(event.user_id) || "Member",
+          isAttending: event.user_id === user.id,
           circleName: event.circle_name ?? null,
+          requestedByMe: requestedEventIds.has(event.id),
+          infoRequestCount: requestCountByEvent.get(event.id) ?? 0,
+          latestInfoRequestMessage: latestRequestMessageByEvent.get(event.id) ?? null,
         } as FeedEvent;
       });
 
@@ -1604,6 +1720,185 @@ const SocialFeed: React.FC = () => {
     }
   };
 
+  const beginEditEvent = (eventId: string) => {
+    if (!user) return;
+    const event = events.find((item) => item.id === eventId);
+    if (!event || event.ownerId !== user.id) return;
+    if (event.source !== "local") {
+      toast({
+        variant: "destructive",
+        title: "This event cannot be edited here",
+        description: "Only local Violets & Vibes events can be edited.",
+      });
+      return;
+    }
+
+    setEditingEventId(event.id);
+    setEditingEvent({
+      title: event.title,
+      description: event.description === "No description provided." ? "" : event.description,
+      location: event.location === "Location TBD" ? "" : event.location,
+      startsAt: toDateTimeLocalValue(event.startsAt),
+      endsAt: toDateTimeLocalValue(event.endsAt),
+    });
+    setEventsError(null);
+  };
+
+  const cancelEditEvent = () => {
+    setEditingEventId(null);
+    setEditingEvent(null);
+    setUpdatingEvent(false);
+  };
+
+  const saveEditedEvent = async () => {
+    if (!user || !editingEventId || !editingEvent) return;
+
+    const title = editingEvent.title.trim();
+    if (!title) {
+      setEventsError("Event title is required.");
+      return;
+    }
+
+    const startsAt = new Date(editingEvent.startsAt);
+    const endsAt = new Date(editingEvent.endsAt);
+    if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime())) {
+      setEventsError("Invalid start or end date.");
+      return;
+    }
+    if (endsAt <= startsAt) {
+      setEventsError("End time must be after start time.");
+      return;
+    }
+
+    setUpdatingEvent(true);
+    setEventsError(null);
+    try {
+      const { error } = await supabase
+        .from("calendar_events")
+        .update({
+          title,
+          description: editingEvent.description.trim() || null,
+          location: editingEvent.location.trim() || null,
+          starts_at: startsAt.toISOString(),
+          ends_at: endsAt.toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", editingEventId)
+        .eq("user_id", user.id)
+        .eq("source", "local");
+
+      if (error) throw error;
+
+      await loadEvents();
+      cancelEditEvent();
+      toast({
+        title: "Event updated",
+        description: "Your changes are now live in Events and Social.",
+      });
+    } catch (error: any) {
+      console.error(error);
+      setEventsError(error?.message || "Could not update event.");
+    } finally {
+      setUpdatingEvent(false);
+    }
+  };
+
+  const deleteEvent = async (eventId: string) => {
+    if (!user) return;
+    const event = events.find((item) => item.id === eventId);
+    if (!event || event.ownerId !== user.id) return;
+
+    const confirmed = window.confirm(
+      `Delete "${event.title}"? This will remove it from Events and Social feeds.`
+    );
+    if (!confirmed) return;
+
+    setEventActionById((prev) => ({ ...prev, [eventId]: true }));
+    setEventsError(null);
+
+    try {
+      const { error } = await supabase
+        .from("calendar_events")
+        .delete()
+        .eq("id", eventId)
+        .eq("user_id", user.id)
+        .eq("source", "local");
+
+      if (error) throw error;
+
+      setEvents((prev) => prev.filter((item) => item.id !== eventId));
+      if (editingEventId === eventId) {
+        cancelEditEvent();
+      }
+
+      toast({
+        title: "Event deleted",
+        description: "The event was removed successfully.",
+      });
+    } catch (error: any) {
+      console.error(error);
+      setEventsError(error?.message || "Could not delete event.");
+    } finally {
+      setEventActionById((prev) => {
+        const next = { ...prev };
+        delete next[eventId];
+        return next;
+      });
+    }
+  };
+
+  const requestEventInfo = async (eventId: string) => {
+    if (!user) return;
+    const event = events.find((item) => item.id === eventId);
+    if (!event || event.ownerId === user.id) return;
+    if (event.requestedByMe) {
+      toast({
+        title: "Already requested",
+        description: "You already asked the organizer for more details.",
+      });
+      return;
+    }
+
+    const message = window.prompt(
+      "Optional note for the organizer (for example: accessibility, parking, age range):",
+      ""
+    );
+    if (message === null) return;
+
+    setEventActionById((prev) => ({ ...prev, [eventId]: true }));
+    setEventsError(null);
+
+    try {
+      const payload: Omit<EventInfoRequestRow, "id"> = {
+        event_id: event.id,
+        requester_id: user.id,
+        owner_id: event.ownerId,
+        message: message.trim() || null,
+      };
+
+      const { error } = await supabase.from("calendar_event_info_requests").insert(payload);
+      if (error && error.code !== "23505") throw error;
+
+      setEvents((prev) =>
+        prev.map((item) => (item.id === eventId ? { ...item, requestedByMe: true } : item))
+      );
+
+      toast({
+        title: "Request sent",
+        description: "The event organizer can now review your request for more details.",
+      });
+    } catch (error: any) {
+      console.error(error);
+      setEventsError(error?.message || "Could not send info request.");
+    } finally {
+      setEventActionById((prev) => {
+        const next = { ...prev };
+        delete next[eventId];
+        return next;
+      });
+    }
+  };
+
   const handleToggleJoinCircle = (circleName: string) => {
     setJoinedCircles((prev) => {
       const next = prev.includes(circleName)
@@ -2111,6 +2406,120 @@ const SocialFeed: React.FC = () => {
                   {event.circleName ?? t("openCommunity")}
                 </div>
                 <EventCard event={event} onJoin={handleJoinEvent} onInvite={handleInviteEvent} />
+
+                <Card className="bg-black/30 border-white/15 text-white">
+                  <CardContent className="p-3 space-y-3">
+                    {event.ownerId === user?.id ? (
+                      <>
+                        <div className="flex items-center justify-between gap-2 flex-wrap text-xs text-white/75">
+                          <span>Organizer tools</span>
+                          <span>{event.infoRequestCount} info request{event.infoRequestCount === 1 ? "" : "s"}</span>
+                        </div>
+                        {event.latestInfoRequestMessage ? (
+                          <div className="text-xs text-white/70 rounded-md border border-white/10 bg-white/5 px-2 py-1">
+                            Latest request:{" "}
+                            {event.latestInfoRequestMessage.length > 120
+                              ? `${event.latestInfoRequestMessage.slice(0, 120)}...`
+                              : event.latestInfoRequestMessage}
+                          </div>
+                        ) : null}
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-white/20 text-white hover:bg-white/10"
+                            onClick={() => beginEditEvent(event.id)}
+                            disabled={!!eventActionById[event.id]}
+                          >
+                            <Pencil className="w-3.5 h-3.5 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-rose-300/30 text-rose-100 hover:bg-rose-500/20"
+                            onClick={() => void deleteEvent(event.id)}
+                            disabled={!!eventActionById[event.id]}
+                          >
+                            <Trash2 className="w-3.5 h-3.5 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="space-y-2">
+                        <div className="text-xs text-white/75">
+                          Need details before joining? Ask the organizer to add more information.
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="w-full border-violet-300/30 text-white hover:bg-violet-500/20"
+                          onClick={() => void requestEventInfo(event.id)}
+                          disabled={!!eventActionById[event.id] || event.requestedByMe}
+                        >
+                          <MessageCirclePlus className="w-3.5 h-3.5 mr-1" />
+                          {event.requestedByMe ? "Requested" : "Request Info"}
+                        </Button>
+                      </div>
+                    )}
+
+                    {editingEventId === event.id && editingEvent ? (
+                      <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-2">
+                        <Input
+                          value={editingEvent.title}
+                          onChange={(e) =>
+                            setEditingEvent((prev) => (prev ? { ...prev, title: e.target.value } : prev))
+                          }
+                          placeholder="Event title"
+                        />
+                        <Textarea
+                          value={editingEvent.description}
+                          onChange={(e) =>
+                            setEditingEvent((prev) =>
+                              prev ? { ...prev, description: e.target.value } : prev
+                            )
+                          }
+                          placeholder="Event description"
+                          className="min-h-[90px]"
+                        />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <Input
+                            type="datetime-local"
+                            value={editingEvent.startsAt}
+                            onChange={(e) =>
+                              setEditingEvent((prev) =>
+                                prev ? { ...prev, startsAt: e.target.value } : prev
+                              )
+                            }
+                          />
+                          <Input
+                            type="datetime-local"
+                            value={editingEvent.endsAt}
+                            onChange={(e) =>
+                              setEditingEvent((prev) => (prev ? { ...prev, endsAt: e.target.value } : prev))
+                            }
+                          />
+                        </div>
+                        <Input
+                          value={editingEvent.location}
+                          onChange={(e) =>
+                            setEditingEvent((prev) => (prev ? { ...prev, location: e.target.value } : prev))
+                          }
+                          placeholder="Location"
+                        />
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button onClick={() => void saveEditedEvent()} disabled={updatingEvent}>
+                            {updatingEvent ? "Saving..." : "Save Changes"}
+                          </Button>
+                          <Button variant="outline" onClick={cancelEditEvent} disabled={updatingEvent}>
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : null}
+                  </CardContent>
+                </Card>
               </div>
             ))
           )}

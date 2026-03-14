@@ -15,8 +15,10 @@ import {
   ExternalLink,
   Link2,
   Loader2,
+  Pencil,
   RefreshCw,
   Share2,
+  Trash2,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -61,6 +63,14 @@ type CreateEventForm = {
   description: string;
   location: string;
   circleName: string;
+  startsAt: string;
+  endsAt: string;
+};
+
+type EventEditForm = {
+  title: string;
+  description: string;
+  location: string;
   startsAt: string;
   endsAt: string;
 };
@@ -321,6 +331,10 @@ const CalendarIntegration: React.FC = () => {
   const [form, setForm] = useState<CreateEventForm>(initialCreateForm);
   const [autoSynced, setAutoSynced] = useState(false);
   const [joinedCircles, setJoinedCircles] = useState<string[]>([]);
+  const [editingEventId, setEditingEventId] = useState<string | null>(null);
+  const [editingEventForm, setEditingEventForm] = useState<EventEditForm | null>(null);
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [deletingEventId, setDeletingEventId] = useState<string | null>(null);
 
   const getAccessToken = useCallback(async () => {
     const { data } = await supabase.auth.getSession();
@@ -750,6 +764,155 @@ const CalendarIntegration: React.FC = () => {
     }
   };
 
+  const startEditingEvent = (event: CalendarEventRow) => {
+    if (event.source !== "local") {
+      toast({
+        variant: "destructive",
+        title: "This event cannot be edited here",
+        description: "Only local Violets & Vibes events can be edited.",
+      });
+      return;
+    }
+
+    setEditingEventId(event.id);
+    setEditingEventForm({
+      title: event.title,
+      description: event.description || "",
+      location: event.location || "",
+      startsAt: formatInputDateTime(new Date(event.starts_at)),
+      endsAt: formatInputDateTime(new Date(event.ends_at)),
+    });
+  };
+
+  const cancelEditingEvent = () => {
+    setEditingEventId(null);
+    setEditingEventForm(null);
+  };
+
+  const saveEditedEvent = async (event: CalendarEventRow) => {
+    if (!user || !editingEventForm || !editingEventId) return;
+
+    const title = editingEventForm.title.trim();
+    if (!title) {
+      toast({
+        variant: "destructive",
+        title: "Title required",
+        description: "Add a title for this event.",
+      });
+      return;
+    }
+
+    const startsAt = new Date(editingEventForm.startsAt);
+    const endsAt = new Date(editingEventForm.endsAt);
+    if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime())) {
+      toast({
+        variant: "destructive",
+        title: "Invalid date/time",
+        description: "Check your event start and end time.",
+      });
+      return;
+    }
+    if (endsAt <= startsAt) {
+      toast({
+        variant: "destructive",
+        title: "Invalid time range",
+        description: "Event end time must be after start time.",
+      });
+      return;
+    }
+
+    setSavingEdit(true);
+    try {
+      const { error } = await supabase
+        .from("calendar_events")
+        .update({
+          title,
+          description: editingEventForm.description.trim() || null,
+          location: editingEventForm.location.trim() || null,
+          starts_at: startsAt.toISOString(),
+          ends_at: endsAt.toISOString(),
+          sync_state: status.connectedCount > 0 ? "pending" : "synced",
+        })
+        .eq("id", editingEventId)
+        .eq("user_id", user.id)
+        .eq("source", "local");
+
+      if (error) throw error;
+
+      cancelEditingEvent();
+      await loadEvents();
+
+      if (status.connectedCount > 0) {
+        await runSync({ eventId: event.id }, { silent: true });
+      }
+
+      toast({
+        title: "Event updated",
+        description: "Your edits are now saved.",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Could not update event",
+        description: error?.message || "Please try again.",
+      });
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
+  const deleteEvent = async (event: CalendarEventRow) => {
+    if (!user) return;
+    if (event.source !== "local") {
+      toast({
+        variant: "destructive",
+        title: "This event cannot be deleted here",
+        description: "Only local Violets & Vibes events can be deleted.",
+      });
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete "${event.title}"? This removes it from your calendar and Social feed.`
+    );
+    if (!confirmed) return;
+
+    setDeletingEventId(event.id);
+    try {
+      const { error } = await supabase
+        .from("calendar_events")
+        .delete()
+        .eq("id", event.id)
+        .eq("user_id", user.id)
+        .eq("source", "local");
+
+      if (error) throw error;
+
+      if (editingEventId === event.id) {
+        cancelEditingEvent();
+      }
+
+      await loadEvents();
+
+      if (status.connectedCount > 0) {
+        await runSync(undefined, { silent: true });
+      }
+
+      toast({
+        title: "Event deleted",
+        description: "The event was removed successfully.",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Could not delete event",
+        description: error?.message || "Please try again.",
+      });
+    } finally {
+      setDeletingEventId(null);
+    }
+  };
+
   const providerRows: Array<{ key: Provider; name: string }> = [
     { key: "google", name: "Google Calendar" },
     { key: "outlook", name: "Outlook Calendar" },
@@ -937,6 +1100,92 @@ const CalendarIntegration: React.FC = () => {
                         Apple (.ics)
                       </Button>
                     </div>
+
+                    {event.source === "local" ? (
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-white/20 text-white hover:bg-white/10"
+                          onClick={() => startEditingEvent(event)}
+                          disabled={deletingEventId === event.id}
+                        >
+                          <Pencil className="w-3.5 h-3.5 mr-1" />
+                          Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-rose-300/35 text-rose-100 hover:bg-rose-500/20"
+                          onClick={() => void deleteEvent(event)}
+                          disabled={deletingEventId === event.id}
+                        >
+                          <Trash2 className="w-3.5 h-3.5 mr-1" />
+                          {deletingEventId === event.id ? "Deleting..." : "Delete"}
+                        </Button>
+                      </div>
+                    ) : null}
+
+                    {editingEventId === event.id && editingEventForm ? (
+                      <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-2">
+                        <Input
+                          value={editingEventForm.title}
+                          onChange={(e) =>
+                            setEditingEventForm((prev) =>
+                              prev ? { ...prev, title: e.target.value } : prev
+                            )
+                          }
+                          placeholder="Event title"
+                        />
+                        <Textarea
+                          value={editingEventForm.description}
+                          onChange={(e) =>
+                            setEditingEventForm((prev) =>
+                              prev ? { ...prev, description: e.target.value } : prev
+                            )
+                          }
+                          placeholder="Event description"
+                          className="min-h-[90px]"
+                        />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <Input
+                            type="datetime-local"
+                            value={editingEventForm.startsAt}
+                            onChange={(e) =>
+                              setEditingEventForm((prev) =>
+                                prev ? { ...prev, startsAt: e.target.value } : prev
+                              )
+                            }
+                          />
+                          <Input
+                            type="datetime-local"
+                            value={editingEventForm.endsAt}
+                            onChange={(e) =>
+                              setEditingEventForm((prev) =>
+                                prev ? { ...prev, endsAt: e.target.value } : prev
+                              )
+                            }
+                          />
+                        </div>
+                        <Input
+                          value={editingEventForm.location}
+                          onChange={(e) =>
+                            setEditingEventForm((prev) =>
+                              prev ? { ...prev, location: e.target.value } : prev
+                            )
+                          }
+                          placeholder="Location"
+                        />
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button onClick={() => void saveEditedEvent(event)} disabled={savingEdit}>
+                            {savingEdit ? "Saving..." : "Save"}
+                          </Button>
+                          <Button variant="outline" onClick={cancelEditingEvent} disabled={savingEdit}>
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : null}
                   </CardContent>
                 </Card>
               </div>
