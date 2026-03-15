@@ -1261,7 +1261,7 @@ const CalendarIntegration: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto w-full max-w-[1800px] space-y-6 px-2 pb-20 sm:px-4 lg:px-6 xl:px-8">
+    <div className="w-full space-y-6 px-1.5 pb-20 sm:px-3 lg:px-4 xl:px-5 2xl:px-6">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <CalendarIcon className="w-6 h-6 text-purple-300" />
@@ -1397,16 +1397,17 @@ const CalendarIntegration: React.FC = () => {
             {calendarView === "month" ? (
               <Card className="overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(20,18,42,0.96),rgba(10,12,28,0.94))] shadow-[0_24px_80px_rgba(14,12,40,0.32)]">
                 <CardContent className="p-3 sm:p-4">
-                  <div className="grid grid-cols-7 gap-2 text-[11px] uppercase tracking-[0.18em] text-white/45">
+                  <div className="grid grid-cols-7 gap-1 text-[10px] uppercase tracking-[0.14em] text-white/45 sm:gap-2 sm:text-[11px] sm:tracking-[0.18em]">
                     {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                      <div key={day} className="px-2 py-1 text-center">
-                        {day}
+                      <div key={day} className="px-0.5 py-1 text-center sm:px-2">
+                        <span className="sm:hidden">{day.slice(0, 1)}</span>
+                        <span className="hidden sm:inline">{day}</span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="mt-2 overflow-x-auto">
-                    <div className="grid min-w-[720px] grid-cols-7 gap-2 xl:min-w-0 xl:gap-3">
+                  <div className="mt-2 w-full">
+                    <div className="grid w-full grid-cols-7 gap-1 sm:gap-2 xl:gap-3">
                     {monthDays.map((day) => {
                       const dayEvents = filteredPlannerEvents.filter((event) => eventOccursOnDay(event, day));
                       return (
@@ -1415,7 +1416,7 @@ const CalendarIntegration: React.FC = () => {
                           type="button"
                           onClick={() => setSelectedDate(startOfDay(day))}
                           className={cn(
-                            "min-h-[152px] rounded-2xl border p-3 text-left align-top transition lg:min-h-[176px] 2xl:min-h-[210px]",
+                            "min-h-[96px] rounded-[18px] border p-1.5 text-left align-top transition sm:min-h-[116px] sm:p-2 lg:min-h-[148px] lg:p-2.5 2xl:min-h-[184px]",
                             isSameDay(day, selectedDate)
                               ? "border-pink-300/45 bg-pink-500/10 shadow-[0_0_30px_rgba(236,72,153,0.15)]"
                               : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/7",
@@ -1425,22 +1426,22 @@ const CalendarIntegration: React.FC = () => {
                           <div className="flex items-center justify-between gap-2">
                             <span
                               className={cn(
-                                "flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold text-white/90",
+                                "flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold text-white/90 sm:h-7 sm:w-7 sm:text-sm",
                                 isToday(day) && "bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white"
                               )}
                             >
                               {format(day, "d")}
                             </span>
-                            <span className="text-[10px] uppercase tracking-[0.14em] text-white/40">
+                            <span className="hidden text-[9px] uppercase tracking-[0.1em] text-white/40 lg:inline">
                               {dayEvents.length} event{dayEvents.length === 1 ? "" : "s"}
                             </span>
                           </div>
 
-                          <div className="mt-3 space-y-2">
-                            {dayEvents.slice(0, 3).map((event) => renderPlannerChip(event, true))}
-                            {dayEvents.length > 3 ? (
-                              <div className="rounded-xl border border-dashed border-white/12 px-2 py-1 text-[11px] text-white/55">
-                                +{dayEvents.length - 3} more on this day
+                          <div className="mt-2 space-y-1.5 sm:mt-3 sm:space-y-2">
+                            {dayEvents.slice(0, 2).map((event) => renderPlannerChip(event, true))}
+                            {dayEvents.length > 2 ? (
+                              <div className="rounded-xl border border-dashed border-white/12 px-1.5 py-1 text-[10px] text-white/55 sm:px-2 sm:text-[11px]">
+                                +{dayEvents.length - 2} more
                               </div>
                             ) : null}
                           </div>
@@ -1454,7 +1455,7 @@ const CalendarIntegration: React.FC = () => {
             ) : null}
 
             {calendarView === "week" ? (
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-7">
+              <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-7">
                 {weekDays.map((day) => {
                   const dayEvents = filteredPlannerEvents.filter((event) => eventOccursOnDay(event, day));
                   return (
@@ -1465,17 +1466,19 @@ const CalendarIntegration: React.FC = () => {
                         isSameDay(day, selectedDate) && "border-pink-300/40 shadow-[0_0_30px_rgba(236,72,153,0.12)]"
                       )}
                     >
-                      <CardContent className="p-4">
+                      <CardContent className="p-3 sm:p-4">
                         <button
                           type="button"
                           onClick={() => setSelectedDate(startOfDay(day))}
                           className="w-full text-left"
                         >
-                          <div className="text-[11px] uppercase tracking-[0.18em] text-white/45">{format(day, "EEEE")}</div>
+                          <div className="text-[10px] uppercase tracking-[0.14em] text-white/45 sm:text-[11px] sm:tracking-[0.18em]">
+                            {format(day, "EEEE")}
+                          </div>
                           <div className="mt-1 flex items-center gap-2 text-white">
                             <span
                               className={cn(
-                                "flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold",
+                                "flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold",
                                 isToday(day)
                                   ? "bg-gradient-to-r from-pink-500 to-fuchsia-500"
                                   : "bg-white/10"
