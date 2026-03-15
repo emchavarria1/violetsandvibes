@@ -3,8 +3,6 @@ import CalendarIntegration from '@/components/CalendarIntegration';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-import { ResponsiveWrapper } from '@/components/ResponsiveWrapper';
-
 const EventsPage: React.FC = () => {
   return (
     <div className="page-gradient min-h-screen flex flex-col relative">
@@ -18,9 +16,9 @@ const EventsPage: React.FC = () => {
 
       {/* Main Content */}
       <div className="relative z-10 flex-1 overflow-y-auto">
-        <ResponsiveWrapper maxWidth="2xl" className="h-full">
-          <div className="glass-pride rounded-2xl overflow-visible">
-            <div className="p-3 border-b border-white/15 flex justify-end">
+        <div className="h-full w-full px-0 sm:px-2 lg:px-3 xl:px-4 2xl:px-5">
+          <div className="glass-pride min-h-full overflow-visible rounded-none sm:rounded-2xl">
+            <div className="flex justify-end border-b border-white/15 p-2.5 sm:p-3">
               <Button
                 asChild
                 variant="outline"
@@ -31,7 +29,7 @@ const EventsPage: React.FC = () => {
             </div>
             <CalendarIntegration />
           </div>
-        </ResponsiveWrapper>
+        </div>
       </div>
     </div>
   );

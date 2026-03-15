@@ -12,6 +12,8 @@ import { Link, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/lib/i18n";
 
+type CalendarVisibility = "private" | "shared" | "circle";
+
 type PostRow = {
   id: string;
   author_id: string;
@@ -54,6 +56,7 @@ type CalendarEventRow = {
   description: string | null;
   location: string | null;
   circle_name?: string | null;
+  visibility: CalendarVisibility;
   starts_at: string;
   ends_at: string;
   source: "local" | "google" | "outlook";
@@ -66,6 +69,7 @@ type FeedEvent = {
   startsAt: string;
   endsAt: string;
   source: "local" | "google" | "outlook";
+  visibility: CalendarVisibility;
   title: string;
   description: string;
   date: string;
@@ -95,9 +99,17 @@ type EventEditForm = {
   title: string;
   description: string;
   location: string;
+  visibility: CalendarVisibility;
+  circleName: string;
   startsAt: string;
   endsAt: string;
 };
+
+function getEventAudienceLabel(event: Pick<CalendarEventRow, "visibility" | "circle_name">) {
+  if (event.visibility === "private") return "Private";
+  if (event.visibility === "circle") return event.circle_name || "Circle";
+  return "Open Community";
+}
 
 const CIRCLE_STORAGE_KEY = "vv_joined_circles_v1";
 const EVENT_TEMPLATES = [
@@ -505,7 +517,7 @@ const SocialFeed: React.FC = () => {
       const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from("calendar_events")
-        .select("id, user_id, title, description, location, circle_name, starts_at, ends_at, source, sync_state")
+        .select("id, user_id, title, description, location, circle_name, visibility, starts_at, ends_at, source, sync_state")
         .eq("source", "local")
         .gte("ends_at", nowIso)
         .order("starts_at", { ascending: true })
@@ -513,7 +525,7 @@ const SocialFeed: React.FC = () => {
 
       if (error) throw error;
 
-      const eventRows = (data ?? []) as CalendarEventRow[];
+      const eventRows = ((data ?? []) as CalendarEventRow[]).filter((event) => event.visibility !== "private");
       const ownerIds = Array.from(new Set(eventRows.map((event) => event.user_id)));
       const eventIds = eventRows.map((event) => event.id);
 
@@ -588,6 +600,7 @@ const SocialFeed: React.FC = () => {
 
       const mapped = eventRows.map((event) => {
         const tags = [
+          getEventAudienceLabel(event),
           event.source === "local"
             ? "Community"
             : event.source === "google"
@@ -604,6 +617,7 @@ const SocialFeed: React.FC = () => {
           startsAt: event.starts_at,
           endsAt: event.ends_at,
           source: event.source,
+          visibility: event.visibility,
           title: event.title,
           description: event.description || "No description provided.",
           date: formatEventDate(event.starts_at),
@@ -1628,6 +1642,7 @@ const SocialFeed: React.FC = () => {
         title,
         description: newEvent.description.trim() || null,
         location: newEvent.location.trim() || null,
+        visibility: activeCircle ? "circle" : "shared",
         ...(activeCircle ? { circle_name: activeCircle } : {}),
         starts_at: startsAt.toISOString(),
         ends_at: endsAt.toISOString(),
@@ -1740,6 +1755,8 @@ const SocialFeed: React.FC = () => {
       title: event.title,
       description: event.description === "No description provided." ? "" : event.description,
       location: event.location === "Location TBD" ? "" : event.location,
+      visibility: event.visibility,
+      circleName: event.circleName || "",
       startsAt: toDateTimeLocalValue(event.startsAt),
       endsAt: toDateTimeLocalValue(event.endsAt),
     });
@@ -1771,6 +1788,10 @@ const SocialFeed: React.FC = () => {
       setEventsError("End time must be after start time.");
       return;
     }
+    if (editingEvent.visibility === "circle" && !editingEvent.circleName) {
+      setEventsError("Choose a circle for circle-only events.");
+      return;
+    }
 
     setUpdatingEvent(true);
     setEventsError(null);
@@ -1781,6 +1802,8 @@ const SocialFeed: React.FC = () => {
           title,
           description: editingEvent.description.trim() || null,
           location: editingEvent.location.trim() || null,
+          visibility: editingEvent.visibility,
+          circle_name: editingEvent.visibility === "circle" ? editingEvent.circleName || null : null,
           starts_at: startsAt.toISOString(),
           ends_at: endsAt.toISOString(),
           updated_at: new Date().toISOString(),
@@ -2405,7 +2428,7 @@ const SocialFeed: React.FC = () => {
             filteredEvents.map((event) => (
               <div key={event.id} className="space-y-2">
                 <div className="inline-flex rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] font-medium text-white/75">
-                  {event.circleName ?? t("openCommunity")}
+                  {event.visibility === "circle" ? event.circleName ?? "Circle" : getEventAudienceLabel(event)}
                 </div>
                 <EventCard
                   event={event}
@@ -2463,6 +2486,43 @@ const SocialFeed: React.FC = () => {
                           }
                           placeholder="Location"
                         />
+                        <select
+                          value={editingEvent.visibility}
+                          onChange={(e) =>
+                            setEditingEvent((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    visibility: e.target.value as CalendarVisibility,
+                                    circleName: e.target.value === "circle" ? prev.circleName : "",
+                                  }
+                                : prev
+                            )
+                          }
+                          className="flex h-10 w-full rounded-md border border-white/15 bg-white/5 px-3 py-2 text-sm text-white"
+                        >
+                          <option value="private">Private to you</option>
+                          <option value="shared">Open community</option>
+                          <option value="circle">Circle only</option>
+                        </select>
+                        {editingEvent.visibility === "circle" ? (
+                          <select
+                            value={editingEvent.circleName}
+                            onChange={(e) =>
+                              setEditingEvent((prev) =>
+                                prev ? { ...prev, circleName: e.target.value } : prev
+                              )
+                            }
+                            className="flex h-10 w-full rounded-md border border-white/15 bg-white/5 px-3 py-2 text-sm text-white"
+                          >
+                            <option value="">Choose a circle</option>
+                            {joinedCircles.map((circleName) => (
+                              <option key={circleName} value={circleName}>
+                                {circleName}
+                              </option>
+                            ))}
+                          </select>
+                        ) : null}
                         <div className="grid grid-cols-2 gap-2">
                           <Button onClick={() => void saveEditedEvent()} disabled={updatingEvent}>
                             {updatingEvent ? "Saving..." : "Save Changes"}

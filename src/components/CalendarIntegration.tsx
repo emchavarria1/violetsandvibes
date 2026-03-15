@@ -50,6 +50,7 @@ import { Link, useNavigate } from "react-router-dom";
 type Provider = "google" | "outlook";
 type PlannerTab = "planner" | "events" | "create";
 type CalendarViewMode = "month" | "week" | "agenda";
+type CalendarVisibility = "private" | "shared" | "circle";
 
 type ProviderStatus = {
   connected: boolean;
@@ -72,6 +73,7 @@ type CalendarEventRow = {
   description: string | null;
   location: string | null;
   circle_name: string | null;
+  visibility: CalendarVisibility;
   starts_at: string;
   ends_at: string;
   source: "local" | "google" | "outlook";
@@ -91,6 +93,7 @@ type CreateEventForm = {
   title: string;
   description: string;
   location: string;
+  visibility: CalendarVisibility;
   circleName: string;
   startsAt: string;
   endsAt: string;
@@ -100,6 +103,8 @@ type EventEditForm = {
   title: string;
   description: string;
   location: string;
+  visibility: CalendarVisibility;
+  circleName: string;
   startsAt: string;
   endsAt: string;
 };
@@ -154,6 +159,45 @@ const PLANNER_FILTER_ALL = "__all__";
 const PLANNER_FILTER_MINE = "__mine__";
 const PLANNER_FILTER_OPEN = "__open__";
 
+const CALENDAR_VISIBILITY_OPTIONS: Array<{
+  value: CalendarVisibility;
+  label: string;
+  description: string;
+}> = [
+  {
+    value: "private",
+    label: "Private to you",
+    description: "Only you see it on your calendar.",
+  },
+  {
+    value: "shared",
+    label: "Open community",
+    description: "Visible in Social and the shared planner.",
+  },
+  {
+    value: "circle",
+    label: "Circle only",
+    description: "Shared only with the circle you choose.",
+  },
+];
+
+const getAudienceLabel = (event: Pick<CalendarEventRow, "visibility" | "circle_name">) => {
+  if (event.visibility === "private") return "Private";
+  if (event.visibility === "circle") return event.circle_name || "Circle";
+  return "Open Community";
+};
+
+const getVisibilityBadgeClass = (visibility: CalendarVisibility) => {
+  switch (visibility) {
+    case "private":
+      return "bg-slate-500/20 text-slate-100 border-slate-300/40";
+    case "circle":
+      return "bg-violet-500/20 text-violet-100 border-violet-300/40";
+    default:
+      return "bg-pink-500/20 text-pink-100 border-pink-300/40";
+  }
+};
+
 const formatInputDateTime = (date: Date) => {
   const pad = (value: number) => String(value).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
@@ -171,6 +215,7 @@ const initialCreateForm = (): CreateEventForm => {
     title: "",
     description: "",
     location: "",
+    visibility: "private",
     circleName: "",
     startsAt: formatInputDateTime(start),
     endsAt: formatInputDateTime(end),
@@ -515,7 +560,7 @@ const CalendarIntegration: React.FC = () => {
     const { data, error } = await supabase
       .from("calendar_events")
       .select(
-        "id, user_id, title, description, location, circle_name, starts_at, ends_at, source, source_event_id, sync_state, sync_error, created_at"
+        "id, user_id, title, description, location, circle_name, visibility, starts_at, ends_at, source, source_event_id, sync_state, sync_error, created_at"
       )
       .eq("user_id", user.id)
       .order("starts_at", { ascending: true })
@@ -536,7 +581,7 @@ const CalendarIntegration: React.FC = () => {
       const { data, error } = await supabase
         .from("calendar_events")
         .select(
-          "id, user_id, title, description, location, circle_name, starts_at, ends_at, source, source_event_id, sync_state, sync_error, created_at"
+          "id, user_id, title, description, location, circle_name, visibility, starts_at, ends_at, source, source_event_id, sync_state, sync_error, created_at"
         )
         .eq("source", "local")
         .gte("ends_at", nowIso)
@@ -547,8 +592,9 @@ const CalendarIntegration: React.FC = () => {
 
       const visibleRows = ((data || []) as CalendarEventRow[]).filter((row) => {
         if (row.user_id === user.id) return false;
-        if (!row.circle_name) return true;
-        return circleNames.includes(row.circle_name);
+        if (row.visibility === "private") return false;
+        if (row.visibility === "circle") return !!row.circle_name && circleNames.includes(row.circle_name);
+        return true;
       });
 
       setCommunityEvents(visibleRows);
@@ -824,6 +870,15 @@ const CalendarIntegration: React.FC = () => {
       return;
     }
 
+    if (form.visibility === "circle" && !form.circleName) {
+      toast({
+        variant: "destructive",
+        title: "Choose a circle",
+        description: "Circle-only events need a circle so the app knows who should see it.",
+      });
+      return;
+    }
+
     setCreating(true);
     try {
       const { data: insertedRow, error } = await supabase
@@ -833,7 +888,8 @@ const CalendarIntegration: React.FC = () => {
           title,
           description: form.description.trim() || null,
           location: form.location.trim() || null,
-          circle_name: form.circleName || null,
+          visibility: form.visibility,
+          circle_name: form.visibility === "circle" ? form.circleName || null : null,
           starts_at: startsAt.toISOString(),
           ends_at: endsAt.toISOString(),
           source: "local",
@@ -848,7 +904,13 @@ const CalendarIntegration: React.FC = () => {
       setActiveTab("planner");
       setCalendarCursorDate(startsAt);
       setSelectedDate(startOfDay(startsAt));
-      setPlannerFilter(form.circleName || PLANNER_FILTER_ALL);
+      setPlannerFilter(
+        form.visibility === "circle"
+          ? form.circleName || PLANNER_FILTER_ALL
+          : form.visibility === "shared"
+            ? PLANNER_FILTER_OPEN
+            : PLANNER_FILTER_MINE
+      );
 
       toast({
         title: "Event created",
@@ -881,9 +943,11 @@ const CalendarIntegration: React.FC = () => {
 
   const toEventCardModel = useCallback((event: CalendarEventRow) => {
     const tags = [
-      event.circle_name || "Open Community",
+      getAudienceLabel(event),
       event.source === "local"
-        ? "Community"
+        ? event.visibility === "private"
+          ? "Private"
+          : "Community"
         : event.source === "google"
           ? "Google"
           : "Outlook",
@@ -961,6 +1025,8 @@ const CalendarIntegration: React.FC = () => {
       title: event.title,
       description: event.description || "",
       location: event.location || "",
+      visibility: event.visibility,
+      circleName: event.circle_name || "",
       startsAt: formatInputDateTime(new Date(event.starts_at)),
       endsAt: formatInputDateTime(new Date(event.ends_at)),
     });
@@ -1004,6 +1070,15 @@ const CalendarIntegration: React.FC = () => {
       return;
     }
 
+    if (editingEventForm.visibility === "circle" && !editingEventForm.circleName) {
+      toast({
+        variant: "destructive",
+        title: "Choose a circle",
+        description: "Circle-only events need a circle so the app knows who should see it.",
+      });
+      return;
+    }
+
     setSavingEdit(true);
     try {
       const { error } = await supabase
@@ -1012,6 +1087,8 @@ const CalendarIntegration: React.FC = () => {
           title,
           description: editingEventForm.description.trim() || null,
           location: editingEventForm.location.trim() || null,
+          visibility: editingEventForm.visibility,
+          circle_name: editingEventForm.visibility === "circle" ? editingEventForm.circleName || null : null,
           starts_at: startsAt.toISOString(),
           ends_at: endsAt.toISOString(),
           sync_state: status.connectedCount > 0 ? "pending" : "synced",
@@ -1025,6 +1102,13 @@ const CalendarIntegration: React.FC = () => {
       cancelEditingEvent();
       setCalendarCursorDate(startsAt);
       setSelectedDate(startOfDay(startsAt));
+      setPlannerFilter(
+        editingEventForm.visibility === "circle"
+          ? editingEventForm.circleName || PLANNER_FILTER_ALL
+          : editingEventForm.visibility === "shared"
+            ? PLANNER_FILTER_OPEN
+            : PLANNER_FILTER_MINE
+      );
       await loadEvents();
 
       if (status.connectedCount > 0) {
@@ -1057,9 +1141,13 @@ const CalendarIntegration: React.FC = () => {
       return;
     }
 
-    const confirmed = window.confirm(
-      `Delete "${event.title}"? This removes it from your calendar and Social feed.`
-    );
+    const removalScope =
+      event.visibility === "private"
+        ? "your personal calendar"
+        : event.visibility === "circle"
+          ? "your calendar and the circle feed"
+          : "your calendar and Social feed";
+    const confirmed = window.confirm(`Delete "${event.title}"? This removes it from ${removalScope}.`);
     if (!confirmed) return;
 
     setDeletingEventId(event.id);
@@ -1115,7 +1203,7 @@ const CalendarIntegration: React.FC = () => {
         ...event,
         organizer: isOwnedByMe ? "You" : ownerNamesById[event.user_id] || "Member",
         isOwnedByMe,
-        audienceLabel: event.circle_name || "Open Community",
+        audienceLabel: getAudienceLabel(event),
       });
     });
 
@@ -1149,7 +1237,9 @@ const CalendarIntegration: React.FC = () => {
     return plannerEvents.filter((event) => {
       if (plannerFilter === PLANNER_FILTER_ALL) return true;
       if (plannerFilter === PLANNER_FILTER_MINE) return event.isOwnedByMe;
-      if (plannerFilter === PLANNER_FILTER_OPEN) return event.source === "local" && !event.circle_name;
+      if (plannerFilter === PLANNER_FILTER_OPEN) {
+        return event.source === "local" && event.visibility === "shared";
+      }
       return event.circle_name === plannerFilter;
     });
   }, [plannerEvents, plannerFilter]);
@@ -1163,8 +1253,8 @@ const CalendarIntegration: React.FC = () => {
 
   const plannerStats = useMemo(() => {
     const upcomingMine = events.filter((event) => new Date(event.ends_at).getTime() >= Date.now()).length;
-    const upcomingCircle = communityEvents.filter((event) => !!event.circle_name).length;
-    const openCommunity = communityEvents.filter((event) => !event.circle_name).length;
+    const upcomingCircle = communityEvents.filter((event) => event.visibility === "circle").length;
+    const openCommunity = communityEvents.filter((event) => event.visibility === "shared").length;
 
     return {
       upcomingMine,
@@ -1223,8 +1313,12 @@ const CalendarIntegration: React.FC = () => {
     const start = parseISO(event.starts_at);
     setSelectedDate(startOfDay(start));
     setCalendarCursorDate(start);
-    if (event.circle_name) {
+    if (event.visibility === "circle" && event.circle_name) {
       setPlannerFilter(event.circle_name);
+    } else if (event.visibility === "shared") {
+      setPlannerFilter(PLANNER_FILTER_OPEN);
+    } else if (event.isOwnedByMe) {
+      setPlannerFilter(PLANNER_FILTER_MINE);
     }
   };
 
@@ -1240,8 +1334,9 @@ const CalendarIntegration: React.FC = () => {
           compact ? "text-[11px]" : "text-xs",
           event.source === "google" && "border-emerald-300/30 bg-emerald-500/12 text-emerald-50",
           event.source === "outlook" && "border-sky-300/30 bg-sky-500/12 text-sky-50",
-          event.source === "local" && !event.circle_name && "border-pink-300/30 bg-pink-500/12 text-pink-50",
-          event.source === "local" && !!event.circle_name && "border-violet-300/30 bg-violet-500/14 text-violet-50",
+          event.source === "local" && event.visibility === "shared" && "border-pink-300/30 bg-pink-500/12 text-pink-50",
+          event.source === "local" && event.visibility === "circle" && "border-violet-300/30 bg-violet-500/14 text-violet-50",
+          event.source === "local" && event.visibility === "private" && "border-slate-300/25 bg-slate-500/12 text-slate-50",
           circleMeta?.glow
         )}
       >
@@ -1253,7 +1348,7 @@ const CalendarIntegration: React.FC = () => {
         </div>
         {!compact ? (
           <div className="mt-1 truncate text-[11px] text-white/60">
-            {event.circle_name || event.organizer}
+            {event.visibility === "circle" ? event.circle_name || event.organizer : event.audienceLabel}
           </div>
         ) : null}
       </button>
@@ -1535,11 +1630,11 @@ const CalendarIntegration: React.FC = () => {
                         <CardContent className="p-4">
                           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                             <div className="space-y-2">
-                              <div className="flex flex-wrap items-center gap-2">
+                            <div className="flex flex-wrap items-center gap-2">
                                 <Badge className={sourceBadgeClass[event.source]} variant="outline">
                                   {event.source}
                                 </Badge>
-                                <Badge className="border-white/15 bg-white/10 text-white" variant="outline">
+                                <Badge className={getVisibilityBadgeClass(event.visibility)} variant="outline">
                                   {event.audienceLabel}
                                 </Badge>
                                 <Badge className="border-white/15 bg-white/10 text-white/70" variant="outline">
@@ -1566,7 +1661,7 @@ const CalendarIntegration: React.FC = () => {
                               >
                                 Focus this date
                               </Button>
-                              {event.circle_name ? (
+                              {event.visibility === "circle" && event.circle_name ? (
                                 <Button
                                   type="button"
                                   variant="outline"
@@ -1574,6 +1669,15 @@ const CalendarIntegration: React.FC = () => {
                                   onClick={() => openCircleConversation(event.circle_name as string)}
                                 >
                                   Open circle chat
+                                </Button>
+                              ) : event.visibility === "private" ? (
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="border-slate-300/25 bg-slate-500/10 text-slate-50 hover:bg-slate-500/20"
+                                  onClick={() => setPlannerFilter(PLANNER_FILTER_MINE)}
+                                >
+                                  Personal event
                                 </Button>
                               ) : (
                                 <Button
@@ -1623,8 +1727,9 @@ const CalendarIntegration: React.FC = () => {
                           "rounded-2xl border p-4 text-white",
                           event.source === "google" && "border-emerald-300/20 bg-emerald-500/10",
                           event.source === "outlook" && "border-sky-300/20 bg-sky-500/10",
-                          event.source === "local" && !event.circle_name && "border-pink-300/20 bg-pink-500/10",
-                          event.source === "local" && !!event.circle_name && "border-violet-300/20 bg-violet-500/10",
+                          event.source === "local" && event.visibility === "shared" && "border-pink-300/20 bg-pink-500/10",
+                          event.source === "local" && event.visibility === "circle" && "border-violet-300/20 bg-violet-500/10",
+                          event.source === "local" && event.visibility === "private" && "border-slate-300/20 bg-slate-500/10",
                           circleMeta?.glow
                         )}
                       >
@@ -1641,7 +1746,7 @@ const CalendarIntegration: React.FC = () => {
                         </div>
 
                         <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                          <Badge className="border-white/15 bg-white/10 text-white" variant="outline">
+                          <Badge className={getVisibilityBadgeClass(event.visibility)} variant="outline">
                             {event.audienceLabel}
                           </Badge>
                           <Badge className={sourceBadgeClass[event.source]} variant="outline">
@@ -1657,7 +1762,7 @@ const CalendarIntegration: React.FC = () => {
                         </p>
 
                         <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                          {event.circle_name ? (
+                          {event.visibility === "circle" && event.circle_name ? (
                             <Button
                               type="button"
                               variant="outline"
@@ -1666,6 +1771,16 @@ const CalendarIntegration: React.FC = () => {
                             >
                               <MessageCircleMore className="mr-2 h-4 w-4" />
                               Open circle chat
+                            </Button>
+                          ) : event.visibility === "private" ? (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="border-slate-300/25 bg-white/5 text-white hover:bg-white/10"
+                              onClick={() => setPlannerFilter(PLANNER_FILTER_MINE)}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              Keep private
                             </Button>
                           ) : (
                             <Button
@@ -1725,7 +1840,7 @@ const CalendarIntegration: React.FC = () => {
                           <div>
                             <div className="text-sm font-semibold">{event.title}</div>
                             <div className="mt-1 text-xs text-white/65">
-                              {event.circle_name || "Open Community"} • {event.organizer}
+                              {event.audienceLabel} • {event.organizer}
                             </div>
                           </div>
                           <Badge className="border-white/15 bg-black/20 text-white" variant="outline">
@@ -1748,7 +1863,7 @@ const CalendarIntegration: React.FC = () => {
                           >
                             Show on planner
                           </Button>
-                          {event.circle_name ? (
+                          {event.visibility === "circle" && event.circle_name ? (
                             <Button
                               type="button"
                               size="sm"
@@ -1757,6 +1872,16 @@ const CalendarIntegration: React.FC = () => {
                               onClick={() => openCircleConversation(event.circle_name as string)}
                             >
                               Open circle
+                            </Button>
+                          ) : event.visibility === "private" ? (
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="outline"
+                              className="border-slate-300/25 bg-white/5 text-white hover:bg-white/10"
+                              onClick={() => setPlannerFilter(PLANNER_FILTER_MINE)}
+                            >
+                              Personal
                             </Button>
                           ) : (
                             <Button
@@ -1832,7 +1957,7 @@ const CalendarIntegration: React.FC = () => {
                   <div>
                     <div className="text-sm font-semibold text-white">Shared with Social Events</div>
                     <div className="mt-1 text-xs leading-relaxed text-white/65">
-                      Events you create here also appear in the Social events UI because both screens use the same calendar event records.
+                      Only events you mark as Open community or Circle only appear in the Social events UI. Private events stay only on your calendar.
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -1933,11 +2058,9 @@ const CalendarIntegration: React.FC = () => {
                         <span>{formatDateTime(event.starts_at)}</span>
                       </div>
                       <div className="flex gap-2">
-                        {event.circle_name ? (
-                          <Badge className="bg-pink-500/20 text-pink-100 border-pink-300/40" variant="outline">
-                            {event.circle_name}
-                          </Badge>
-                        ) : null}
+                        <Badge className={getVisibilityBadgeClass(event.visibility)} variant="outline">
+                          {getAudienceLabel(event)}
+                        </Badge>
                         <Badge className={sourceBadgeClass[event.source]} variant="outline">
                           {event.source}
                         </Badge>
@@ -2039,6 +2162,48 @@ const CalendarIntegration: React.FC = () => {
                           }
                           placeholder="Location"
                         />
+                        <select
+                          value={editingEventForm.visibility}
+                          onChange={(e) =>
+                            setEditingEventForm((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    visibility: e.target.value as CalendarVisibility,
+                                    circleName: e.target.value === "circle" ? prev.circleName : "",
+                                  }
+                                : prev
+                            )
+                          }
+                          className="flex h-10 w-full rounded-md border border-violet-400/30 bg-violet-900/30 px-3 py-2 text-sm text-white"
+                        >
+                          {CALENDAR_VISIBILITY_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                        {editingEventForm.visibility === "circle" ? (
+                          <select
+                            value={editingEventForm.circleName}
+                            onChange={(e) =>
+                              setEditingEventForm((prev) =>
+                                prev ? { ...prev, circleName: e.target.value } : prev
+                              )
+                            }
+                            className="flex h-10 w-full rounded-md border border-violet-400/30 bg-violet-900/30 px-3 py-2 text-sm text-white"
+                          >
+                            <option value="">Choose a circle</option>
+                            {(joinedCircles.length > 0
+                              ? communityCircles.filter((circle) => joinedCircles.includes(circle.name))
+                              : []
+                            ).map((circle) => (
+                              <option key={circle.name} value={circle.name}>
+                                {circle.name}
+                              </option>
+                            ))}
+                          </select>
+                        ) : null}
                         <div className="grid grid-cols-2 gap-2">
                           <Button onClick={() => void saveEditedEvent(event)} disabled={savingEdit}>
                             {savingEdit ? "Saving..." : "Save"}
@@ -2142,31 +2307,60 @@ const CalendarIntegration: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="event-circle" className="text-white/90">
-                    Circle visibility
+                  <Label htmlFor="event-visibility" className="text-white/90">
+                    Event visibility
                   </Label>
                   <select
-                    id="event-circle"
-                    value={form.circleName}
-                    onChange={(e) => setForm((prev) => ({ ...prev, circleName: e.target.value }))}
+                    id="event-visibility"
+                    value={form.visibility}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        visibility: e.target.value as CalendarVisibility,
+                        circleName: e.target.value === "circle" ? prev.circleName : "",
+                      }))
+                    }
                     className="flex h-10 w-full rounded-md border border-violet-400/30 bg-violet-900/30 px-3 py-2 text-sm text-white"
                   >
-                    <option value="">Open Community</option>
-                    {(joinedCircles.length > 0
-                      ? communityCircles.filter((circle) => joinedCircles.includes(circle.name))
-                      : []
-                    ).map((circle) => (
-                      <option key={circle.name} value={circle.name}>
-                        {circle.name}
+                    {CALENDAR_VISIBILITY_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
                       </option>
                     ))}
                   </select>
                   <div className="text-xs text-white/55">
-                    {joinedCircles.length > 0
-                      ? "You can only post calendar events into circles you have joined on the Social page."
-                      : "Join a circle on the Social page to target an event to that community. Otherwise the event stays open to the full community."}
+                    {CALENDAR_VISIBILITY_OPTIONS.find((option) => option.value === form.visibility)?.description}
                   </div>
                 </div>
+
+                {form.visibility === "circle" ? (
+                  <div className="space-y-2">
+                    <Label htmlFor="event-circle" className="text-white/90">
+                      Circle
+                    </Label>
+                    <select
+                      id="event-circle"
+                      value={form.circleName}
+                      onChange={(e) => setForm((prev) => ({ ...prev, circleName: e.target.value }))}
+                      className="flex h-10 w-full rounded-md border border-violet-400/30 bg-violet-900/30 px-3 py-2 text-sm text-white"
+                    >
+                      <option value="">Choose a circle</option>
+                      {(joinedCircles.length > 0
+                        ? communityCircles.filter((circle) => joinedCircles.includes(circle.name))
+                        : []
+                      ).map((circle) => (
+                        <option key={circle.name} value={circle.name}>
+                          {circle.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="text-xs text-white/55">
+                      {joinedCircles.length > 0
+                        ? "You can only post circle events into circles you have joined on the Social page."
+                        : "Join a circle on the Social page before posting a circle-only event."}
+                    </div>
+                  </div>
+                ) : null}
 
                 <div className="space-y-2">
                   <Label htmlFor="event-description" className="text-white/90">
