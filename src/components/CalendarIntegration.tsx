@@ -272,6 +272,37 @@ const syncBadgeClass: Record<CalendarEventRow["sync_state"], string> = {
   error: "bg-rose-500/20 text-rose-100 border-rose-300/40",
 };
 
+const PRIDE_ACCENT_SEGMENTS = [
+  "from-rose-500 to-orange-400",
+  "from-orange-400 to-amber-300",
+  "from-amber-300 to-yellow-200",
+  "from-emerald-400 to-green-300",
+  "from-cyan-400 to-sky-300",
+  "from-blue-500 to-indigo-400",
+  "from-fuchsia-500 to-pink-400",
+] as const;
+
+const CALENDAR_WEEKDAY_ACCENTS = [
+  { short: "Su", full: "Sun", textClass: "text-rose-200", dotClass: "bg-rose-400" },
+  { short: "Mo", full: "Mon", textClass: "text-orange-200", dotClass: "bg-orange-400" },
+  { short: "Tu", full: "Tue", textClass: "text-amber-200", dotClass: "bg-amber-300" },
+  { short: "We", full: "Wed", textClass: "text-emerald-200", dotClass: "bg-emerald-400" },
+  { short: "Th", full: "Thu", textClass: "text-sky-200", dotClass: "bg-sky-400" },
+  { short: "Fr", full: "Fri", textClass: "text-indigo-200", dotClass: "bg-indigo-400" },
+  { short: "Sa", full: "Sat", textClass: "text-fuchsia-200", dotClass: "bg-fuchsia-400" },
+] as const;
+
+const PrideAccentBar = ({ className }: { className?: string }) => (
+  <div className={cn("pointer-events-none absolute inset-x-4 top-3 z-10 flex gap-1.5", className)}>
+    {PRIDE_ACCENT_SEGMENTS.map((segment, index) => (
+      <span
+        key={`${segment}-${index}`}
+        className={cn("h-1.5 flex-1 rounded-full bg-gradient-to-r opacity-95", segment)}
+      />
+    ))}
+  </div>
+);
+
 const escapeIcsValue = (value: string) =>
   value
     .replace(/\\/g, "\\\\")
@@ -1332,22 +1363,30 @@ const CalendarIntegration: React.FC = () => {
         className={cn(
           "w-full rounded-xl border px-2 py-1.5 text-left transition hover:scale-[1.01] hover:border-white/35",
           compact ? "text-[11px]" : "text-xs",
-          event.source === "google" && "border-emerald-300/30 bg-emerald-500/12 text-emerald-50",
-          event.source === "outlook" && "border-sky-300/30 bg-sky-500/12 text-sky-50",
-          event.source === "local" && event.visibility === "shared" && "border-pink-300/30 bg-pink-500/12 text-pink-50",
-          event.source === "local" && event.visibility === "circle" && "border-violet-300/30 bg-violet-500/14 text-violet-50",
-          event.source === "local" && event.visibility === "private" && "border-slate-300/25 bg-slate-500/12 text-slate-50",
+          event.source === "google" &&
+            "border-emerald-300/35 bg-[linear-gradient(135deg,rgba(6,95,70,0.92),rgba(16,185,129,0.2))] text-emerald-50",
+          event.source === "outlook" &&
+            "border-sky-300/35 bg-[linear-gradient(135deg,rgba(7,39,110,0.92),rgba(59,130,246,0.22))] text-sky-50",
+          event.source === "local" &&
+            event.visibility === "shared" &&
+            "border-pink-300/35 bg-[linear-gradient(135deg,rgba(95,24,73,0.94),rgba(236,72,153,0.22))] text-pink-50",
+          event.source === "local" &&
+            event.visibility === "circle" &&
+            "border-violet-300/35 bg-[linear-gradient(135deg,rgba(67,31,118,0.94),rgba(139,92,246,0.22))] text-violet-50",
+          event.source === "local" &&
+            event.visibility === "private" &&
+            "border-slate-300/30 bg-[linear-gradient(135deg,rgba(30,41,59,0.94),rgba(100,116,139,0.18))] text-slate-50",
           circleMeta?.glow
         )}
       >
         <div className="flex items-center justify-between gap-2">
           <span className="truncate font-medium">{event.title}</span>
-          <span className="shrink-0 text-[10px] uppercase tracking-[0.16em] text-white/55">
+          <span className="shrink-0 text-[10px] uppercase tracking-[0.16em] text-white/78">
             {format(parseISO(event.starts_at), "h:mm a")}
           </span>
         </div>
         {!compact ? (
-          <div className="mt-1 truncate text-[11px] text-white/60">
+          <div className="mt-1 truncate text-[11px] text-white/80">
             {event.visibility === "circle" ? event.circle_name || event.organizer : event.audienceLabel}
           </div>
         ) : null}
@@ -1364,12 +1403,16 @@ const CalendarIntegration: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white/10">
+          <Button
+            asChild
+            variant="outline"
+            className="border-pink-300/25 bg-white/10 text-white shadow-[0_0_24px_rgba(236,72,153,0.12)] hover:bg-white/16"
+          >
             <Link to="/social">Open Social Events</Link>
           </Button>
           <Button
             variant="outline"
-            className="border-white/20 text-white hover:bg-white/10"
+            className="border-violet-300/30 bg-white/10 text-white shadow-[0_0_24px_rgba(168,85,247,0.16)] hover:bg-white/16"
             onClick={() => void runSync()}
             disabled={syncing || loading}
           >
@@ -1389,24 +1432,37 @@ const CalendarIntegration: React.FC = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as PlannerTab)} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-violet-950/60 border border-white/15">
-          <TabsTrigger value="planner" className="text-white data-[state=active]:bg-violet-600">
+        <TabsList className="grid w-full grid-cols-3 border border-white/15 bg-[linear-gradient(180deg,rgba(28,14,52,0.92),rgba(16,10,36,0.86))] shadow-[0_18px_45px_rgba(8,6,24,0.2)]">
+          <TabsTrigger
+            value="planner"
+            className="text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:via-violet-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
+          >
             Planner
           </TabsTrigger>
-          <TabsTrigger value="events" className="text-white data-[state=active]:bg-violet-600">
+          <TabsTrigger
+            value="events"
+            className="text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:via-violet-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
+          >
             My Events
           </TabsTrigger>
-          <TabsTrigger value="create" className="text-white data-[state=active]:bg-violet-600">
+          <TabsTrigger
+            value="create"
+            className="text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:via-violet-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
+          >
             Create Event
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="planner" className="mt-4 space-y-4">
-          <Card className="overflow-hidden border-white/12 bg-[linear-gradient(135deg,rgba(28,18,60,0.82),rgba(10,18,43,0.9))]">
+          <Card className="glass-pride-strong relative overflow-hidden border-white/12">
+            <PrideAccentBar />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(236,72,153,0.18),transparent_32%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.14),transparent_26%),linear-gradient(135deg,rgba(26,17,52,0.9),rgba(10,14,34,0.92))]" />
+            <Sparkles className="pointer-events-none absolute right-5 top-6 h-4 w-4 text-pink-300/85" />
+            <Sparkles className="pointer-events-none absolute right-10 top-11 h-3 w-3 text-violet-200/75" />
             <CardContent className="p-4 sm:p-5">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="relative z-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                  <div className="text-[11px] uppercase tracking-[0.24em] text-white/55">Preferred calendar view</div>
+                  <div className="text-[11px] uppercase tracking-[0.24em] text-white/75">Preferred calendar view</div>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {(["month", "week", "agenda"] as CalendarViewMode[]).map((view) => (
                       <Button
@@ -1416,8 +1472,9 @@ const CalendarIntegration: React.FC = () => {
                         variant="outline"
                         onClick={() => setCalendarView(view)}
                         className={cn(
-                          "border-white/15 bg-white/5 text-white hover:bg-white/10",
-                          calendarView === view && "border-pink-300/35 bg-pink-500/15 text-pink-50"
+                          "border-white/20 bg-white/10 text-white hover:bg-white/16",
+                          calendarView === view &&
+                            "border-transparent bg-gradient-to-r from-pink-500/90 via-violet-500/90 to-indigo-500/90 text-white shadow-[0_0_28px_rgba(168,85,247,0.2)] hover:from-pink-500/90 hover:via-violet-500/90 hover:to-indigo-500/90"
                         )}
                       >
                         {view === "month" ? "Monthly" : view === "week" ? "Weekly" : "Agenda"}
@@ -1431,20 +1488,20 @@ const CalendarIntegration: React.FC = () => {
                     type="button"
                     size="icon"
                     variant="outline"
-                    className="border-white/15 bg-white/5 text-white hover:bg-white/10"
+                    className="border-white/20 bg-white/10 text-white shadow-[0_0_18px_rgba(255,255,255,0.08)] hover:bg-white/16"
                     onClick={() => handlePlannerShift("prev")}
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <div className="min-w-[200px] rounded-2xl border border-white/12 bg-white/5 px-4 py-2 text-center text-white">
-                    <div className="text-[11px] uppercase tracking-[0.18em] text-white/50">Visible range</div>
+                  <div className="min-w-[200px] rounded-2xl border border-white/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.08))] px-4 py-2 text-center text-white shadow-[0_0_24px_rgba(236,72,153,0.12)]">
+                    <div className="text-[11px] uppercase tracking-[0.18em] text-white/72">Visible range</div>
                     <div className="text-sm font-medium">{getPlannerRangeLabel(calendarView, calendarCursorDate)}</div>
                   </div>
                   <Button
                     type="button"
                     size="icon"
                     variant="outline"
-                    className="border-white/15 bg-white/5 text-white hover:bg-white/10"
+                    className="border-white/20 bg-white/10 text-white shadow-[0_0_18px_rgba(255,255,255,0.08)] hover:bg-white/16"
                     onClick={() => handlePlannerShift("next")}
                   >
                     <ChevronRight className="h-4 w-4" />
@@ -1452,7 +1509,7 @@ const CalendarIntegration: React.FC = () => {
                   <Button
                     type="button"
                     variant="outline"
-                    className="border-pink-300/30 bg-pink-500/10 text-pink-50 hover:bg-pink-500/20"
+                    className="border-pink-300/35 bg-gradient-to-r from-pink-500/24 via-violet-500/20 to-indigo-500/24 text-pink-50 shadow-[0_0_24px_rgba(236,72,153,0.16)] hover:from-pink-500/30 hover:via-violet-500/26 hover:to-indigo-500/30"
                     onClick={() => {
                       const now = new Date();
                       setCalendarCursorDate(now);
@@ -1464,8 +1521,8 @@ const CalendarIntegration: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-3 xl:grid-cols-[minmax(0,1.2fr)_280px]">
-                <div className="rounded-2xl border border-white/12 bg-black/15 px-4 py-3 text-white/85 text-sm">
+              <div className="relative z-10 mt-4 grid gap-3 xl:grid-cols-[minmax(0,1.2fr)_280px]">
+                <div className="rounded-2xl border border-white/18 bg-[linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.07))] px-4 py-3 text-white/92 text-sm">
                   {calendarView === "month"
                     ? "Month view gives you the full rhythm: your schedule, circle meetups, and open community events in one glance."
                     : calendarView === "week"
@@ -1476,7 +1533,7 @@ const CalendarIntegration: React.FC = () => {
                 <select
                   value={plannerFilter}
                   onChange={(event) => setPlannerFilter(event.target.value)}
-                  className="h-12 rounded-2xl border border-white/15 bg-white/5 px-3 text-sm text-white"
+                  className="h-12 rounded-2xl border border-white/20 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.08))] px-3 text-sm text-white shadow-[0_0_20px_rgba(99,102,241,0.12)]"
                 >
                   {plannerFilterOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -1490,19 +1547,21 @@ const CalendarIntegration: React.FC = () => {
 
           <div className="space-y-4">
             {calendarView === "month" ? (
-              <Card className="overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(20,18,42,0.96),rgba(10,12,28,0.94))] shadow-[0_24px_80px_rgba(14,12,40,0.32)]">
+              <Card className="relative overflow-hidden border border-white/12 bg-[linear-gradient(180deg,rgba(15,9,31,0.99),rgba(7,7,18,0.98))] shadow-[0_24px_80px_rgba(14,12,40,0.4)]">
+                <PrideAccentBar className="top-4" />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(244,114,182,0.12),transparent_24%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.1),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.1),transparent_24%)]" />
+                <Sparkles className="pointer-events-none absolute right-6 top-6 h-4 w-4 text-fuchsia-300/70" />
                 <CardContent className="p-1 sm:p-2 lg:p-3">
-                  <div className="grid grid-cols-7 gap-0.5 text-[10px] uppercase tracking-[0.1em] text-white/45 sm:gap-1.5 sm:text-[11px] sm:tracking-[0.16em] lg:gap-2">
-                    {[
-                      { short: "Su", full: "Sun" },
-                      { short: "Mo", full: "Mon" },
-                      { short: "Tu", full: "Tue" },
-                      { short: "We", full: "Wed" },
-                      { short: "Th", full: "Thu" },
-                      { short: "Fr", full: "Fri" },
-                      { short: "Sa", full: "Sat" },
-                    ].map((day) => (
-                      <div key={day.full} className="px-0.5 py-1 text-center sm:px-1">
+                  <div className="grid grid-cols-7 gap-0.5 text-[10px] uppercase tracking-[0.1em] sm:gap-1.5 sm:text-[11px] sm:tracking-[0.16em] lg:gap-2">
+                    {CALENDAR_WEEKDAY_ACCENTS.map((day) => (
+                      <div
+                        key={day.full}
+                        className={cn(
+                          "flex items-center justify-center gap-1 rounded-full border border-white/12 bg-[linear-gradient(180deg,rgba(45,27,76,0.85),rgba(24,18,45,0.8))] px-0.5 py-1 text-center font-medium sm:px-1",
+                          day.textClass
+                        )}
+                      >
+                        <span className={cn("h-1.5 w-1.5 rounded-full shadow-[0_0_12px_rgba(255,255,255,0.16)]", day.dotClass)} />
                         <span className="sm:hidden">{day.short}</span>
                         <span className="hidden sm:inline">{day.full}</span>
                       </div>
@@ -1521,9 +1580,9 @@ const CalendarIntegration: React.FC = () => {
                           className={cn(
                             "aspect-[1/1.03] min-h-0 rounded-[12px] border p-1 text-left align-top transition sm:aspect-auto sm:min-h-[108px] sm:rounded-[16px] sm:p-1.5 lg:min-h-[138px] lg:p-2 2xl:min-h-[172px]",
                             isSameDay(day, selectedDate)
-                              ? "border-pink-300/45 bg-pink-500/10 shadow-[0_0_30px_rgba(236,72,153,0.15)]"
-                              : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/7",
-                            !isSameMonth(day, calendarCursorDate) && "opacity-45"
+                              ? "border-pink-300/55 bg-[linear-gradient(180deg,rgba(236,72,153,0.24),rgba(124,58,237,0.18))] shadow-[0_0_30px_rgba(236,72,153,0.18)]"
+                              : "border-white/12 bg-[linear-gradient(180deg,rgba(35,22,63,0.9),rgba(11,11,27,0.96))] hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(46,29,80,0.94),rgba(14,14,33,0.98))]",
+                            !isSameMonth(day, calendarCursorDate) && "opacity-65"
                           )}
                         >
                           <div className="flex items-center justify-between gap-2">
@@ -1535,14 +1594,14 @@ const CalendarIntegration: React.FC = () => {
                             >
                               {format(day, "d")}
                             </span>
-                            <span className="hidden text-[9px] uppercase tracking-[0.1em] text-white/40 lg:inline">
+                            <span className="hidden text-[9px] uppercase tracking-[0.1em] text-white/65 lg:inline">
                               {dayEvents.length} event{dayEvents.length === 1 ? "" : "s"}
                             </span>
                           </div>
 
                           <div className="mt-1 flex min-h-[18px] items-center sm:hidden">
                             {dayEvents.length > 0 ? (
-                              <span className="inline-flex rounded-full border border-white/12 bg-white/8 px-1.5 py-0.5 text-[10px] font-medium text-white/80">
+                              <span className="inline-flex rounded-full border border-white/16 bg-white/14 px-1.5 py-0.5 text-[10px] font-medium text-white/95">
                                 {dayEvents.length}
                               </span>
                             ) : null}
@@ -1551,7 +1610,7 @@ const CalendarIntegration: React.FC = () => {
                           <div className="mt-2 hidden space-y-1.5 sm:mt-2.5 sm:block sm:space-y-1.5 lg:space-y-2">
                             {dayEvents.slice(0, 2).map((event) => renderPlannerChip(event, true))}
                             {dayEvents.length > 2 ? (
-                              <div className="rounded-xl border border-dashed border-white/12 px-1.5 py-1 text-[10px] text-white/55 sm:px-2 sm:text-[11px]">
+                              <div className="rounded-xl border border-dashed border-white/16 px-1.5 py-1 text-[10px] text-white/72 sm:px-2 sm:text-[11px]">
                                 +{dayEvents.length - 2} more
                               </div>
                             ) : null}
@@ -1573,17 +1632,18 @@ const CalendarIntegration: React.FC = () => {
                     <Card
                       key={day.toISOString()}
                       className={cn(
-                        "border-white/15 bg-black/30",
+                        "glass-pride relative overflow-hidden border-white/15",
                         isSameDay(day, selectedDate) && "border-pink-300/40 shadow-[0_0_30px_rgba(236,72,153,0.12)]"
                       )}
                     >
+                      <PrideAccentBar className="top-2" />
                       <CardContent className="p-3 sm:p-4">
                         <button
                           type="button"
                           onClick={() => setSelectedDate(startOfDay(day))}
                           className="w-full text-left"
                         >
-                          <div className="text-[10px] uppercase tracking-[0.14em] text-white/45 sm:text-[11px] sm:tracking-[0.18em]">
+                          <div className="text-[10px] uppercase tracking-[0.14em] text-white/72 sm:text-[11px] sm:tracking-[0.18em]">
                             {format(day, "EEEE")}
                           </div>
                           <div className="mt-1 flex items-center gap-2 text-white">
@@ -1592,12 +1652,12 @@ const CalendarIntegration: React.FC = () => {
                                 "flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold",
                                 isToday(day)
                                   ? "bg-gradient-to-r from-pink-500 to-fuchsia-500"
-                                  : "bg-white/10"
+                                  : "bg-white/16"
                               )}
                             >
                               {format(day, "d")}
                             </span>
-                            <span className="text-sm text-white/65">{dayEvents.length} scheduled</span>
+                            <span className="text-sm text-white/85">{dayEvents.length} scheduled</span>
                           </div>
                         </button>
 
@@ -1605,7 +1665,7 @@ const CalendarIntegration: React.FC = () => {
                           {dayEvents.length > 0 ? (
                             dayEvents.map((event) => renderPlannerChip(event))
                           ) : (
-                            <div className="rounded-xl border border-dashed border-white/12 px-3 py-4 text-xs text-white/45">
+                            <div className="rounded-xl border border-dashed border-white/16 px-3 py-4 text-xs text-white/68">
                               No events scheduled.
                             </div>
                           )}
@@ -1625,8 +1685,9 @@ const CalendarIntegration: React.FC = () => {
                     return (
                       <Card
                         key={event.id}
-                        className={cn("border-white/15 bg-black/30", circleMeta?.glow)}
+                        className={cn("glass-pride relative overflow-hidden border-white/15", circleMeta?.glow)}
                       >
+                        <PrideAccentBar className="top-2" />
                         <CardContent className="p-4">
                           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                             <div className="space-y-2">
@@ -1637,17 +1698,17 @@ const CalendarIntegration: React.FC = () => {
                                 <Badge className={getVisibilityBadgeClass(event.visibility)} variant="outline">
                                   {event.audienceLabel}
                                 </Badge>
-                                <Badge className="border-white/15 bg-white/10 text-white/70" variant="outline">
+                                <Badge className="border-white/18 bg-white/14 text-white/90" variant="outline">
                                   {event.organizer}
                                 </Badge>
                               </div>
                               <div>
                                 <div className="text-lg font-semibold text-white">{event.title}</div>
-                                <div className="mt-1 text-sm text-white/65">
+                                <div className="mt-1 text-sm text-white/82">
                                   {formatDateTime(event.starts_at)} • {event.location || "Location TBD"}
                                 </div>
                               </div>
-                              <p className="text-sm text-white/75">
+                              <p className="text-sm text-white/88">
                                 {event.description || "No description provided yet."}
                               </p>
                             </div>
@@ -1656,7 +1717,7 @@ const CalendarIntegration: React.FC = () => {
                               <Button
                                 type="button"
                                 variant="outline"
-                                className="border-white/15 bg-white/5 text-white hover:bg-white/10"
+                                className="border-white/18 bg-white/10 text-white hover:bg-white/16"
                                 onClick={() => jumpToEventDay(event)}
                               >
                                 Focus this date
@@ -1696,8 +1757,8 @@ const CalendarIntegration: React.FC = () => {
                     );
                   })
                 ) : (
-                  <Card className="border-white/15 bg-black/30">
-                    <CardContent className="p-6 text-sm text-white/65">
+                  <Card className="glass-pride border-white/15">
+                    <CardContent className="p-6 text-sm text-white/82">
                       No events match {plannerFilterLabel(plannerFilter, joinedCircles).toLowerCase()} yet.
                     </CardContent>
                   </Card>
@@ -1707,11 +1768,13 @@ const CalendarIntegration: React.FC = () => {
           </div>
 
           <div className="grid gap-4 2xl:grid-cols-[minmax(0,1.3fr)_minmax(360px,1fr)]">
-            <Card className="border-white/12 bg-[linear-gradient(145deg,rgba(23,16,42,0.88),rgba(12,18,42,0.82))]">
+            <Card className="glass-pride relative overflow-hidden border-white/12">
+              <PrideAccentBar />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(236,72,153,0.12),transparent_26%)]" />
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center justify-between gap-3 text-sm text-white">
                   <span>{format(selectedDate, "EEEE, MMMM d")}</span>
-                  <Badge className="border-white/15 bg-white/10 text-white" variant="outline">
+                  <Badge className="border-white/18 bg-white/14 text-white" variant="outline">
                     {selectedDayEvents.length} event{selectedDayEvents.length === 1 ? "" : "s"}
                   </Badge>
                 </CardTitle>
@@ -1725,18 +1788,26 @@ const CalendarIntegration: React.FC = () => {
                         key={event.id}
                         className={cn(
                           "rounded-2xl border p-4 text-white",
-                          event.source === "google" && "border-emerald-300/20 bg-emerald-500/10",
-                          event.source === "outlook" && "border-sky-300/20 bg-sky-500/10",
-                          event.source === "local" && event.visibility === "shared" && "border-pink-300/20 bg-pink-500/10",
-                          event.source === "local" && event.visibility === "circle" && "border-violet-300/20 bg-violet-500/10",
-                          event.source === "local" && event.visibility === "private" && "border-slate-300/20 bg-slate-500/10",
+                          event.source === "google" &&
+                            "border-emerald-300/25 bg-[linear-gradient(135deg,rgba(6,95,70,0.92),rgba(16,185,129,0.18))]",
+                          event.source === "outlook" &&
+                            "border-sky-300/25 bg-[linear-gradient(135deg,rgba(7,39,110,0.92),rgba(59,130,246,0.18))]",
+                          event.source === "local" &&
+                            event.visibility === "shared" &&
+                            "border-pink-300/25 bg-[linear-gradient(135deg,rgba(95,24,73,0.94),rgba(236,72,153,0.18))]",
+                          event.source === "local" &&
+                            event.visibility === "circle" &&
+                            "border-violet-300/25 bg-[linear-gradient(135deg,rgba(67,31,118,0.94),rgba(139,92,246,0.18))]",
+                          event.source === "local" &&
+                            event.visibility === "private" &&
+                            "border-slate-300/24 bg-[linear-gradient(135deg,rgba(30,41,59,0.94),rgba(100,116,139,0.16))]",
                           circleMeta?.glow
                         )}
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <div className="text-lg font-semibold">{event.title}</div>
-                            <div className="mt-1 text-sm text-white/65">
+                            <div className="mt-1 text-sm text-white/82">
                               {formatEventTimeRange(event.starts_at, event.ends_at)} • {event.location || "Location TBD"}
                             </div>
                           </div>
@@ -1752,12 +1823,12 @@ const CalendarIntegration: React.FC = () => {
                           <Badge className={sourceBadgeClass[event.source]} variant="outline">
                             {event.source}
                           </Badge>
-                          <Badge className="border-white/15 bg-white/10 text-white/70" variant="outline">
+                          <Badge className="border-white/18 bg-white/14 text-white/88" variant="outline">
                             {event.organizer}
                           </Badge>
                         </div>
 
-                        <p className="mt-3 text-sm text-white/75">
+                        <p className="mt-3 text-sm text-white/88">
                           {event.description || "No description provided yet."}
                         </p>
 
@@ -1766,7 +1837,7 @@ const CalendarIntegration: React.FC = () => {
                             <Button
                               type="button"
                               variant="outline"
-                              className="border-violet-300/25 bg-white/5 text-white hover:bg-white/10"
+                              className="border-violet-300/30 bg-white/10 text-white hover:bg-white/16"
                               onClick={() => openCircleConversation(event.circle_name as string)}
                             >
                               <MessageCircleMore className="mr-2 h-4 w-4" />
@@ -1776,7 +1847,7 @@ const CalendarIntegration: React.FC = () => {
                             <Button
                               type="button"
                               variant="outline"
-                              className="border-slate-300/25 bg-white/5 text-white hover:bg-white/10"
+                              className="border-slate-300/30 bg-white/10 text-white hover:bg-white/16"
                               onClick={() => setPlannerFilter(PLANNER_FILTER_MINE)}
                             >
                               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -1786,7 +1857,7 @@ const CalendarIntegration: React.FC = () => {
                             <Button
                               type="button"
                               variant="outline"
-                              className="border-pink-300/25 bg-white/5 text-white hover:bg-white/10"
+                              className="border-pink-300/30 bg-white/10 text-white hover:bg-white/16"
                               onClick={() => navigate("/social")}
                             >
                               <ArrowRight className="mr-2 h-4 w-4" />
@@ -1798,7 +1869,7 @@ const CalendarIntegration: React.FC = () => {
                             <Button
                               type="button"
                               variant="outline"
-                              className="border-white/15 bg-white/5 text-white hover:bg-white/10"
+                              className="border-white/18 bg-white/10 text-white hover:bg-white/16"
                               onClick={() => startEditingEvent(event)}
                             >
                               Edit this event
@@ -1809,14 +1880,16 @@ const CalendarIntegration: React.FC = () => {
                     );
                   })
                 ) : (
-                  <div className="rounded-2xl border border-dashed border-white/12 px-4 py-6 text-sm text-white/55">
+                  <div className="rounded-2xl border border-dashed border-white/16 px-4 py-6 text-sm text-white/72">
                     No events match {plannerFilterLabel(plannerFilter, joinedCircles).toLowerCase()} on this day.
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            <Card className="border-white/12 bg-[linear-gradient(145deg,rgba(34,18,58,0.82),rgba(10,18,43,0.8))]">
+            <Card className="glass-pride relative overflow-hidden border-white/12">
+              <PrideAccentBar />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(236,72,153,0.12),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.1),transparent_24%)]" />
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-sm text-white">
                   <Users className="h-4 w-4 text-pink-300" />
@@ -1832,23 +1905,23 @@ const CalendarIntegration: React.FC = () => {
                         key={event.id}
                         className={cn(
                           "rounded-2xl border p-3 text-white",
-                          circleMeta?.tone || "border-white/12 bg-white/5",
+                          circleMeta?.tone || "border-white/14 bg-[linear-gradient(135deg,rgba(32,21,58,0.9),rgba(12,12,29,0.96))]",
                           circleMeta?.glow
                         )}
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <div className="text-sm font-semibold">{event.title}</div>
-                            <div className="mt-1 text-xs text-white/65">
+                            <div className="mt-1 text-xs text-white/82">
                               {event.audienceLabel} • {event.organizer}
                             </div>
                           </div>
-                          <Badge className="border-white/15 bg-black/20 text-white" variant="outline">
+                          <Badge className="border-white/18 bg-black/28 text-white" variant="outline">
                             {format(parseISO(event.starts_at), "MMM d")}
                           </Badge>
                         </div>
 
-                        <div className="mt-2 text-xs text-white/65">
+                        <div className="mt-2 text-xs text-white/82">
                           {formatEventTimeRange(event.starts_at, event.ends_at)}
                           {event.location ? ` • ${event.location}` : ""}
                         </div>
@@ -1858,7 +1931,7 @@ const CalendarIntegration: React.FC = () => {
                             type="button"
                             size="sm"
                             variant="outline"
-                            className="border-white/15 bg-white/5 text-white hover:bg-white/10"
+                            className="border-white/18 bg-white/10 text-white hover:bg-white/16"
                             onClick={() => jumpToEventDay(event)}
                           >
                             Show on planner
@@ -1868,7 +1941,7 @@ const CalendarIntegration: React.FC = () => {
                               type="button"
                               size="sm"
                               variant="outline"
-                              className="border-violet-300/25 bg-white/5 text-white hover:bg-white/10"
+                              className="border-violet-300/30 bg-white/10 text-white hover:bg-white/16"
                               onClick={() => openCircleConversation(event.circle_name as string)}
                             >
                               Open circle
@@ -1878,7 +1951,7 @@ const CalendarIntegration: React.FC = () => {
                               type="button"
                               size="sm"
                               variant="outline"
-                              className="border-slate-300/25 bg-white/5 text-white hover:bg-white/10"
+                              className="border-slate-300/30 bg-white/10 text-white hover:bg-white/16"
                               onClick={() => setPlannerFilter(PLANNER_FILTER_MINE)}
                             >
                               Personal
@@ -1888,7 +1961,7 @@ const CalendarIntegration: React.FC = () => {
                               type="button"
                               size="sm"
                               variant="outline"
-                              className="border-pink-300/25 bg-white/5 text-white hover:bg-white/10"
+                              className="border-pink-300/30 bg-white/10 text-white hover:bg-white/16"
                               onClick={() => navigate("/social")}
                             >
                               Social feed
@@ -1899,13 +1972,13 @@ const CalendarIntegration: React.FC = () => {
                     );
                   })
                 ) : (
-                  <div className="rounded-2xl border border-dashed border-white/12 px-4 py-5 text-sm text-white/55">
+                  <div className="rounded-2xl border border-dashed border-white/16 px-4 py-5 text-sm text-white/72">
                     Join circles on the Social page and their meetups will appear here as they are posted.
                   </div>
                 )}
 
                 {communityNotice ? (
-                  <div className="rounded-xl border border-white/12 bg-white/5 px-3 py-2 text-xs text-white/60">
+                  <div className="rounded-xl border border-white/16 bg-white/10 px-3 py-2 text-xs text-white/78">
                     {communityNotice}
                   </div>
                 ) : null}
@@ -1914,7 +1987,10 @@ const CalendarIntegration: React.FC = () => {
           </div>
 
           <div className="grid gap-4 2xl:grid-cols-[minmax(0,1.05fr)_minmax(0,1.15fr)]">
-            <Card className="overflow-hidden border-white/12 bg-[linear-gradient(135deg,rgba(34,18,58,0.88),rgba(11,18,40,0.9))]">
+            <Card className="glass-pride-strong relative overflow-hidden border-white/12">
+              <PrideAccentBar />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(236,72,153,0.16),transparent_24%),radial-gradient(circle_at_top_right,rgba(96,165,250,0.1),transparent_22%),linear-gradient(135deg,rgba(34,18,58,0.88),rgba(11,18,40,0.9))]" />
+              <Sparkles className="pointer-events-none absolute right-5 top-5 h-4 w-4 text-pink-300/75" />
               <CardContent className="p-4 sm:p-5">
                 <div className="flex h-full flex-col gap-4 lg:justify-between">
                   <div className="max-w-3xl">
@@ -1925,26 +2001,26 @@ const CalendarIntegration: React.FC = () => {
                     <h3 className="mt-3 text-xl font-semibold tracking-tight text-white sm:text-2xl">
                       Your calendar stays primary. Circles and social events layer into it.
                     </h3>
-                    <p className="mt-2 max-w-2xl text-sm text-white/70">
+                    <p className="mt-2 max-w-2xl text-sm text-white/84">
                       Use month, week, or agenda view without losing your own schedule. Community and circle events stay visible, but secondary to the calendar itself.
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white">
-                      <div className="text-[11px] uppercase tracking-[0.2em] text-white/50">Your events</div>
+                    <div className="rounded-2xl border border-rose-300/20 bg-[linear-gradient(135deg,rgba(244,63,94,0.1),rgba(236,72,153,0.06))] px-4 py-3 text-white">
+                      <div className="text-[11px] uppercase tracking-[0.2em] text-white/72">Your events</div>
                       <div className="mt-1 text-xl font-semibold">{plannerStats.upcomingMine}</div>
-                      <div className="text-xs text-white/60">Upcoming on your calendar</div>
+                      <div className="text-xs text-white/78">Upcoming on your calendar</div>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white">
-                      <div className="text-[11px] uppercase tracking-[0.2em] text-white/50">Circle meetups</div>
+                    <div className="rounded-2xl border border-violet-300/20 bg-[linear-gradient(135deg,rgba(124,58,237,0.12),rgba(147,51,234,0.06))] px-4 py-3 text-white">
+                      <div className="text-[11px] uppercase tracking-[0.2em] text-white/72">Circle meetups</div>
                       <div className="mt-1 text-xl font-semibold">{plannerStats.upcomingCircle}</div>
-                      <div className="text-xs text-white/60">From circles you can join or follow</div>
+                      <div className="text-xs text-white/78">From circles you can join or follow</div>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white">
-                      <div className="text-[11px] uppercase tracking-[0.2em] text-white/50">Open community</div>
+                    <div className="rounded-2xl border border-sky-300/20 bg-[linear-gradient(135deg,rgba(59,130,246,0.1),rgba(34,211,238,0.06))] px-4 py-3 text-white">
+                      <div className="text-[11px] uppercase tracking-[0.2em] text-white/72">Open community</div>
                       <div className="mt-1 text-xl font-semibold">{plannerStats.openCommunity}</div>
-                      <div className="text-xs text-white/60">Shared meetups visible beyond one circle</div>
+                      <div className="text-xs text-white/78">Shared meetups visible beyond one circle</div>
                     </div>
                   </div>
                 </div>
@@ -1952,11 +2028,12 @@ const CalendarIntegration: React.FC = () => {
             </Card>
 
             <div className="grid items-start gap-4 xl:grid-cols-[minmax(340px,0.95fr)_minmax(0,1.1fr)]">
-              <Card className="h-full bg-black/30 border-white/15">
+              <Card className="glass-pride-dark relative h-full overflow-hidden border-white/15">
+                <PrideAccentBar className="top-2" />
                 <CardContent className="flex h-full flex-col justify-between gap-4 p-4">
                   <div>
                     <div className="text-sm font-semibold text-white">Shared with Social Events</div>
-                    <div className="mt-1 text-xs leading-relaxed text-white/65">
+                    <div className="mt-1 text-xs leading-relaxed text-white/82">
                       Only events you mark as Open community or Circle only appear in the Social events UI. Private events stay only on your calendar.
                     </div>
                   </div>
@@ -1967,7 +2044,8 @@ const CalendarIntegration: React.FC = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-black/30 border-white/15">
+              <Card className="glass-pride-dark relative overflow-hidden border-white/15">
+                <PrideAccentBar className="top-2" />
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm text-white flex items-center gap-2">
                     <Link2 className="w-4 h-4" />
@@ -1980,11 +2058,11 @@ const CalendarIntegration: React.FC = () => {
                     return (
                       <div
                         key={row.key}
-                        className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 sm:flex-row sm:items-center sm:justify-between"
+                        className="flex flex-col gap-3 rounded-2xl border border-white/16 bg-white/10 p-3 sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="min-w-0 flex-1">
                           <div className="text-sm text-white/95">{row.name}</div>
-                          <div className="text-xs text-white/60 truncate">
+                          <div className="text-xs text-white/78 truncate">
                             {provider.connected
                               ? provider.providerAccountEmail || "Connected"
                               : "Not connected"}
@@ -2009,7 +2087,7 @@ const CalendarIntegration: React.FC = () => {
                   })}
 
                   <div className="pt-1 flex items-center justify-between gap-2 flex-wrap">
-                    <div className="text-xs text-white/60">
+                    <div className="text-xs text-white/78">
                       Apple Calendar uses .ics export. Two-way sync is available for Google and Outlook.
                     </div>
                     <Badge className="bg-white/10 border-white/20 text-white">
@@ -2030,15 +2108,15 @@ const CalendarIntegration: React.FC = () => {
 
         <TabsContent value="events" className="space-y-4 mt-4">
           {loading ? (
-            <Card className="bg-black/30 border-white/15">
-              <CardContent className="p-6 text-white/80 flex items-center gap-2">
+            <Card className="glass-pride border-white/15">
+              <CardContent className="p-6 text-white/90 flex items-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 Loading events…
               </CardContent>
             </Card>
           ) : upcomingEvents.length === 0 ? (
-            <Card className="bg-black/30 border-white/15">
-              <CardContent className="p-6 text-white/70">No upcoming events yet.</CardContent>
+            <Card className="glass-pride border-white/15">
+              <CardContent className="p-6 text-white/84">No upcoming events yet.</CardContent>
             </Card>
           ) : (
             upcomingEvents.map((event) => (
@@ -2050,7 +2128,7 @@ const CalendarIntegration: React.FC = () => {
                   actionBusy={deletingEventId === event.id}
                 />
 
-                <Card className="bg-black/30 border-white/15">
+                <Card className="glass-pride-dark border-white/15">
                   <CardContent className="p-3 space-y-3">
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex items-center gap-2 text-sm text-white/80">
@@ -2113,7 +2191,7 @@ const CalendarIntegration: React.FC = () => {
                     </div>
 
                     {editingEventId === event.id && editingEventForm ? (
-                      <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-2">
+                        <div className="rounded-xl border border-white/18 bg-white/10 p-3 space-y-2">
                         <Input
                           value={editingEventForm.title}
                           onChange={(e) =>
@@ -2222,7 +2300,9 @@ const CalendarIntegration: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="create" className="mt-4">
-          <Card className="bg-black/30 border-white/15">
+          <Card className="glass-pride-strong relative overflow-hidden border-white/15">
+            <PrideAccentBar />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(236,72,153,0.16),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.1),transparent_24%)]" />
             <CardHeader className="pb-3">
               <CardTitle className="text-sm text-white flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-pink-300" />
