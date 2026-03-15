@@ -1483,7 +1483,7 @@ const CalendarIntegration: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex w-full flex-wrap items-center gap-2 lg:w-auto lg:flex-nowrap">
                   <Button
                     type="button"
                     size="icon"
@@ -1493,7 +1493,7 @@ const CalendarIntegration: React.FC = () => {
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <div className="min-w-[200px] rounded-2xl border border-white/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.08))] px-4 py-2 text-center text-white shadow-[0_0_24px_rgba(236,72,153,0.12)]">
+                  <div className="min-w-0 flex-1 rounded-2xl border border-white/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.08))] px-3 py-2 text-center text-white shadow-[0_0_24px_rgba(236,72,153,0.12)] sm:px-4 lg:min-w-[200px]">
                     <div className="text-[11px] uppercase tracking-[0.18em] text-white/72">Visible range</div>
                     <div className="text-sm font-medium">{getPlannerRangeLabel(calendarView, calendarCursorDate)}</div>
                   </div>
@@ -1548,7 +1548,7 @@ const CalendarIntegration: React.FC = () => {
           <div className="space-y-4">
             {calendarView === "month" ? (
               <Card className="relative overflow-hidden border border-white/12 bg-[linear-gradient(180deg,rgba(15,9,31,0.99),rgba(7,7,18,0.98))] shadow-[0_24px_80px_rgba(14,12,40,0.4)]">
-                <PrideAccentBar className="top-4" />
+                <PrideAccentBar className="top-1.5" />
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(244,114,182,0.12),transparent_24%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.1),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.1),transparent_24%)]" />
                 <Sparkles className="pointer-events-none absolute right-6 top-6 h-4 w-4 text-fuchsia-300/70" />
                 <CardContent className="p-1 sm:p-2 lg:p-3">

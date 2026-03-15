@@ -15,7 +15,7 @@ const EventsPage: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 flex-1 overflow-y-auto">
+      <div className="relative z-10 flex-1 overflow-x-hidden overflow-y-auto">
         <div className="h-full w-full px-0 sm:px-2 lg:px-3 xl:px-4 2xl:px-5">
           <div className="glass-pride-strong relative min-h-full overflow-visible rounded-none sm:rounded-2xl">
             <div className="pointer-events-none absolute inset-x-4 top-3 z-10 flex gap-1.5">
