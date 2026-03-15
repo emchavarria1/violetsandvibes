@@ -1261,7 +1261,7 @@ const CalendarIntegration: React.FC = () => {
   };
 
   return (
-    <div className="w-full space-y-6 px-1.5 pb-20 sm:px-3 lg:px-4 xl:px-5 2xl:px-6">
+    <div className="w-full space-y-6 px-0 pb-20 sm:px-1.5 lg:px-2.5 xl:px-3.5 2xl:px-4">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <CalendarIcon className="w-6 h-6 text-purple-300" />
@@ -1369,7 +1369,7 @@ const CalendarIntegration: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px]">
+              <div className="mt-4 grid gap-3 xl:grid-cols-[minmax(0,1.2fr)_280px]">
                 <div className="rounded-2xl border border-white/12 bg-black/15 px-4 py-3 text-white/85 text-sm">
                   {calendarView === "month"
                     ? "Month view gives you the full rhythm: your schedule, circle meetups, and open community events in one glance."
@@ -1396,18 +1396,26 @@ const CalendarIntegration: React.FC = () => {
           <div className="space-y-4">
             {calendarView === "month" ? (
               <Card className="overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(20,18,42,0.96),rgba(10,12,28,0.94))] shadow-[0_24px_80px_rgba(14,12,40,0.32)]">
-                <CardContent className="p-3 sm:p-4">
-                  <div className="grid grid-cols-7 gap-1 text-[10px] uppercase tracking-[0.14em] text-white/45 sm:gap-2 sm:text-[11px] sm:tracking-[0.18em]">
-                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                      <div key={day} className="px-0.5 py-1 text-center sm:px-2">
-                        <span className="sm:hidden">{day.slice(0, 1)}</span>
-                        <span className="hidden sm:inline">{day}</span>
+                <CardContent className="p-1 sm:p-2 lg:p-3">
+                  <div className="grid grid-cols-7 gap-0.5 text-[10px] uppercase tracking-[0.1em] text-white/45 sm:gap-1.5 sm:text-[11px] sm:tracking-[0.16em] lg:gap-2">
+                    {[
+                      { short: "Su", full: "Sun" },
+                      { short: "Mo", full: "Mon" },
+                      { short: "Tu", full: "Tue" },
+                      { short: "We", full: "Wed" },
+                      { short: "Th", full: "Thu" },
+                      { short: "Fr", full: "Fri" },
+                      { short: "Sa", full: "Sat" },
+                    ].map((day) => (
+                      <div key={day.full} className="px-0.5 py-1 text-center sm:px-1">
+                        <span className="sm:hidden">{day.short}</span>
+                        <span className="hidden sm:inline">{day.full}</span>
                       </div>
                     ))}
                   </div>
 
                   <div className="mt-2 w-full">
-                    <div className="grid w-full grid-cols-7 gap-1 sm:gap-2 xl:gap-3">
+                    <div className="grid w-full grid-cols-7 gap-0.5 sm:gap-1.5 lg:gap-2">
                     {monthDays.map((day) => {
                       const dayEvents = filteredPlannerEvents.filter((event) => eventOccursOnDay(event, day));
                       return (
@@ -1416,7 +1424,7 @@ const CalendarIntegration: React.FC = () => {
                           type="button"
                           onClick={() => setSelectedDate(startOfDay(day))}
                           className={cn(
-                            "min-h-[96px] rounded-[18px] border p-1.5 text-left align-top transition sm:min-h-[116px] sm:p-2 lg:min-h-[148px] lg:p-2.5 2xl:min-h-[184px]",
+                            "aspect-[1/1.03] min-h-0 rounded-[12px] border p-1 text-left align-top transition sm:aspect-auto sm:min-h-[108px] sm:rounded-[16px] sm:p-1.5 lg:min-h-[138px] lg:p-2 2xl:min-h-[172px]",
                             isSameDay(day, selectedDate)
                               ? "border-pink-300/45 bg-pink-500/10 shadow-[0_0_30px_rgba(236,72,153,0.15)]"
                               : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/7",
@@ -1426,7 +1434,7 @@ const CalendarIntegration: React.FC = () => {
                           <div className="flex items-center justify-between gap-2">
                             <span
                               className={cn(
-                                "flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold text-white/90 sm:h-7 sm:w-7 sm:text-sm",
+                                "flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-semibold text-white/90 sm:h-6 sm:w-6 sm:text-xs lg:h-7 lg:w-7 lg:text-sm",
                                 isToday(day) && "bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white"
                               )}
                             >
@@ -1437,7 +1445,15 @@ const CalendarIntegration: React.FC = () => {
                             </span>
                           </div>
 
-                          <div className="mt-2 space-y-1.5 sm:mt-3 sm:space-y-2">
+                          <div className="mt-1 flex min-h-[18px] items-center sm:hidden">
+                            {dayEvents.length > 0 ? (
+                              <span className="inline-flex rounded-full border border-white/12 bg-white/8 px-1.5 py-0.5 text-[10px] font-medium text-white/80">
+                                {dayEvents.length}
+                              </span>
+                            ) : null}
+                          </div>
+
+                          <div className="mt-2 hidden space-y-1.5 sm:mt-2.5 sm:block sm:space-y-1.5 lg:space-y-2">
                             {dayEvents.slice(0, 2).map((event) => renderPlannerChip(event, true))}
                             {dayEvents.length > 2 ? (
                               <div className="rounded-xl border border-dashed border-white/12 px-1.5 py-1 text-[10px] text-white/55 sm:px-2 sm:text-[11px]">
@@ -1586,7 +1602,7 @@ const CalendarIntegration: React.FC = () => {
             ) : null}
           </div>
 
-          <div className="grid gap-4 xl:grid-cols-2">
+          <div className="grid gap-4 2xl:grid-cols-[minmax(0,1.3fr)_minmax(360px,1fr)]">
             <Card className="border-white/12 bg-[linear-gradient(145deg,rgba(23,16,42,0.88),rgba(12,18,42,0.82))]">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center justify-between gap-3 text-sm text-white">
@@ -1772,7 +1788,7 @@ const CalendarIntegration: React.FC = () => {
             </Card>
           </div>
 
-          <div className="grid gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+          <div className="grid gap-4 2xl:grid-cols-[minmax(0,1.05fr)_minmax(0,1.15fr)]">
             <Card className="overflow-hidden border-white/12 bg-[linear-gradient(135deg,rgba(34,18,58,0.88),rgba(11,18,40,0.9))]">
               <CardContent className="p-4 sm:p-5">
                 <div className="flex h-full flex-col gap-4 lg:justify-between">
@@ -1810,7 +1826,7 @@ const CalendarIntegration: React.FC = () => {
               </CardContent>
             </Card>
 
-            <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+            <div className="grid items-start gap-4 xl:grid-cols-[minmax(340px,0.95fr)_minmax(0,1.1fr)]">
               <Card className="h-full bg-black/30 border-white/15">
                 <CardContent className="flex h-full flex-col justify-between gap-4 p-4">
                   <div>
