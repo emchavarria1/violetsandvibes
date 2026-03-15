@@ -3,10 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Camera, Shield, CheckCircle, Clock, Lock, Upload } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { invokeEdgeFunction, supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import { getVerificationState, type VerificationStatus } from '@/lib/verification';
+import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  getVerificationAutomationState,
+  getStripeIdentityState,
+  getVerificationState,
+  type VerificationStatus,
+} from '@/lib/verification';
 import { useToast } from '@/hooks/use-toast';
 import { isAdminBypassUser, resolveSubscriptionTier } from '@/lib/subscriptionTier';
 import { useI18n } from '@/lib/i18n';
@@ -26,6 +31,14 @@ type LikeReceivedItem = {
   createdAt: string;
 };
 
+type VerificationFileMetadata = {
+  mimeType: string | null;
+  sizeBytes: number | null;
+  extension: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
+};
+
 const PROFILE_THEME_OPTIONS: Array<{ id: ProfileThemeId; label: string; swatchClass: string }> = [
   { id: 'prism', label: 'Prism Glow', swatchClass: 'from-pink-500 via-purple-500 to-indigo-500' },
   { id: 'sunset', label: 'Sunset Bloom', swatchClass: 'from-rose-500 via-orange-400 to-amber-300' },
@@ -33,9 +46,53 @@ const PROFILE_THEME_OPTIONS: Array<{ id: ProfileThemeId; label: string; swatchCl
   { id: 'aurora', label: 'Aurora Wave', swatchClass: 'from-cyan-400 via-emerald-400 to-violet-500' },
 ];
 
+const getFileExtension = (name: string) => {
+  const parts = name.split('.');
+  if (parts.length < 2) return null;
+  const extension = parts.pop()?.trim().toLowerCase();
+  return extension || null;
+};
+
+const readImageDimensions = (file: File) =>
+  new Promise<{ width: number | null; height: number | null }>((resolve) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+
+    image.onload = () => {
+      resolve({ width: image.naturalWidth || null, height: image.naturalHeight || null });
+      URL.revokeObjectURL(objectUrl);
+    };
+
+    image.onerror = () => {
+      resolve({ width: null, height: null });
+      URL.revokeObjectURL(objectUrl);
+    };
+
+    image.src = objectUrl;
+  });
+
+const collectVerificationFileMetadata = async (file: File): Promise<VerificationFileMetadata> => {
+  const metadata: VerificationFileMetadata = {
+    mimeType: file.type || null,
+    sizeBytes: Number.isFinite(file.size) ? file.size : null,
+    extension: getFileExtension(file.name),
+    imageWidth: null,
+    imageHeight: null,
+  };
+
+  if (file.type.startsWith('image/')) {
+    const dimensions = await readImageDimensions(file);
+    metadata.imageWidth = dimensions.width;
+    metadata.imageHeight = dimensions.height;
+  }
+
+  return metadata;
+};
+
 const UserVerification: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const { t } = useI18n();
 
@@ -55,8 +112,10 @@ const UserVerification: React.FC = () => {
   const [likesError, setLikesError] = useState<string | null>(null);
   const [likesReceived, setLikesReceived] = useState<LikeReceivedItem[]>([]);
   const [showLikesSection, setShowLikesSection] = useState(false);
+  const [stripeLoading, setStripeLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const cameraStreamRef = useRef<MediaStream | null>(null);
+  const stripeReturnHandledRef = useRef<string | null>(null);
   const subscriptionTier = useMemo(
     () => resolveSubscriptionTier(existingPrivacySettings, existingSafetySettings),
     [existingPrivacySettings, existingSafetySettings]
@@ -123,6 +182,7 @@ const UserVerification: React.FC = () => {
       } catch (error) {
         console.error('Failed to load verification state:', error);
         if (!cancelled) {
+          setExistingSafetySettings({});
           setPhotoStatus('pending');
           setIdStatus('pending');
           setIsAdminBypass(false);
@@ -182,6 +242,126 @@ const UserVerification: React.FC = () => {
       }),
     [existingSafetySettings, photoStatus, idStatus]
   );
+  const automationState = useMemo(
+    () => getVerificationAutomationState(existingSafetySettings),
+    [existingSafetySettings]
+  );
+  const stripeIdentityState = useMemo(
+    () => getStripeIdentityState(existingSafetySettings),
+    [existingSafetySettings]
+  );
+
+  const cleanStripeReturnParams = () => {
+    const params = new URLSearchParams(location.search);
+    params.delete('stripe_identity');
+    params.delete('session_id');
+    const nextSearch = params.toString();
+    navigate(
+      {
+        pathname: location.pathname,
+        search: nextSearch ? `?${nextSearch}` : '',
+      },
+      { replace: true }
+    );
+  };
+
+  const syncVerificationSafetyState = (nextSafety: Record<string, any>) => {
+    const state = getVerificationState(nextSafety);
+    setExistingSafetySettings(nextSafety);
+    setPhotoStatus(state.photoStatus);
+    setIdStatus(state.idStatus);
+  };
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const params = new URLSearchParams(location.search);
+    if (params.get('stripe_identity') !== 'return') return;
+
+    const handledKey = `${user.id}:${params.toString()}`;
+    if (stripeReturnHandledRef.current === handledKey) return;
+    stripeReturnHandledRef.current = handledKey;
+
+    let cancelled = false;
+
+    const syncStripeReturn = async () => {
+      try {
+        setStripeLoading(true);
+
+        const { data, error } = await invokeEdgeFunction<{
+          status?: string;
+          safetySettings?: Record<string, any>;
+          rejectionReason?: string | null;
+        }>(
+          'stripe-identity-refresh',
+          {
+            body: {},
+          },
+          {
+            authTransport: 'both',
+          }
+        );
+
+        if (error) throw error;
+        if (cancelled) return;
+
+        const nextSafety =
+          data?.safetySettings && typeof data.safetySettings === 'object'
+            ? (data.safetySettings as Record<string, any>)
+            : null;
+        if (nextSafety) {
+          syncVerificationSafetyState(nextSafety);
+        }
+
+        const status = typeof data?.status === 'string' ? data.status : 'unknown';
+        if (status === 'verified') {
+          toast({
+            title: 'Verification approved',
+            description: 'Stripe Identity verified your document and selfie automatically.',
+          });
+        } else if (status === 'processing') {
+          toast({
+            title: 'Verification submitted',
+            description: 'Stripe is still processing your verification. Check back shortly.',
+          });
+        } else if (status === 'requires_input') {
+          toast({
+            title: 'Verification needs another try',
+            description:
+              data?.rejectionReason ||
+              'Stripe asked for a clearer document or selfie. Start the flow again to resubmit.',
+            variant: 'destructive',
+          });
+        } else if (status === 'canceled') {
+          toast({
+            title: 'Verification canceled',
+            description: 'Stripe Identity was canceled before it completed.',
+            variant: 'destructive',
+          });
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error('Stripe Identity return sync failed:', error);
+          toast({
+            title: 'Could not refresh verification status',
+            description: (error as Error)?.message || 'Please try again.',
+            variant: 'destructive',
+          });
+        }
+      } finally {
+        if (!cancelled) {
+          setStripeLoading(false);
+          cleanStripeReturnParams();
+        }
+      }
+    };
+
+    void syncStripeReturn();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location.pathname, location.search, navigate, toast, user?.id]);
 
   const updateVerificationStatus = async (
     type: 'photo' | 'id',
@@ -461,35 +641,6 @@ const UserVerification: React.FC = () => {
     stopCameraStream();
   };
 
-  const submitCapturedPhoto = async () => {
-    try {
-      setLoading(true);
-      const file = await capturePhotoFile();
-      const uploaded = await uploadVerificationFile('photo', file);
-      await updateVerificationStatus(
-        'photo',
-        'submitted',
-        uploaded.originalFileName,
-        uploaded.path
-      );
-
-      toast({
-        title: t('photoSubmitted'),
-        description: t('verificationReviewTiming'),
-      });
-      closeCameraCapture();
-    } catch (error) {
-      console.error('Camera photo submit failed:', error);
-      toast({
-        title: t('error'),
-        description: (error as Error)?.message || 'Could not submit verification photo.',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const uploadVerificationFile = async (type: 'photo' | 'id', file: File) => {
     if (!user?.id) throw new Error('You must be logged in.');
 
@@ -541,6 +692,196 @@ const UserVerification: React.FC = () => {
     return { path, originalFileName: file.name };
   };
 
+  const runAutomaticVerificationReview = async (
+    type: 'photo' | 'id',
+    upload: { path: string; originalFileName: string },
+    fileMeta: VerificationFileMetadata
+  ) => {
+    const { data, error } = await invokeEdgeFunction<{
+      safetySettings?: Record<string, any>;
+      currentUpload?: {
+        status?: VerificationStatus;
+        summary?: string | null;
+      };
+    }>(
+      'verification-autoreview',
+      {
+        body: {
+          type,
+          fileName: upload.originalFileName,
+          storagePath: upload.path,
+          fileMeta,
+        },
+      },
+      {
+        authTransport: 'both',
+      }
+    );
+
+    if (error) throw error;
+    return data ?? null;
+  };
+
+  const showAutomaticReviewToast = (
+    type: 'photo' | 'id',
+    result: { status?: VerificationStatus; summary?: string | null } | null
+  ) => {
+    const label = type === 'photo' ? 'Photo' : 'ID';
+    const status = result?.status ?? 'submitted';
+    const summary = result?.summary?.trim();
+
+    if (status === 'approved') {
+      toast({
+        title: type === 'photo' ? t('photoVerified') : t('idVerified'),
+        description: summary || `${label} passed the automatic checks.`,
+      });
+      return;
+    }
+
+    if (status === 'rejected') {
+      toast({
+        title: `${label} needs another try`,
+        description: summary || `Please upload a clearer ${label.toLowerCase()} file.`,
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    toast({
+      title: type === 'photo' ? t('photoSubmitted') : t('idSubmitted'),
+      description:
+        summary || 'Automatic checks finished. This upload is queued for a final review.',
+    });
+  };
+
+  const submitVerificationUpload = async (type: 'photo' | 'id', file: File) => {
+    const fileMeta = await collectVerificationFileMetadata(file);
+    const uploaded = await uploadVerificationFile(type, file);
+
+    try {
+      const autoReview = await runAutomaticVerificationReview(type, uploaded, fileMeta);
+      const nextSafety =
+        autoReview?.safetySettings && typeof autoReview.safetySettings === 'object'
+          ? (autoReview.safetySettings as Record<string, any>)
+          : null;
+
+      if (nextSafety) {
+        syncVerificationSafetyState(nextSafety);
+      } else {
+        await updateVerificationStatus(type, 'submitted', uploaded.originalFileName, uploaded.path);
+      }
+
+      showAutomaticReviewToast(type, autoReview?.currentUpload ?? null);
+      return;
+    } catch (error) {
+      console.warn('Automatic verification pre-screen failed. Falling back to manual queue.', error);
+    }
+
+    await updateVerificationStatus(type, 'submitted', uploaded.originalFileName, uploaded.path);
+    toast({
+      title: type === 'photo' ? t('photoSubmitted') : t('idSubmitted'),
+      description: 'Automatic checks were unavailable, so this upload was sent to the review queue.',
+    });
+  };
+
+  const startStripeIdentityVerification = async () => {
+    if (!user?.id) {
+      toast({
+        title: 'You must be logged in',
+        description: 'Sign in again and retry the verification flow.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setStripeLoading(true);
+      const params = new URLSearchParams(location.search);
+      params.set('stripe_identity', 'return');
+      params.delete('session_id');
+      const nextSearch = params.toString();
+      const returnUrl = `${window.location.origin}${location.pathname}${nextSearch ? `?${nextSearch}` : ''}`;
+
+      const { data, error } = await invokeEdgeFunction<{
+        status?: string;
+        redirectUrl?: string | null;
+        safetySettings?: Record<string, any>;
+      }>(
+        'stripe-identity-start',
+        {
+          body: { returnUrl },
+        },
+        {
+          authTransport: 'both',
+        }
+      );
+
+      if (error) throw error;
+
+      const nextSafety =
+        data?.safetySettings && typeof data.safetySettings === 'object'
+          ? (data.safetySettings as Record<string, any>)
+          : null;
+      if (nextSafety) {
+        syncVerificationSafetyState(nextSafety);
+      }
+
+      const status = typeof data?.status === 'string' ? data.status : 'unknown';
+      if (status === 'verified') {
+        toast({
+          title: 'Verification already approved',
+          description: 'Your Stripe Identity verification has already cleared.',
+        });
+        return;
+      }
+
+      if (status === 'processing') {
+        toast({
+          title: 'Verification still processing',
+          description: 'Stripe is still checking your document. Refresh later for the final result.',
+        });
+        return;
+      }
+
+      const redirectUrl =
+        typeof data?.redirectUrl === 'string' && data.redirectUrl.trim().length > 0
+          ? data.redirectUrl.trim()
+          : null;
+      if (!redirectUrl) {
+        throw new Error('Stripe did not return a verification link.');
+      }
+
+      window.location.assign(redirectUrl);
+    } catch (error) {
+      console.error('Stripe Identity start failed:', error);
+      toast({
+        title: 'Could not start automatic verification',
+        description: (error as Error)?.message || 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setStripeLoading(false);
+    }
+  };
+
+  const submitCapturedPhoto = async () => {
+    try {
+      setLoading(true);
+      const file = await capturePhotoFile();
+      await submitVerificationUpload('photo', file);
+      closeCameraCapture();
+    } catch (error) {
+      console.error('Camera photo submit failed:', error);
+      toast({
+        title: t('error'),
+        description: (error as Error)?.message || 'Could not submit verification photo.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePhotoUpload = async () => {
     try {
       const openedCamera = await startCameraCapture();
@@ -550,17 +891,7 @@ const UserVerification: React.FC = () => {
       const file = await pickSingleFile('image/*', 'environment');
       if (!file) return;
 
-      const uploaded = await uploadVerificationFile('photo', file);
-      await updateVerificationStatus(
-        'photo',
-        'submitted',
-        uploaded.originalFileName,
-        uploaded.path
-      );
-      toast({
-        title: t('photoSubmitted'),
-        description: t('verificationReviewTiming'),
-      });
+      await submitVerificationUpload('photo', file);
     } catch (error) {
       console.error('Photo upload failed:', error);
       toast({
@@ -579,12 +910,7 @@ const UserVerification: React.FC = () => {
       const file = await pickSingleFile('image/*,.pdf');
       if (!file) return;
 
-      const uploaded = await uploadVerificationFile('id', file);
-      await updateVerificationStatus('id', 'submitted', uploaded.originalFileName, uploaded.path);
-      toast({
-        title: t('idSubmitted'),
-        description: t('verificationReviewTiming'),
-      });
+      await submitVerificationUpload('id', file);
     } catch (error) {
       console.error('ID upload failed:', error);
       toast({
@@ -705,6 +1031,57 @@ const UserVerification: React.FC = () => {
           )}
 
           <div className="space-y-3 pt-4">
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50/90 p-4 space-y-3">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-sm font-semibold text-emerald-900">
+                    Automatic ID + selfie check
+                  </div>
+                  <p className="text-xs text-emerald-800 mt-1">
+                    Optional fast-track verification powered by Stripe Identity. Manual uploads below
+                    still work if you prefer the existing review flow.
+                  </p>
+                </div>
+                <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 capitalize">
+                  {stripeIdentityState.status.replace('_', ' ')}
+                </Badge>
+              </div>
+
+              {stripeIdentityState.lastErrorReason ? (
+                <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                  {stripeIdentityState.lastErrorReason}
+                </div>
+              ) : null}
+
+              {stripeIdentityState.verifiedAt ? (
+                <div className="text-xs text-emerald-800">
+                  Verified on {new Date(stripeIdentityState.verifiedAt).toLocaleString()}.
+                </div>
+              ) : stripeIdentityState.updatedAt ? (
+                <div className="text-xs text-emerald-800">
+                  Last Stripe update: {new Date(stripeIdentityState.updatedAt).toLocaleString()}
+                </div>
+              ) : null}
+
+              <Button
+                type="button"
+                className="w-full bg-emerald-600 hover:bg-emerald-700"
+                onClick={() => void startStripeIdentityVerification()}
+                disabled={loading || stripeLoading}
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                {stripeLoading
+                  ? 'Connecting...'
+                  : stripeIdentityState.status === 'verified'
+                  ? 'Stripe verification complete'
+                  : stripeIdentityState.status === 'processing'
+                  ? 'Refresh Stripe status'
+                  : stripeIdentityState.status === 'requires_input'
+                  ? 'Continue Stripe verification'
+                  : 'Verify with Stripe Identity'}
+              </Button>
+            </div>
+
             <Button 
               onClick={handlePhotoUpload}
               className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
@@ -712,7 +1089,8 @@ const UserVerification: React.FC = () => {
                 photoStatus === 'submitted' ||
                 photoStatus === 'approved' ||
                 loading ||
-                showCameraCapture
+                showCameraCapture ||
+                stripeLoading
               }
             >
               <Camera className="w-4 h-4 mr-2" />
@@ -727,7 +1105,7 @@ const UserVerification: React.FC = () => {
               onClick={handleIdUpload}
               variant="outline"
               className="w-full border-purple-300 text-purple-700 hover:bg-purple-50"
-              disabled={idStatus === 'submitted' || idStatus === 'approved' || loading}
+              disabled={idStatus === 'submitted' || idStatus === 'approved' || loading || stripeLoading}
             >
               <Upload className="w-4 h-4 mr-2" />
               {idStatus === 'approved'
@@ -737,6 +1115,35 @@ const UserVerification: React.FC = () => {
                 : t('uploadIdDocument')}
             </Button>
           </div>
+
+          {(automationState.summary || automationState.flags.length > 0) && (
+            <div
+              className={`mt-4 rounded-lg border px-4 py-3 space-y-2 ${
+                automationState.overallStatus === 'approved'
+                  ? 'border-green-200 bg-green-50 text-green-800'
+                  : automationState.overallStatus === 'rejected'
+                  ? 'border-red-200 bg-red-50 text-red-800'
+                  : 'border-amber-200 bg-amber-50 text-amber-900'
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div className="font-medium">Automatic pre-screen</div>
+                <Badge variant="outline" className="capitalize">
+                  {automationState.overallStatus.replace('_', ' ')}
+                </Badge>
+              </div>
+              {automationState.summary ? (
+                <p className="text-sm">{automationState.summary}</p>
+              ) : null}
+              {automationState.flags.length > 0 ? (
+                <ul className="list-disc pl-5 text-xs space-y-1">
+                  {automationState.flags.slice(0, 4).map((flag) => (
+                    <li key={flag}>{flag}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          )}
 
           {verificationState.submittedForReview && (
             <div className="mt-4 p-4 bg-purple-50 rounded-lg text-center">

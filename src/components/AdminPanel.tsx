@@ -20,9 +20,39 @@ type QueueItem = {
   underReview: boolean;
   photoStatus: 'pending' | 'submitted' | 'approved' | 'rejected';
   idStatus: 'pending' | 'submitted' | 'approved' | 'rejected';
-  photoUrl: string | null;
-  idUrl: string | null;
+  photoUrl?: string | null;
+  idUrl?: string | null;
+  autoReview: {
+    overallStatus: 'pending' | 'approved' | 'needs_review' | 'rejected';
+    overallScore: number | null;
+    summary: string | null;
+    flags: string[];
+    reviewedAt: string | null;
+    photo: {
+      summary: string | null;
+      score: number | null;
+      flags: string[];
+    };
+    id: {
+      summary: string | null;
+      score: number | null;
+      flags: string[];
+    };
+  } | null;
+  verificationAudit: {
+    source: string | null;
+    provider: string | null;
+    reviewerType: string | null;
+    decision: string | null;
+    reviewedBy: string | null;
+    reviewedAt: string | null;
+    approvedAt: string | null;
+    rejectedAt: string | null;
+    updatedAt: string | null;
+  } | null;
 };
+
+type QueueAutoReviewStatus = NonNullable<QueueItem['autoReview']>['overallStatus'];
 
 type DecisionTarget = 'photo' | 'id' | 'both';
 type DecisionType = 'approve' | 'reject';
@@ -68,6 +98,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
   const [queueLoading, setQueueLoading] = useState(true);
   const [queueError, setQueueError] = useState<string | null>(null);
   const [queue, setQueue] = useState<QueueItem[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
+  const [historyError, setHistoryError] = useState<string | null>(null);
+  const [history, setHistory] = useState<QueueItem[]>([]);
   const [suggestionsLoading, setSuggestionsLoading] = useState(true);
   const [suggestionsError, setSuggestionsError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<CircleSuggestionItem[]>([]);
@@ -77,6 +110,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
   useEffect(() => {
     if (!user?.id) return;
     void loadQueue();
+    void loadHistory();
     void loadSuggestions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
@@ -92,6 +126,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
   const pendingSuggestionCount = useMemo(
     () => suggestions.filter((item) => item.status === 'pending').length,
     [suggestions]
+  );
+  const approvedHistoryCount = useMemo(
+    () => history.filter((item) => item.verificationAudit?.decision === 'approved').length,
+    [history]
+  );
+  const rejectedHistoryCount = useMemo(
+    () =>
+      history.filter((item) => {
+        const decision = item.verificationAudit?.decision;
+        return decision === 'rejected' || decision === 'canceled';
+      }).length,
+    [history]
   );
 
   const invokeVerificationReview = async (body: Record<string, unknown>) => {
@@ -129,6 +175,39 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
     setIsAdmin(true);
     setQueue((data?.items ?? []) as QueueItem[]);
     setQueueLoading(false);
+  };
+
+  const loadHistory = async () => {
+    if (!user?.id) {
+      setHistoryLoading(false);
+      setHistoryError('Session not ready yet. Please refresh.');
+      return;
+    }
+
+    setHistoryLoading(true);
+    setHistoryError(null);
+
+    const { data, error } = await invokeVerificationReview({ action: 'list_history' });
+
+    if (error) {
+      const message = await resolveFunctionErrorMessage(error);
+      if (message.toLowerCase().includes('admin access required')) {
+        setIsAdmin(false);
+        setHistory([]);
+        setHistoryLoading(false);
+        return;
+      }
+
+      setIsAdmin(true);
+      setHistoryError(message);
+      setHistory([]);
+      setHistoryLoading(false);
+      return;
+    }
+
+    setIsAdmin(true);
+    setHistory((data?.items ?? []) as QueueItem[]);
+    setHistoryLoading(false);
   };
 
   const loadSuggestions = async () => {
@@ -282,12 +361,43 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
     } finally {
       setDecisionLoadingKey(null);
       await loadQueue();
+      await loadHistory();
     }
   };
 
   const openPreview = (url: string | null) => {
     if (!url) return;
     window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const autoReviewBadgeClass = (status: QueueAutoReviewStatus) => {
+    switch (status) {
+      case 'approved':
+        return 'bg-green-100 text-green-700 border-green-200';
+      case 'rejected':
+        return 'bg-red-100 text-red-700 border-red-200';
+      case 'needs_review':
+        return 'bg-amber-100 text-amber-800 border-amber-200';
+      default:
+        return 'bg-slate-100 text-slate-700 border-slate-200';
+    }
+  };
+
+  const formatAuditLabel = (item: QueueItem) => {
+    const audit = item.verificationAudit;
+    if (!audit?.source) return null;
+
+    if (audit.source === 'stripe_identity') {
+      const decision = audit.decision ? audit.decision.replace(/_/g, ' ') : 'updated';
+      return `Stripe Identity • ${decision}`;
+    }
+
+    if (audit.source === 'manual_review') {
+      const decision = audit.decision ? audit.decision.replace(/_/g, ' ') : 'reviewed';
+      return `Manual review • ${decision}`;
+    }
+
+    return audit.source.replace(/_/g, ' ');
   };
 
   if (isAdmin === false) {
@@ -344,6 +454,26 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{pendingSuggestionCount}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Approved history</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{approvedHistoryCount}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Rejected history</CardTitle>
+            <XCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{rejectedHistoryCount}</div>
           </CardContent>
         </Card>
       </div>
@@ -408,7 +538,68 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                   <Badge variant={item.idStatus === 'submitted' ? 'default' : 'secondary'}>
                     {t('idShort')}: {item.idStatus}
                   </Badge>
+                  {item.verificationAudit?.source ? (
+                    <Badge variant="outline" className="border-purple-200 bg-purple-50 text-purple-700">
+                      {formatAuditLabel(item)}
+                    </Badge>
+                  ) : null}
+                  {item.autoReview ? (
+                    <Badge
+                      variant="outline"
+                      className={autoReviewBadgeClass(item.autoReview.overallStatus)}
+                    >
+                      Auto: {item.autoReview.overallStatus.replace('_', ' ')}
+                      {typeof item.autoReview.overallScore === 'number'
+                        ? ` • ${item.autoReview.overallScore}`
+                        : ''}
+                    </Badge>
+                  ) : null}
                 </div>
+
+                {item.autoReview?.summary ? (
+                  <div className="rounded-md border border-amber-200 bg-amber-50/70 px-3 py-2 text-sm text-amber-900 space-y-2">
+                    <div className="font-medium">Automatic pre-screen</div>
+                    <div>{item.autoReview.summary}</div>
+                    {item.autoReview.photo.summary ? (
+                      <div className="text-xs">
+                        <span className="font-medium">Photo:</span> {item.autoReview.photo.summary}
+                      </div>
+                    ) : null}
+                    {item.autoReview.id.summary ? (
+                      <div className="text-xs">
+                        <span className="font-medium">ID:</span> {item.autoReview.id.summary}
+                      </div>
+                    ) : null}
+                    {item.autoReview.flags.length > 0 ? (
+                      <ul className="list-disc pl-5 text-xs space-y-1">
+                        {item.autoReview.flags.slice(0, 4).map((flag) => (
+                          <li key={flag}>{flag}</li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {item.verificationAudit?.source ? (
+                  <div className="rounded-md border border-purple-200 bg-purple-50/70 px-3 py-2 text-xs text-purple-900 space-y-1">
+                    <div className="font-medium">Verification audit</div>
+                    <div>
+                      Source: {item.verificationAudit.source.replace(/_/g, ' ')}
+                      {item.verificationAudit.provider ? ` • Provider: ${item.verificationAudit.provider}` : ''}
+                    </div>
+                    {item.verificationAudit.decision ? (
+                      <div>Decision: {item.verificationAudit.decision.replace(/_/g, ' ')}</div>
+                    ) : null}
+                    {item.verificationAudit.reviewedAt ? (
+                      <div>Reviewed: {new Date(item.verificationAudit.reviewedAt).toLocaleString()}</div>
+                    ) : item.verificationAudit.updatedAt ? (
+                      <div>Updated: {new Date(item.verificationAudit.updatedAt).toLocaleString()}</div>
+                    ) : null}
+                    {item.verificationAudit.reviewedBy ? (
+                      <div>Reviewer ID: {item.verificationAudit.reviewedBy}</div>
+                    ) : null}
+                  </div>
+                ) : null}
 
                 <div className="flex flex-wrap gap-2">
                   <Button
@@ -492,6 +683,99 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     {decisionLoadingKey === rejectBothKey ? `${t('saving')}...` : t('rejectBoth')}
                   </Button>
                 </div>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between gap-3">
+            <CardTitle>Recent verification history</CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => void loadHistory()}
+              disabled={historyLoading}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${historyLoading ? 'animate-spin' : ''}`} />
+              {t('refresh')}
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {historyLoading ? (
+            <div className="text-sm text-muted-foreground">Loading verification history...</div>
+          ) : null}
+
+          {historyError ? (
+            <div className="text-sm text-red-600">{historyError}</div>
+          ) : null}
+
+          {!historyLoading && !historyError && history.length === 0 ? (
+            <div className="text-sm text-muted-foreground">No reviewed verification records yet.</div>
+          ) : null}
+
+          {history.map((item) => {
+            const auditLabel = formatAuditLabel(item);
+            const reviewedAt = item.verificationAudit?.reviewedAt || item.verificationAudit?.updatedAt;
+
+            return (
+              <div key={`history:${item.userId}:${reviewedAt ?? item.submittedAt}`} className="rounded-lg border p-4 space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="font-semibold">{item.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {item.username ? `@${item.username}` : item.userId}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Reviewed: {reviewedAt ? new Date(reviewedAt).toLocaleString() : 'Unknown'}
+                    </div>
+                  </div>
+                  <Badge
+                    variant="outline"
+                    className={
+                      item.verificationAudit?.decision === 'approved'
+                        ? 'border-green-200 bg-green-50 text-green-700'
+                        : 'border-red-200 bg-red-50 text-red-700'
+                    }
+                  >
+                    {(item.verificationAudit?.decision || 'reviewed').replace(/_/g, ' ')}
+                  </Badge>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">
+                    {t('photoShort')}: {item.photoStatus}
+                  </Badge>
+                  <Badge variant="secondary">
+                    {t('idShort')}: {item.idStatus}
+                  </Badge>
+                  {auditLabel ? (
+                    <Badge variant="outline" className="border-purple-200 bg-purple-50 text-purple-700">
+                      {auditLabel}
+                    </Badge>
+                  ) : null}
+                </div>
+
+                {item.verificationAudit?.source ? (
+                  <div className="rounded-md border border-purple-200 bg-purple-50/70 px-3 py-2 text-xs text-purple-900 space-y-1">
+                    <div>
+                      Source: {item.verificationAudit.source.replace(/_/g, ' ')}
+                      {item.verificationAudit.provider ? ` • Provider: ${item.verificationAudit.provider}` : ''}
+                    </div>
+                    {item.verificationAudit.reviewedBy ? (
+                      <div>Reviewer ID: {item.verificationAudit.reviewedBy}</div>
+                    ) : null}
+                    {item.verificationAudit.approvedAt ? (
+                      <div>Approved: {new Date(item.verificationAudit.approvedAt).toLocaleString()}</div>
+                    ) : null}
+                    {item.verificationAudit.rejectedAt ? (
+                      <div>Rejected: {new Date(item.verificationAudit.rejectedAt).toLocaleString()}</div>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
             );
           })}

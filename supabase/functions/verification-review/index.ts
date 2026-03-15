@@ -44,6 +44,14 @@ function toIsoOrNull(value: unknown): string | null {
   return date.toISOString();
 }
 
+function normalizeStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 function buildComputedState(safetySettings: Record<string, unknown>) {
   const photoStatus = normalizeStatus(
     safetySettings.verification_photo_status ?? safetySettings.photo_status,
@@ -68,6 +76,62 @@ function buildComputedState(safetySettings: Record<string, unknown>) {
     submittedForReview,
     underReview,
     completeForAccess,
+  };
+}
+
+function buildVerificationAudit(
+  safetySettings: Record<string, unknown>,
+  updatedAt: unknown
+) {
+  const verificationAudit = asObject(safetySettings.verification_audit);
+  const source =
+    typeof verificationAudit.source === "string"
+      ? verificationAudit.source
+      : safetySettings.photoVerification === true ||
+          normalizeStatus(safetySettings.verification_photo_status, "pending") === "approved" ||
+          normalizeStatus(safetySettings.verification_id_status, "pending") === "approved" ||
+          normalizeStatus(safetySettings.verification_photo_status, "pending") === "rejected" ||
+          normalizeStatus(safetySettings.verification_id_status, "pending") === "rejected"
+        ? "legacy_review"
+        : null;
+  const reviewedAt =
+    toIsoOrNull(verificationAudit.reviewedAt) ??
+    toIsoOrNull(safetySettings.verification_reviewed_at) ??
+    toIsoOrNull(updatedAt);
+  const decision =
+    typeof verificationAudit.decision === "string"
+      ? verificationAudit.decision
+      : safetySettings.photoVerification === true
+        ? "approved"
+        : normalizeStatus(safetySettings.verification_photo_status, "pending") === "rejected" ||
+            normalizeStatus(safetySettings.verification_id_status, "pending") === "rejected"
+          ? "rejected"
+          : null;
+
+  return {
+    source,
+    provider: typeof verificationAudit.provider === "string" ? verificationAudit.provider : null,
+    reviewerType:
+      typeof verificationAudit.reviewerType === "string"
+        ? verificationAudit.reviewerType
+        : source === "legacy_review"
+          ? "legacy"
+          : null,
+    decision,
+    reviewedBy:
+      typeof verificationAudit.reviewedBy === "string"
+        ? verificationAudit.reviewedBy
+        : typeof safetySettings.verification_reviewed_by === "string"
+          ? safetySettings.verification_reviewed_by
+          : null,
+    reviewedAt,
+    approvedAt:
+      toIsoOrNull(verificationAudit.approvedAt) ??
+      (decision === "approved" ? reviewedAt : null),
+    rejectedAt:
+      toIsoOrNull(verificationAudit.rejectedAt) ??
+      (decision === "rejected" || decision === "canceled" ? reviewedAt : null),
+    updatedAt: toIsoOrNull(verificationAudit.updatedAt) ?? toIsoOrNull(updatedAt),
   };
 }
 
@@ -180,6 +244,13 @@ serve(async (req) => {
           toIsoOrNull(safety.verification_submitted_at) ??
           toIsoOrNull((row as Record<string, unknown>).updated_at) ??
           new Date().toISOString();
+        const autoReview = asObject(safety.verification_auto_review);
+        const autoPhoto = asObject(autoReview.photo);
+        const autoId = asObject(autoReview.id);
+        const verificationAudit = buildVerificationAudit(
+          safety,
+          (row as Record<string, unknown>).updated_at
+        );
 
         items.push({
           userId: row.id,
@@ -193,12 +264,117 @@ serve(async (req) => {
           idPath,
           photoUrl,
           idUrl,
+          autoReview: {
+            overallStatus:
+              typeof autoReview.overallStatus === "string" ? autoReview.overallStatus : "pending",
+            overallScore:
+              typeof autoReview.overallScore === "number" ? Math.round(autoReview.overallScore) : null,
+            summary: typeof autoReview.summary === "string" ? autoReview.summary : null,
+            flags: normalizeStringArray(autoReview.flags),
+            reviewedAt: toIsoOrNull(autoReview.reviewedAt),
+            photo: {
+              summary: typeof autoPhoto.summary === "string" ? autoPhoto.summary : null,
+              score: typeof autoPhoto.score === "number" ? Math.round(autoPhoto.score) : null,
+              flags: normalizeStringArray(autoPhoto.flags),
+            },
+            id: {
+              summary: typeof autoId.summary === "string" ? autoId.summary : null,
+              score: typeof autoId.score === "number" ? Math.round(autoId.score) : null,
+              flags: normalizeStringArray(autoId.flags),
+            },
+          },
+          verificationAudit: {
+            source: verificationAudit.source,
+            provider: verificationAudit.provider,
+            reviewerType: verificationAudit.reviewerType,
+            decision: verificationAudit.decision,
+            reviewedBy: verificationAudit.reviewedBy,
+            reviewedAt: verificationAudit.reviewedAt,
+            approvedAt: verificationAudit.approvedAt,
+            rejectedAt: verificationAudit.rejectedAt,
+            updatedAt: verificationAudit.updatedAt,
+          },
         });
       }
 
       items.sort((a, b) => {
         const ta = new Date(String(a.submittedAt ?? 0)).getTime();
         const tb = new Date(String(b.submittedAt ?? 0)).getTime();
+        return tb - ta;
+      });
+
+      return jsonResponse({
+        success: true,
+        items,
+      });
+    }
+
+    if (action === "list_history") {
+      const { data: rows, error } = await service
+        .from("profiles")
+        .select("id, full_name, username, safety_settings, updated_at")
+        .order("updated_at", { ascending: false })
+        .limit(500);
+
+      if (error) throw error;
+
+      const items: Array<Record<string, unknown>> = [];
+      for (const row of rows ?? []) {
+        const safety = asObject((row as Record<string, unknown>).safety_settings);
+        const computed = buildComputedState(safety);
+        const verificationAudit = buildVerificationAudit(
+          safety,
+          (row as Record<string, unknown>).updated_at
+        );
+
+        const isHistoryItem =
+          !!verificationAudit.source &&
+          !!verificationAudit.decision &&
+          verificationAudit.decision !== "started" &&
+          verificationAudit.decision !== "processing";
+
+        if (!isHistoryItem) continue;
+
+        items.push({
+          userId: row.id,
+          name: row.full_name ?? row.username ?? "Member",
+          username: row.username ?? null,
+          submittedAt:
+            toIsoOrNull(safety.verification_submitted_at) ??
+            toIsoOrNull((row as Record<string, unknown>).updated_at) ??
+            new Date().toISOString(),
+          underReview: computed.underReview,
+          photoStatus: computed.photoStatus,
+          idStatus: computed.idStatus,
+          verificationAudit: {
+            source: verificationAudit.source,
+            provider: verificationAudit.provider,
+            reviewerType: verificationAudit.reviewerType,
+            decision: verificationAudit.decision,
+            reviewedBy: verificationAudit.reviewedBy,
+            reviewedAt: verificationAudit.reviewedAt,
+            approvedAt: verificationAudit.approvedAt,
+            rejectedAt: verificationAudit.rejectedAt,
+            updatedAt: verificationAudit.updatedAt,
+          },
+        });
+      }
+
+      items.sort((a, b) => {
+        const ta = new Date(
+          String(
+            (a.verificationAudit as Record<string, unknown> | undefined)?.reviewedAt ??
+              a.submittedAt ??
+              0
+          )
+        ).getTime();
+        const tb = new Date(
+          String(
+            (b.verificationAudit as Record<string, unknown> | undefined)?.reviewedAt ??
+              b.submittedAt ??
+              0
+          )
+        ).getTime();
         return tb - ta;
       });
 
@@ -247,6 +423,18 @@ serve(async (req) => {
       nextSafety.photoVerification = computed.fullyApproved;
       nextSafety.verification_reviewed_at = now;
       nextSafety.verification_reviewed_by = user.id;
+      nextSafety.verification_audit = {
+        ...asObject(safety.verification_audit),
+        source: "manual_review",
+        provider: null,
+        reviewerType: "admin",
+        decision: decision === "approve" ? "approved" : "rejected",
+        reviewedBy: user.id,
+        reviewedAt: now,
+        updatedAt: now,
+        approvedAt: decision === "approve" ? now : null,
+        rejectedAt: decision === "reject" ? now : null,
+      };
 
       if (decision === "reject") {
         nextSafety.verification_rejection_reason = notes || null;
