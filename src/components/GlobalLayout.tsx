@@ -121,7 +121,7 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({
         return (
           <div className="vv-global-header-shell space-y-2 text-center">
             <div className="vv-global-header-primary vv-global-header-flow font-['Inter']">
-              Your Violets Online Calendar and Vibes Social Meetup Hub!
+              Violets and Vibes Social Calendar
             </div>
           </div>
         );
