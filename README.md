@@ -35,6 +35,19 @@ npm run dev
 npm run build
 ```
 
+## Demo Seed Bundle
+
+This repo now includes an optional demo seed utility for local development.
+
+```bash
+npm run generate:avatars
+npm run seed:local
+```
+
+That will generate demo avatars in `public/seed-avatars` and a ready-to-use profile JSON file in `public/demo/seed_profiles.ready.json`.
+
+For Supabase seeding and the full workflow, see `SEEDING.md`.
+
 ## Environment Variables
 
 This project uses environment variables stored in `.env`:

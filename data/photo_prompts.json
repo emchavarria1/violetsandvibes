@@ -1,0 +1,255 @@
+{
+  "base_style": "natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression",
+  "photo_prompts": [
+    {
+      "id": 1,
+      "name": "Maya",
+      "prompt": "Latina woman late 20s with curly hair holding coffee in a bookstore, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 2,
+      "name": "Dani",
+      "prompt": "tattooed queer woman early 30s with confident smile outside an art studio, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 3,
+      "name": "Alexis",
+      "prompt": "queer woman mid 20s in cozy bookstore aisle holding a poetry book, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 4,
+      "name": "Jordan",
+      "prompt": "androgynous nonbinary person on a forest trail with camera strap, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 5,
+      "name": "Sofia",
+      "prompt": "femme Latina woman laughing in a bright kitchen with salsa music vibe, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 6,
+      "name": "Riley",
+      "prompt": "queer painter in studio with paint on hands and soft natural light, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 7,
+      "name": "Tasha",
+      "prompt": "athletic woman tying running shoes in a desert park at sunrise, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 8,
+      "name": "Kira",
+      "prompt": "gamer woman with cozy room lighting and headset resting around neck, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 9,
+      "name": "Sam",
+      "prompt": "masc lesbian leaning near a motorcycle outdoors in mountain air, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 10,
+      "name": "Olivia",
+      "prompt": "creative queer woman at an outdoor music festival just before sunset, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 11,
+      "name": "Paige",
+      "prompt": "yoga instructor seated cross-legged in a peaceful sunlit studio, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 12,
+      "name": "Carmen",
+      "prompt": "chef smiling in a warm kitchen holding a wooden spoon, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 13,
+      "name": "Ash",
+      "prompt": "androgynous skater at a skate park with thrifted streetwear, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 14,
+      "name": "Bianca",
+      "prompt": "professional bi woman walking downtown in a chic outfit, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 15,
+      "name": "Jade",
+      "prompt": "young artist painting on a canvas in a bright studio, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 16,
+      "name": "Leah",
+      "prompt": "woman hiking with rescue dog on a mountain trail, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 17,
+      "name": "Nina",
+      "prompt": "smart playful woman with microphone and headphones in a podcast nook, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 18,
+      "name": "Harper",
+      "prompt": "coffee roaster pouring espresso in a small modern caf\u00e9, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 19,
+      "name": "Zuri",
+      "prompt": "dancer stretching in a mirrored studio with vibrant energy, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 20,
+      "name": "Eliza",
+      "prompt": "bookish woman holding a vintage book in a grand library, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 21,
+      "name": "Sky",
+      "prompt": "stargazer wrapped in a blanket under a clear night sky campsite, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 22,
+      "name": "Morgan",
+      "prompt": "stylish marketing professional on a downtown weekend walk, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 23,
+      "name": "Luna",
+      "prompt": "soft femme woman with candles and crystals in a cozy room, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 24,
+      "name": "Daniella",
+      "prompt": "fitness coach on the beach at golden hour, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 25,
+      "name": "Taylor",
+      "prompt": "androgynous tech developer working on laptop in a modern workspace, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 26,
+      "name": "Casey",
+      "prompt": "masc woman in a woodshop building furniture, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 27,
+      "name": "Aaliyah",
+      "prompt": "singer-songwriter playing acoustic guitar in moody warm light, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 28,
+      "name": "Brooke",
+      "prompt": "interior designer arranging plants in a cozy living room, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 29,
+      "name": "Sienna",
+      "prompt": "photographer holding a vintage camera in city golden hour, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 30,
+      "name": "Remy",
+      "prompt": "writer typing on laptop in a neighborhood coffee shop, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 31,
+      "name": "Clara",
+      "prompt": "therapist sitting comfortably in a warm inviting office, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 32,
+      "name": "Maddy",
+      "prompt": "volleyball player holding a ball near the beach, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 33,
+      "name": "Erin",
+      "prompt": "garden lover watering herbs and tomatoes in a backyard garden, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 34,
+      "name": "Quinn",
+      "prompt": "graphic designer sketching on a tablet in a stylish caf\u00e9, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 35,
+      "name": "Naomi",
+      "prompt": "travel nurse with backpack in an airport terminal, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 36,
+      "name": "Ivy",
+      "prompt": "environmental scientist walking through a green forest trail, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 37,
+      "name": "Alex",
+      "prompt": "androgynous podcast host speaking into a microphone, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 38,
+      "name": "Maya R.",
+      "prompt": "film lover sitting alone in an independent movie theater, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 39,
+      "name": "Rowan",
+      "prompt": "herbalist preparing tea with dried herbs and ceramic mugs, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 40,
+      "name": "Tori",
+      "prompt": "masc skater at an urban skate park at sunset, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 41,
+      "name": "Jasmine",
+      "prompt": "makeup artist doing eyeliner in front of a mirror with studio bulbs, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 42,
+      "name": "Zoe",
+      "prompt": "psychology student studying in a campus library, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 43,
+      "name": "Marissa",
+      "prompt": "karaoke singer holding a microphone on a small stage, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 44,
+      "name": "Elle",
+      "prompt": "meditation guide seated in nature with calm expression, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 45,
+      "name": "Frankie",
+      "prompt": "masc mechanic under a raised car hood smiling, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 46,
+      "name": "Kiara",
+      "prompt": "fashion stylist adjusting a clothing rack in studio light, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 47,
+      "name": "Sasha",
+      "prompt": "runner stretching before a long run near the ocean, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 48,
+      "name": "Alina",
+      "prompt": "baker holding a tray of fresh pastries in a small bakery, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 49,
+      "name": "Brooke M.",
+      "prompt": "social worker smiling on a park bench in soft daylight, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    },
+    {
+      "id": 50,
+      "name": "Val",
+      "prompt": "female pilot standing near a small airplane on a runway, women-centered identity, natural lighting, realistic photo, dating app profile portrait, candid, shallow depth of field, high resolution, friendly expression"
+    }
+  ]
+}

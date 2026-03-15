@@ -9,6 +9,9 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
+    "generate:avatars": "tsx --tsconfig tsconfig.seed.json scripts/generate-placeholders.ts",
+    "seed:local": "tsx --tsconfig tsconfig.seed.json scripts/seed-local.ts",
+    "seed:supabase": "tsx --tsconfig tsconfig.seed.json scripts/seed-supabase.ts",
     "deploy:preview": "npx vercel --yes",
     "deploy:prod": "npx vercel --prod --yes",
     "deploy:prod:force": "npx vercel --prod --yes --force"
@@ -56,6 +59,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
     "embla-carousel-react": "^8.3.0",
     "highlight.js": "^11.9.0",
     "input-otp": "^1.2.4",
@@ -90,6 +94,7 @@
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
+    "tsx": "^4.19.2",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
