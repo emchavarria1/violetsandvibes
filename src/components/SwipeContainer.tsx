@@ -5,7 +5,8 @@ import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { fetchDiscoverProfiles, type ProfileRow } from '@/lib/profiles';
-import { supabase } from '@/lib/supabase';
+import { sendProfileVibe, type ProfileVibe } from '@/lib/vibes';
+import { useToast } from '@/hooks/use-toast';
 
 interface SwipeProfile {
   id: string;
@@ -57,6 +58,7 @@ const mapToSwipeProfile = (profile: ProfileRow): SwipeProfile => ({
 
 const SwipeContainer: React.FC = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [profiles, setProfiles] = useState<SwipeProfile[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -95,14 +97,14 @@ const SwipeContainer: React.FC = () => {
     setCurrentIndex((prev) => prev + 1);
   };
 
-  const handleSwipeLeft = () => {
+  const handlePass = () => {
     if (isLimitReached) return;
     if (!incrementSwipe()) return;
 
     advance();
   };
 
-  const handleSwipeRight = async () => {
+  const handleSendVibe = async (vibe: ProfileVibe) => {
     if (isLimitReached) return;
     if (!incrementSwipe()) return;
 
@@ -114,15 +116,21 @@ const SwipeContainer: React.FC = () => {
 
     setSubmittingLike(true);
     try {
-      const { error: likeError } = await supabase.from('likes').insert({
-        liker_id: user.id,
-        liked_id: currentProfile.id,
-      });
+      const result = await sendProfileVibe(user.id, currentProfile.id, vibe);
 
-      // unique violation means this user was already liked before.
-      if (likeError && likeError.code !== '23505') throw likeError;
+      toast({
+        title: result.matched ? "It’s a match 💜" : `Sent a ${vibe} vibe`,
+        description: result.matched
+          ? `You and ${currentProfile.name} can message each other now.`
+          : `${currentProfile.name} will see that you led with ${vibe} energy.`,
+      });
     } catch (likeError: any) {
-      console.error('Failed to like profile during swipe:', likeError);
+      console.error('Failed to send vibe during discovery:', likeError);
+      toast({
+        title: "Could not send vibe",
+        description: likeError?.message || "Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setSubmittingLike(false);
       advance();
@@ -163,10 +171,10 @@ const SwipeContainer: React.FC = () => {
         <div className="text-center p-8 max-w-md">
           <div className="text-6xl mb-4">⏰</div>
           <h2 className="text-2xl font-bold text-white mb-2">
-            Daily Swipe Limit Reached!
+            Daily Discovery Limit Reached
           </h2>
           <p className="text-white/80 mb-6">
-            You've used all 50 of your daily swipes. Upgrade to 💜 Violets Verified Plus for unlimited swipes!
+            You've used all 50 of your daily discovery actions. Upgrade to 💜 Violets Verified Plus for more room to connect.
           </p>
           <Button className="btn-pride">
             Upgrade to 💜 Violets Verified Plus
@@ -199,7 +207,7 @@ const SwipeContainer: React.FC = () => {
         <Card className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm">
           <CardContent className="p-3">
             <p className="text-sm font-medium">
-              {remainingSwipes} swipes left today
+              {remainingSwipes} discovery actions left today
             </p>
           </CardContent>
         </Card>
@@ -207,8 +215,9 @@ const SwipeContainer: React.FC = () => {
       
       <ProfileCard
         profile={currentProfile}
-        onSwipeLeft={submittingLike ? () => {} : handleSwipeLeft}
-        onSwipeRight={submittingLike ? () => {} : (() => { void handleSwipeRight(); })}
+        onPass={submittingLike ? () => {} : handlePass}
+        onSendVibe={submittingLike ? () => {} : ((vibe) => { void handleSendVibe(vibe); })}
+        isSendingVibe={submittingLike}
       />
     </div>
   );

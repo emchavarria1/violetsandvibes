@@ -12,6 +12,7 @@
     "generate:avatars": "tsx --tsconfig tsconfig.seed.json scripts/generate-placeholders.ts",
     "seed:local": "tsx --tsconfig tsconfig.seed.json scripts/seed-local.ts",
     "seed:supabase": "tsx --tsconfig tsconfig.seed.json scripts/seed-supabase.ts",
+    "seed:refresh": "tsx --tsconfig tsconfig.seed.json scripts/refresh-seed-engagement.ts",
     "deploy:preview": "npx vercel --yes",
     "deploy:prod": "npx vercel --prod --yes",
     "deploy:prod:force": "npx vercel --prod --yes --force"

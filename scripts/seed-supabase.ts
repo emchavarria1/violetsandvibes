@@ -1,14 +1,13 @@
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
-import { v5 as uuidv5 } from 'uuid';
 import seedData from '../data/seed_profiles.json' with { type: 'json' };
+import { ensureSeedAuthUsers, slugToUsername } from './seed-auth-users.js';
 
 dotenv.config({ path: process.env.DOTENV_CONFIG_PATH || '.env.seed' });
 
-const url = process.env.SUPABASE_URL;
+const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const table = process.env.SUPABASE_TABLE || 'profiles';
-const namespace = 'a7be2314-b8cc-4a2a-a5f8-f4cb3721fd30';
 
 if (!url || !key) {
   throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in your .env file');
@@ -21,10 +20,6 @@ const supabase = createClient(url, key, {
   },
 });
 
-function slugToUsername(slug: string) {
-  return slug.replace(/[^a-z0-9_]+/gi, '_').replace(/^_+|_+$/g, '').toLowerCase();
-}
-
 function deriveBirthdate(age: number) {
   const today = new Date();
   const year = today.getUTCFullYear() - age;
@@ -33,10 +28,17 @@ function deriveBirthdate(age: number) {
 
 async function run() {
   const now = new Date().toISOString();
+  const authUsers = await ensureSeedAuthUsers(supabase as any, seedData.seed_profiles);
   const rows = seedData.seed_profiles.map((profile) => {
     const photoPath = `/seed-avatars/${profile.slug}.svg`;
+    const authUser = authUsers.get(profile.slug);
+
+    if (!authUser?.id) {
+      throw new Error(`Missing seeded auth user for ${profile.slug}`);
+    }
+
     return {
-      id: uuidv5(`vv-seed:${profile.slug}`, namespace),
+      id: authUser.id,
       full_name: profile.name,
       username: slugToUsername(profile.slug),
       bio: profile.bio,
@@ -51,13 +53,17 @@ async function run() {
       privacy_settings: {
         demo_profile: true,
         demo_label: profile.demo_label,
+        profileDiscoverable: true,
+        hideFromSearch: false,
         intentions: profile.intentions,
         pronouns: profile.pronouns,
         vibe_tags: profile.vibe_tags,
         conversation_starter: profile.conversation_starter,
+        seeded_demo_email: authUser.email,
       },
       safety_settings: {
         seeded_demo_profile: true,
+        photoVerification: true,
       },
       created_at: now,
       updated_at: now,

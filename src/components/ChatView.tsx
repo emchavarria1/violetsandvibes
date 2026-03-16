@@ -5,10 +5,16 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { extractBlockedUserIds } from "@/lib/safety";
 import { getOrCreateCircleConversation } from "@/lib/messaging";
+import {
+  appendCommunityGuideExchange,
+  COMMUNITY_GUIDE_CONVERSATION_ID,
+  loadCommunityGuideThread,
+  type CommunityGuideMessage,
+} from "@/lib/communityGuide";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, Flag, Heart, Lightbulb, Loader2, MessageCircle, Users } from "lucide-react";
+import { ChevronLeft, Compass, Flag, Heart, Lightbulb, Loader2, MessageCircle, Sparkles, Users } from "lucide-react";
 
 type ConversationMemberRow = {
   conversation_id: string;
@@ -45,7 +51,7 @@ type ProfileRow = {
 
 type ConversationListItem = {
   conversationId: string;
-  kind: "direct" | "circle";
+  kind: "direct" | "circle" | "guide";
   circleName: string | null;
   otherUserId: string | null;
   otherName: string;
@@ -74,6 +80,8 @@ type MessageReactionRow = {
   reaction: "heart";
   created_at: string;
 };
+
+const COMMUNITY_GUIDE_SENDER_ID = "__community_guide__";
 
 function timeAgo(iso?: string | null) {
   if (!iso) return "";
@@ -105,6 +113,25 @@ function previewText(s?: string | null, max = 60) {
 function isMissingCircleConversationMetadata(error: { message?: string } | null | undefined) {
   const message = (error?.message || "").toLowerCase();
   return message.includes("kind") || message.includes("circle_name");
+}
+
+function toGuideMessageRows(thread: CommunityGuideMessage[], userId: string): MessageRow[] {
+  return thread.map((entry) => ({
+    id: entry.id,
+    conversation_id: COMMUNITY_GUIDE_CONVERSATION_ID,
+    sender_id: entry.role === "user" ? userId : COMMUNITY_GUIDE_SENDER_ID,
+    body: entry.body,
+    created_at: entry.createdAt,
+  }));
+}
+
+function fromGuideMessageRows(rows: MessageRow[], userId: string): CommunityGuideMessage[] {
+  return rows.map((row) => ({
+    id: row.id,
+    role: row.sender_id === userId ? "user" : "guide",
+    body: row.body,
+    createdAt: row.created_at,
+  }));
 }
 
 const EMPTY_CHAT_PROMPTS = [
@@ -142,6 +169,13 @@ const PROMPT_CATEGORIES = [
       "What does a respectful first conversation look like to you?",
     ],
   },
+] as const;
+
+const COMMUNITY_GUIDE_LINKS = [
+  { label: "Discover", href: "/discover" },
+  { label: "Social", href: "/social" },
+  { label: "Calendar", href: "/calendar" },
+  { label: "Verify", href: "/verification" },
 ] as const;
 
 const ChatView: React.FC = () => {
@@ -194,6 +228,35 @@ const ChatView: React.FC = () => {
     () => Array.from(blockedUserIds).sort().join(","),
     [blockedUserIds]
   );
+  const guideDisplayName = useMemo(() => {
+    const fullName = `${user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? ""}`.trim();
+    if (fullName) return fullName;
+    const username = `${user?.user_metadata?.username ?? ""}`.trim();
+    if (username) return username;
+    const email = user?.email ?? "";
+    return email.includes("@") ? email.split("@")[0] : "there";
+  }, [user?.email, user?.user_metadata]);
+
+  const getGuideItem = () => {
+    if (!user?.id) return null;
+    const guideRows = toGuideMessageRows(loadCommunityGuideThread(user.id, guideDisplayName), user.id);
+    const latest = guideRows[guideRows.length - 1] ?? null;
+
+    return {
+      conversationId: COMMUNITY_GUIDE_CONVERSATION_ID,
+      kind: "guide" as const,
+      circleName: null,
+      otherUserId: null,
+      otherName: "Community Guide",
+      otherPhoto: null,
+      memberCount: 1,
+      lastMessageAt: latest?.created_at ?? null,
+      lastReadAt: latest?.created_at ?? null,
+      hasUnread: false,
+      lastMessagePreview: previewText(latest?.body ?? "Guided onboarding and feature help"),
+      lastMessageSenderId: latest?.sender_id ?? COMMUNITY_GUIDE_SENDER_ID,
+    };
+  };
 
   // Keep URL -> state in sync
   useEffect(() => {
@@ -230,7 +293,7 @@ const ChatView: React.FC = () => {
   useEffect(() => {
     if (queryConversationId || queryCircleName) return;
     if (!activeConversationId && conversations.length > 0) {
-      const first = conversations[0];
+      const first = conversations.find((item) => item.kind !== "guide") ?? conversations[0];
       const firstId = first.conversationId;
       setActiveConversationId(firstId);
       navigate(`/chat?c=${firstId}`, { replace: true });
@@ -318,6 +381,8 @@ const ChatView: React.FC = () => {
     setListError(null);
 
     try {
+      const guideItem = getGuideItem();
+
       // 1) My memberships
       const { data: myMemberships, error: memErr } = await supabase
         .from("conversation_members")
@@ -330,7 +395,7 @@ const ChatView: React.FC = () => {
       const convoIds = memberships.map((m) => m.conversation_id);
 
       if (convoIds.length === 0) {
-        setConversations([]);
+        setConversations(guideItem ? [guideItem] : []);
         return;
       }
 
@@ -499,7 +564,7 @@ const ChatView: React.FC = () => {
         return tb - ta;
       });
 
-      setConversations(visibleItems);
+      setConversations(guideItem ? [guideItem, ...visibleItems] : visibleItems);
     } catch (e: any) {
       console.error(e);
       setListError(e?.message || "Failed to load conversations");
@@ -544,6 +609,7 @@ const ChatView: React.FC = () => {
 
   const markConversationRead = async (conversationId: string) => {
     if (!user) return;
+    if (conversationId === COMMUNITY_GUIDE_CONVERSATION_ID) return;
     const now = new Date().toISOString();
 
     // optimistic list update
@@ -569,6 +635,28 @@ const ChatView: React.FC = () => {
 
   const loadThread = async (conversationId: string) => {
     if (!user) return;
+
+    if (conversationId === COMMUNITY_GUIDE_CONVERSATION_ID) {
+      setThreadLoading(true);
+      setThreadError(null);
+      try {
+        const guideRows = toGuideMessageRows(
+          loadCommunityGuideThread(user.id, guideDisplayName),
+          user.id
+        );
+        setMessages(guideRows);
+        setHeartCountsByMessageId({});
+        setHeartedMessageIds(new Set());
+        setFirstUnreadMessageId(null);
+      } catch (e: any) {
+        console.error(e);
+        setMessages([]);
+        setThreadError("Could not load the Community Guide.");
+      } finally {
+        setThreadLoading(false);
+      }
+      return;
+    }
 
     const activeConvo = conversations.find((c) => c.conversationId === conversationId);
     if (
@@ -699,6 +787,32 @@ const ChatView: React.FC = () => {
     if (!user || !activeConversationId) return;
     const body = draft.trim();
     if (!body) return;
+
+    if (activeConversationId === COMMUNITY_GUIDE_CONVERSATION_ID) {
+      const nextThread = appendCommunityGuideExchange(
+        user.id,
+        fromGuideMessageRows(messages, user.id),
+        body
+      );
+      const nextRows = toGuideMessageRows(nextThread, user.id);
+      setMessages(nextRows);
+      setDraft("");
+      const latest = nextRows[nextRows.length - 1] ?? null;
+      setConversations((prev) =>
+        prev.map((conversation) =>
+          conversation.conversationId === COMMUNITY_GUIDE_CONVERSATION_ID
+            ? {
+                ...conversation,
+                lastMessageAt: latest?.created_at ?? conversation.lastMessageAt,
+                lastMessagePreview:
+                  previewText(latest?.body ?? null) ?? conversation.lastMessagePreview,
+                lastMessageSenderId: latest?.sender_id ?? conversation.lastMessageSenderId,
+              }
+            : conversation
+        )
+      );
+      return;
+    }
 
     setSending(true);
 
@@ -961,7 +1075,7 @@ const ChatView: React.FC = () => {
   }, [firstUnreadMessageId, newDividerSeen]);
 
   useEffect(() => {
-    if (!user || !activeConversationId) {
+    if (!user || !activeConversationId || activeConversationId === COMMUNITY_GUIDE_CONVERSATION_ID) {
       setOtherOnline(false);
       return;
     }
@@ -991,7 +1105,7 @@ const ChatView: React.FC = () => {
   }, [user?.id, activeConversationId, showOnlineEnabled]);
 
   useEffect(() => {
-    if (!user || !activeConversationId) {
+    if (!user || !activeConversationId || activeConversationId === COMMUNITY_GUIDE_CONVERSATION_ID) {
       setOtherTyping(false);
       setShowPromptPicker(false);
       return;
@@ -1032,7 +1146,7 @@ const ChatView: React.FC = () => {
   }, [user?.id, activeConversationId]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || activeConversationId === COMMUNITY_GUIDE_CONVERSATION_ID) return;
 
     // Subscribe to any message INSERTs for conversations where I'm a member
     const channel = supabase
@@ -1113,7 +1227,13 @@ const ChatView: React.FC = () => {
   }, [user?.id, activeConversationId]);
 
   useEffect(() => {
-    if (!user || !activeConversationId || !heartsEnabled) return;
+    if (
+      !user ||
+      !activeConversationId ||
+      activeConversationId === COMMUNITY_GUIDE_CONVERSATION_ID ||
+      !heartsEnabled
+    )
+      return;
 
     const channel = supabase
       .channel(`vv-chat-hearts-${activeConversationId}`)
@@ -1262,7 +1382,11 @@ const ChatView: React.FC = () => {
                     <div className="flex items-center gap-3">
                       {/* Avatar */}
                       <div className="relative">
-                        {c.kind === "circle" ? (
+                        {c.kind === "guide" ? (
+                          <div className="w-10 h-10 rounded-full bg-pink-500/15 border border-pink-300/30 flex items-center justify-center text-white font-semibold">
+                            <Compass className="w-5 h-5 text-pink-200" />
+                          </div>
+                        ) : c.kind === "circle" ? (
                           <div className="w-10 h-10 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white font-semibold">
                             <Users className="w-5 h-5 text-pink-200" />
                           </div>
@@ -1295,7 +1419,9 @@ const ChatView: React.FC = () => {
                         <div className="text-xs text-white/55 mt-0.5 truncate">
                           {c.lastMessagePreview
                             ? c.lastMessagePreview
-                            : c.kind === "circle"
+                            : c.kind === "guide"
+                              ? "Guided onboarding and feature help"
+                              : c.kind === "circle"
                               ? c.memberCount === 1
                                 ? "You are the first member here."
                                 : `${c.memberCount} members`
@@ -1334,7 +1460,9 @@ const ChatView: React.FC = () => {
                 {active ? active.otherName : "Select a conversation"}
               </div>
               {active ? (
-                active.kind === "circle" ? (
+                active.kind === "guide" ? (
+                  <div className="text-xs text-pink-200">System guide</div>
+                ) : active.kind === "circle" ? (
                   <div className="text-xs text-white/60">{active.memberCount} members</div>
                 ) : otherOnline ? (
                   <div className="text-xs text-green-300">Online</div>
@@ -1351,7 +1479,7 @@ const ChatView: React.FC = () => {
               ) : null}
               </div>
             </div>
-            {active ? (
+            {active && active.kind !== "guide" ? (
               <div className="flex items-center gap-2">
                 <Button
                   size="sm"
@@ -1376,7 +1504,9 @@ const ChatView: React.FC = () => {
 
           {activeConversationId ? (
             <div className="px-4 py-2 border-b border-white/10 bg-white/5 text-[11px] sm:text-xs text-white/75">
-              Respect and accountability are expected in all conversations.
+              {active?.kind === "guide"
+                ? "Community Guide is a clearly labeled system assistant. It helps orient members and does not represent a real person."
+                : "Respect and accountability are expected in all conversations."}
             </div>
           ) : null}
 
@@ -1398,6 +1528,52 @@ const ChatView: React.FC = () => {
               <Card className="bg-pink-900/20 border-pink-400/30 text-pink-100 p-3">
                 {threadError}
               </Card>
+            ) : active?.kind === "guide" ? (
+              <div className="space-y-4">
+                <Card className="border border-pink-300/20 bg-pink-500/10 p-4 text-white/90">
+                  <div className="flex items-start gap-3">
+                    <Sparkles className="mt-0.5 h-5 w-5 text-pink-200" />
+                    <div className="space-y-3">
+                      <div className="font-semibold">Community Guide</div>
+                      <div className="text-sm text-white/80">
+                        Use this thread for orientation, feature routing, and safe next steps. It is a system guide, not a real member.
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {COMMUNITY_GUIDE_LINKS.map((link) => (
+                          <Button
+                            key={link.href}
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="border-white/20 text-white hover:bg-white/10"
+                            onClick={() => navigate(link.href)}
+                          >
+                            {link.label}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+                {messages.map((m) => {
+                  const mine = m.sender_id === user.id;
+
+                  return (
+                    <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+                      <div
+                        className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm whitespace-pre-wrap shadow-[0_12px_30px_rgba(0,0,0,0.22)] ${
+                          mine
+                            ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white"
+                            : "border border-pink-300/20 bg-[#2B1F3F] text-white/92"
+                        }`}
+                      >
+                        {m.body}
+                        <div className="mt-1 text-[11px] opacity-70">{timeAgo(m.created_at)}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             ) : messages.length === 0 ? (
               <div className="text-white/70">
                 No messages yet. Say hi ✨
@@ -1408,7 +1584,10 @@ const ChatView: React.FC = () => {
                 const showDivider = m.id === firstUnreadMessageId;
                 const isHearted = heartedMessageIds.has(m.id);
                 const heartCount = heartCountsByMessageId[m.id] ?? 0;
-                const canHeart = heartsEnabled && !m.id.startsWith("temp_");
+                const canHeart =
+                  heartsEnabled &&
+                  active?.kind !== "guide" &&
+                  !m.id.startsWith("temp_");
 
                 return (
                   <React.Fragment key={m.id}>
@@ -1436,7 +1615,7 @@ const ChatView: React.FC = () => {
                         {m.body}
                         <div className="mt-1 flex items-center justify-between gap-3">
                           <div className="text-[11px] opacity-70">{timeAgo(m.created_at)}</div>
-                          {heartsEnabled ? (
+                          {heartsEnabled && active?.kind !== "guide" ? (
                             <button
                               type="button"
                               disabled={!canHeart}
@@ -1529,7 +1708,13 @@ const ChatView: React.FC = () => {
               <Input
                 value={draft}
                 onChange={(e) => onDraftChange(e.target.value)}
-                placeholder={activeConversationId ? "Write a message…" : "Select a conversation…"}
+                placeholder={
+                  !activeConversationId
+                    ? "Select a conversation…"
+                    : active?.kind === "guide"
+                      ? "Ask the Community Guide…"
+                      : "Write a message…"
+                }
                 disabled={!activeConversationId || sending}
                 className="bg-violet-900/30 border-violet-400/30 text-white placeholder:text-white/50"
                 onKeyDown={(e) => {

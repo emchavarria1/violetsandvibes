@@ -41,6 +41,7 @@ const readyProfiles = seedData.seed_profiles.map((profile) => {
       intentions: profile.intentions,
       pronouns: profile.pronouns,
       vibe_tags: profile.vibe_tags,
+      conversation_starter: profile.conversation_starter,
     },
     safety_settings: {
       seeded_demo_profile: true,

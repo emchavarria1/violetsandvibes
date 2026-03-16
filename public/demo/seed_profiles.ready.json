@@ -14,12 +14,15 @@
         "farmers markets",
         "reading"
       ],
-      "conversation_starter": "What's your perfect slow Sunday?",
+      "conversation_starter": "What song instantly lifts your mood?",
       "vibe_tags": [
         "calm",
         "thoughtful",
-        "cozy"
+        "cozy",
+        "old-soul"
       ],
+      "vibe_prompt": "Maya's vibe today: calm • thoughtful • cozy • old-soul",
+      "demo_activity": "Currently refreshing her profile and exploring new conversations.",
       "slug": "maya-1",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -45,7 +48,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.956Z",
+      "last_active_at": "2026-03-15T22:57:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -60,12 +63,19 @@
         "vibe_tags": [
           "calm",
           "thoughtful",
-          "cozy"
-        ]
+          "cozy",
+          "old-soul"
+        ],
+        "conversation_starter": "What song instantly lifts your mood?",
+        "vibe_prompt": "Maya's vibe today: calm • thoughtful • cozy • old-soul",
+        "demo_activity": "Currently refreshing her profile and exploring new conversations.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T22:57:29.791Z"
     },
     {
       "id": "108c41b4-9475-520f-8016-31d97bc658ef",
@@ -81,12 +91,15 @@
         "road trips",
         "art"
       ],
-      "conversation_starter": "If you could take a spontaneous road trip tomorrow where would you go?",
+      "conversation_starter": "What dessert would win your heart immediately?",
       "vibe_tags": [
         "adventurous",
         "creative",
-        "loyal"
+        "loyal",
+        "witchy"
       ],
+      "vibe_prompt": "Dani is leaning into adventurous, creative, loyal, witchy energy today.",
+      "demo_activity": "Active in the community and open to intentional dating.",
       "slug": "dani-2",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -112,7 +125,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.957Z",
+      "last_active_at": "2026-03-15T21:08:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -127,12 +140,19 @@
         "vibe_tags": [
           "adventurous",
           "creative",
-          "loyal"
-        ]
+          "loyal",
+          "witchy"
+        ],
+        "conversation_starter": "What dessert would win your heart immediately?",
+        "vibe_prompt": "Dani is leaning into adventurous, creative, loyal, witchy energy today.",
+        "demo_activity": "Active in the community and open to intentional dating.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T21:08:29.791Z"
     },
     {
       "id": "3f2b653c-05ee-50eb-be71-45f32e2f577a",
@@ -148,12 +168,15 @@
         "coffee",
         "movies"
       ],
-      "conversation_starter": "What book changed your life?",
+      "conversation_starter": "What's your favorite way to reset after a long week?",
       "vibe_tags": [
         "romantic",
         "intellectual",
-        "soft"
+        "soft",
+        "grounded"
       ],
+      "vibe_prompt": "Current mood: romantic • intellectual • soft • grounded",
+      "demo_activity": "In a social mood today and open to a warm first hello.",
       "slug": "alexis-3",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -179,7 +202,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.957Z",
+      "last_active_at": "2026-03-15T14:11:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -194,12 +217,19 @@
         "vibe_tags": [
           "romantic",
           "intellectual",
-          "soft"
-        ]
+          "soft",
+          "grounded"
+        ],
+        "conversation_starter": "What's your favorite way to reset after a long week?",
+        "vibe_prompt": "Current mood: romantic • intellectual • soft • grounded",
+        "demo_activity": "In a social mood today and open to a warm first hello.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T14:11:29.791Z"
     },
     {
       "id": "6454bcd1-1762-5664-a506-d457cdad85e3",
@@ -215,12 +245,15 @@
         "nature",
         "travel"
       ],
-      "conversation_starter": "Mountains or ocean?",
+      "conversation_starter": "Would you rather have a beach date or a game night date?",
       "vibe_tags": [
         "outdoorsy",
         "curious",
-        "grounded"
+        "grounded",
+        "compassionate"
       ],
+      "vibe_prompt": "Best opener for Jordan today: match the outdoorsy energy.",
+      "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
       "slug": "jordan-4",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -246,7 +279,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.957Z",
+      "last_active_at": "2026-03-15T14:46:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -261,12 +294,19 @@
         "vibe_tags": [
           "outdoorsy",
           "curious",
-          "grounded"
-        ]
+          "grounded",
+          "compassionate"
+        ],
+        "conversation_starter": "Would you rather have a beach date or a game night date?",
+        "vibe_prompt": "Best opener for Jordan today: match the outdoorsy energy.",
+        "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T14:46:29.791Z"
     },
     {
       "id": "a1a5b5b3-54fa-5390-ae91-6573f94f23dd",
@@ -282,12 +322,15 @@
         "music",
         "travel"
       ],
-      "conversation_starter": "Favorite comfort food?",
+      "conversation_starter": "If you could take a spontaneous road trip tomorrow where would you go?",
       "vibe_tags": [
         "playful",
         "social",
-        "warm"
+        "warm",
+        "mindful"
       ],
+      "vibe_prompt": "Current mood: playful • social • warm • mindful",
+      "demo_activity": "Checking the social feed and planning something low-key this week.",
       "slug": "sofia-5",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -313,7 +356,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T22:15:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -328,12 +371,19 @@
         "vibe_tags": [
           "playful",
           "social",
-          "warm"
-        ]
+          "warm",
+          "mindful"
+        ],
+        "conversation_starter": "If you could take a spontaneous road trip tomorrow where would you go?",
+        "vibe_prompt": "Current mood: playful • social • warm • mindful",
+        "demo_activity": "Checking the social feed and planning something low-key this week.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T22:15:29.791Z"
     },
     {
       "id": "67ecd520-688b-5c48-9d29-19289b660054",
@@ -349,12 +399,15 @@
         "journaling",
         "art"
       ],
-      "conversation_starter": "What creative hobby helps you relax?",
+      "conversation_starter": "What's something people misunderstand about you at first?",
       "vibe_tags": [
         "empathetic",
         "artsy",
-        "steady"
+        "steady",
+        "creative"
       ],
+      "vibe_prompt": "Current mood: empathetic • artsy • steady • creative",
+      "demo_activity": "Checking the social feed and planning something low-key this week.",
       "slug": "riley-6",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -380,7 +433,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T18:55:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -395,12 +448,19 @@
         "vibe_tags": [
           "empathetic",
           "artsy",
-          "steady"
-        ]
+          "steady",
+          "creative"
+        ],
+        "conversation_starter": "What's something people misunderstand about you at first?",
+        "vibe_prompt": "Current mood: empathetic • artsy • steady • creative",
+        "demo_activity": "Checking the social feed and planning something low-key this week.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T18:55:29.791Z"
     },
     {
       "id": "6f4aff32-8c0f-509c-a3d9-9e703461d025",
@@ -416,12 +476,15 @@
         "hiking",
         "wellness"
       ],
-      "conversation_starter": "Morning workouts or night workouts?",
+      "conversation_starter": "What book changed your life?",
       "vibe_tags": [
         "energetic",
         "balanced",
-        "motivated"
+        "motivated",
+        "loyal"
       ],
+      "vibe_prompt": "Tasha is leaning into energetic, balanced, motivated, loyal energy today.",
+      "demo_activity": "Open to a cozy coffee chat and nearby community events.",
       "slug": "tasha-7",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -447,7 +510,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T17:44:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -462,12 +525,19 @@
         "vibe_tags": [
           "energetic",
           "balanced",
-          "motivated"
-        ]
+          "motivated",
+          "loyal"
+        ],
+        "conversation_starter": "What book changed your life?",
+        "vibe_prompt": "Tasha is leaning into energetic, balanced, motivated, loyal energy today.",
+        "demo_activity": "Open to a cozy coffee chat and nearby community events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T17:44:29.791Z"
     },
     {
       "id": "a184bd84-19ef-5e15-81bc-d7955a07bfc1",
@@ -483,12 +553,15 @@
         "ramen",
         "movies"
       ],
-      "conversation_starter": "Favorite game ever?",
+      "conversation_starter": "Favorite comfort food?",
       "vibe_tags": [
         "funny",
         "nerdy",
-        "cozy"
+        "cozy",
+        "kind"
       ],
+      "vibe_prompt": "Kira's vibe today: funny • nerdy • cozy • kind",
+      "demo_activity": "Currently refreshing her profile and exploring new conversations.",
       "slug": "kira-8",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -514,7 +587,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T19:21:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -529,12 +602,19 @@
         "vibe_tags": [
           "funny",
           "nerdy",
-          "cozy"
-        ]
+          "cozy",
+          "kind"
+        ],
+        "conversation_starter": "Favorite comfort food?",
+        "vibe_prompt": "Kira's vibe today: funny • nerdy • cozy • kind",
+        "demo_activity": "Currently refreshing her profile and exploring new conversations.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T19:21:29.791Z"
     },
     {
       "id": "9705040b-f291-5d5e-8f0c-d3abbc8b2a76",
@@ -550,12 +630,15 @@
         "camping",
         "road trips"
       ],
-      "conversation_starter": "Dream road trip?",
+      "conversation_starter": "What's a moment you wish you could freeze in time?",
       "vibe_tags": [
         "protective",
         "hands-on",
-        "adventurous"
+        "adventurous",
+        "creative"
       ],
+      "vibe_prompt": "Best opener for Sam today: match the protective energy.",
+      "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
       "slug": "sam-9",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -581,7 +664,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T18:46:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -596,12 +679,19 @@
         "vibe_tags": [
           "protective",
           "hands-on",
-          "adventurous"
-        ]
+          "adventurous",
+          "creative"
+        ],
+        "conversation_starter": "What's a moment you wish you could freeze in time?",
+        "vibe_prompt": "Best opener for Sam today: match the protective energy.",
+        "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T18:46:29.791Z"
     },
     {
       "id": "59252391-f70f-5ab1-bd5b-140bfb46bc68",
@@ -617,12 +707,15 @@
         "concerts",
         "travel"
       ],
-      "conversation_starter": "Best concert you've ever been to?",
+      "conversation_starter": "Would you rather spend a weekend in the mountains or by a lake?",
       "vibe_tags": [
         "sparkly",
         "social",
-        "creative"
+        "creative",
+        "witchy"
       ],
+      "vibe_prompt": "Current mood: sparkly • social • creative • witchy",
+      "demo_activity": "Checking the social feed and planning something low-key this week.",
       "slug": "olivia-10",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -648,7 +741,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T15:03:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -663,12 +756,19 @@
         "vibe_tags": [
           "sparkly",
           "social",
-          "creative"
-        ]
+          "creative",
+          "witchy"
+        ],
+        "conversation_starter": "Would you rather spend a weekend in the mountains or by a lake?",
+        "vibe_prompt": "Current mood: sparkly • social • creative • witchy",
+        "demo_activity": "Checking the social feed and planning something low-key this week.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T15:03:29.791Z"
     },
     {
       "id": "d705a875-1f0a-55c6-bc31-c080e90f4050",
@@ -684,12 +784,15 @@
         "nature",
         "wellness"
       ],
-      "conversation_starter": "Do you start your day with coffee or calm?",
+      "conversation_starter": "Would you rather have a beach date or a game night date?",
       "vibe_tags": [
         "peaceful",
         "centered",
-        "gentle"
+        "gentle",
+        "cosmic"
       ],
+      "vibe_prompt": "Best opener for Paige today: match the peaceful energy.",
+      "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
       "slug": "paige-11",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -715,7 +818,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T15:06:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -730,12 +833,19 @@
         "vibe_tags": [
           "peaceful",
           "centered",
-          "gentle"
-        ]
+          "gentle",
+          "cosmic"
+        ],
+        "conversation_starter": "Would you rather have a beach date or a game night date?",
+        "vibe_prompt": "Best opener for Paige today: match the peaceful energy.",
+        "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T15:06:29.791Z"
     },
     {
       "id": "2af6b2c9-c372-53c1-a68b-f7ed993d1b4e",
@@ -751,12 +861,15 @@
         "wine",
         "travel"
       ],
-      "conversation_starter": "What’s your favorite dish?",
+      "conversation_starter": "Would you rather spend a weekend in the mountains or by a lake?",
       "vibe_tags": [
         "confident",
         "nurturing",
-        "sensual"
+        "sensual",
+        "funny"
       ],
+      "vibe_prompt": "Carmen's vibe today: confident • nurturing • sensual • funny",
+      "demo_activity": "Exploring circles, local events, and one good new conversation.",
       "slug": "carmen-12",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -782,7 +895,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T12:53:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -797,12 +910,19 @@
         "vibe_tags": [
           "confident",
           "nurturing",
-          "sensual"
-        ]
+          "sensual",
+          "funny"
+        ],
+        "conversation_starter": "Would you rather spend a weekend in the mountains or by a lake?",
+        "vibe_prompt": "Carmen's vibe today: confident • nurturing • sensual • funny",
+        "demo_activity": "Exploring circles, local events, and one good new conversation.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T12:53:29.791Z"
     },
     {
       "id": "e6032c56-7c8b-545d-933b-2185be656ba5",
@@ -818,12 +938,15 @@
         "indie music",
         "streetwear"
       ],
-      "conversation_starter": "Best thrift find ever?",
+      "conversation_starter": "What's something people misunderstand about you at first?",
       "vibe_tags": [
         "cool",
         "offbeat",
-        "creative"
+        "creative",
+        "fun"
       ],
+      "vibe_prompt": "Ash is leaning into cool, offbeat, creative, fun energy today.",
+      "demo_activity": "Open to a cozy coffee chat and nearby community events.",
       "slug": "ash-13",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -849,7 +972,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-16T00:24:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -864,12 +987,19 @@
         "vibe_tags": [
           "cool",
           "offbeat",
-          "creative"
-        ]
+          "creative",
+          "fun"
+        ],
+        "conversation_starter": "What's something people misunderstand about you at first?",
+        "vibe_prompt": "Ash is leaning into cool, offbeat, creative, fun energy today.",
+        "demo_activity": "Open to a cozy coffee chat and nearby community events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-16T00:24:29.791Z"
     },
     {
       "id": "4d24b443-2788-5491-9570-1b9e61bb5395",
@@ -885,12 +1015,15 @@
         "beaches",
         "live music"
       ],
-      "conversation_starter": "Where would you go for a weekend escape?",
+      "conversation_starter": "Best concert you've ever been to?",
       "vibe_tags": [
         "ambitious",
         "glam",
-        "spontaneous"
+        "spontaneous",
+        "fun"
       ],
+      "vibe_prompt": "Current mood: ambitious • glam • spontaneous • fun",
+      "demo_activity": "In a social mood today and open to a warm first hello.",
       "slug": "bianca-14",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -916,7 +1049,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T22:59:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -931,12 +1064,19 @@
         "vibe_tags": [
           "ambitious",
           "glam",
-          "spontaneous"
-        ]
+          "spontaneous",
+          "fun"
+        ],
+        "conversation_starter": "Best concert you've ever been to?",
+        "vibe_prompt": "Current mood: ambitious • glam • spontaneous • fun",
+        "demo_activity": "In a social mood today and open to a warm first hello.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T22:59:29.791Z"
     },
     {
       "id": "a21d89ea-5b96-5760-b553-aaddfc62f61f",
@@ -952,12 +1092,15 @@
         "coffee",
         "journaling"
       ],
-      "conversation_starter": "What color matches your mood today?",
+      "conversation_starter": "What's your favorite way to reset after a long week?",
       "vibe_tags": [
         "dreamy",
         "sensitive",
-        "artsy"
+        "artsy",
+        "outdoorsy"
       ],
+      "vibe_prompt": "Jade is leaning into dreamy, sensitive, artsy, outdoorsy energy today.",
+      "demo_activity": "Open to a cozy coffee chat and nearby community events.",
       "slug": "jade-15",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -983,7 +1126,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T14:00:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -998,12 +1141,19 @@
         "vibe_tags": [
           "dreamy",
           "sensitive",
-          "artsy"
-        ]
+          "artsy",
+          "outdoorsy"
+        ],
+        "conversation_starter": "What's your favorite way to reset after a long week?",
+        "vibe_prompt": "Jade is leaning into dreamy, sensitive, artsy, outdoorsy energy today.",
+        "demo_activity": "Open to a cozy coffee chat and nearby community events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T14:00:29.791Z"
     },
     {
       "id": "5f198f83-98e2-56be-b637-99cc1dd70f6b",
@@ -1019,12 +1169,15 @@
         "volunteering",
         "camping"
       ],
-      "conversation_starter": "Would you rather spend a weekend in the mountains or by a lake?",
+      "conversation_starter": "What's one thing that instantly makes a space feel cozy?",
       "vibe_tags": [
         "caring",
         "outdoorsy",
-        "steady"
+        "steady",
+        "dreamy"
       ],
+      "vibe_prompt": "Current mood: caring • outdoorsy • steady • dreamy",
+      "demo_activity": "Checking the social feed and planning something low-key this week.",
       "slug": "leah-16",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1050,7 +1203,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T18:39:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1065,12 +1218,19 @@
         "vibe_tags": [
           "caring",
           "outdoorsy",
-          "steady"
-        ]
+          "steady",
+          "dreamy"
+        ],
+        "conversation_starter": "What's one thing that instantly makes a space feel cozy?",
+        "vibe_prompt": "Current mood: caring • outdoorsy • steady • dreamy",
+        "demo_activity": "Checking the social feed and planning something low-key this week.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T18:39:29.791Z"
     },
     {
       "id": "4a777fee-a0e5-5806-b230-f63586e008c9",
@@ -1086,12 +1246,15 @@
         "comedy",
         "wine bars"
       ],
-      "conversation_starter": "What's your most random useful fact?",
+      "conversation_starter": "What helps you feel safe opening up to someone?",
       "vibe_tags": [
         "witty",
         "clever",
-        "chatty"
+        "chatty",
+        "social"
       ],
+      "vibe_prompt": "Nina is leaning into witty, clever, chatty, social energy today.",
+      "demo_activity": "Active in the community and open to intentional dating.",
       "slug": "nina-17",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1117,7 +1280,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T19:56:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1132,12 +1295,19 @@
         "vibe_tags": [
           "witty",
           "clever",
-          "chatty"
-        ]
+          "chatty",
+          "social"
+        ],
+        "conversation_starter": "What helps you feel safe opening up to someone?",
+        "vibe_prompt": "Nina is leaning into witty, clever, chatty, social energy today.",
+        "demo_activity": "Active in the community and open to intentional dating.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T19:56:29.791Z"
     },
     {
       "id": "8098a6a0-d68d-5f5c-8cbd-7b4b8fb2de66",
@@ -1153,12 +1323,15 @@
         "sunrises",
         "music"
       ],
-      "conversation_starter": "Beach sunrise or mountain sunset?",
+      "conversation_starter": "Would you rather spend a weekend in the mountains or by a lake?",
       "vibe_tags": [
         "earthy",
         "easygoing",
-        "bright"
+        "bright",
+        "grounded"
       ],
+      "vibe_prompt": "Harper's vibe today: earthy • easygoing • bright • grounded",
+      "demo_activity": "Currently refreshing her profile and exploring new conversations.",
       "slug": "harper-18",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1184,7 +1357,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T21:53:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1199,12 +1372,19 @@
         "vibe_tags": [
           "earthy",
           "easygoing",
-          "bright"
-        ]
+          "bright",
+          "grounded"
+        ],
+        "conversation_starter": "Would you rather spend a weekend in the mountains or by a lake?",
+        "vibe_prompt": "Harper's vibe today: earthy • easygoing • bright • grounded",
+        "demo_activity": "Currently refreshing her profile and exploring new conversations.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T21:53:29.791Z"
     },
     {
       "id": "51dcf6e1-d059-502c-9ddb-e3ad27dfa45a",
@@ -1220,12 +1400,15 @@
         "music",
         "community"
       ],
-      "conversation_starter": "What song instantly lifts your mood?",
+      "conversation_starter": "What's your getting-ready playlist like?",
       "vibe_tags": [
         "vibrant",
         "magnetic",
-        "joyful"
+        "joyful",
+        "sunny"
       ],
+      "vibe_prompt": "Best opener for Zuri today: match the vibrant energy.",
+      "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
       "slug": "zuri-19",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1251,7 +1434,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T18:06:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1266,12 +1449,19 @@
         "vibe_tags": [
           "vibrant",
           "magnetic",
-          "joyful"
-        ]
+          "joyful",
+          "sunny"
+        ],
+        "conversation_starter": "What's your getting-ready playlist like?",
+        "vibe_prompt": "Best opener for Zuri today: match the vibrant energy.",
+        "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T18:06:29.791Z"
     },
     {
       "id": "e1f56458-cfb6-555e-a9ce-89a9061ef2b9",
@@ -1287,12 +1477,15 @@
         "history",
         "museums"
       ],
-      "conversation_starter": "What book would you reread forever?",
+      "conversation_starter": "What's your dream car or dream road trip?",
       "vibe_tags": [
         "gentle",
         "bookish",
-        "old-soul"
+        "old-soul",
+        "capable"
       ],
+      "vibe_prompt": "Current mood: gentle • bookish • old-soul • capable",
+      "demo_activity": "Checking the social feed and planning something low-key this week.",
       "slug": "eliza-20",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1318,7 +1511,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T15:43:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1333,12 +1526,19 @@
         "vibe_tags": [
           "gentle",
           "bookish",
-          "old-soul"
-        ]
+          "old-soul",
+          "capable"
+        ],
+        "conversation_starter": "What's your dream car or dream road trip?",
+        "vibe_prompt": "Current mood: gentle • bookish • old-soul • capable",
+        "demo_activity": "Checking the social feed and planning something low-key this week.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T15:43:29.791Z"
     },
     {
       "id": "27a262ae-d7d5-51c3-a465-e15501124084",
@@ -1354,12 +1554,15 @@
         "astronomy",
         "photography"
       ],
-      "conversation_starter": "If we had a blanket and a clear sky, what would we talk about first?",
+      "conversation_starter": "Beach sunrise or mountain sunset?",
       "vibe_tags": [
         "cosmic",
         "curious",
-        "calm"
+        "calm",
+        "protective"
       ],
+      "vibe_prompt": "Best opener for Sky today: match the cosmic energy.",
+      "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
       "slug": "sky-21",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1385,7 +1588,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T13:58:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1400,12 +1603,19 @@
         "vibe_tags": [
           "cosmic",
           "curious",
-          "calm"
-        ]
+          "calm",
+          "protective"
+        ],
+        "conversation_starter": "Beach sunrise or mountain sunset?",
+        "vibe_prompt": "Best opener for Sky today: match the cosmic energy.",
+        "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T13:58:29.791Z"
     },
     {
       "id": "0a7421c2-aaad-5972-9d36-4e7b54cf8bef",
@@ -1421,12 +1631,15 @@
         "brunch",
         "pilates"
       ],
-      "conversation_starter": "City weekend or cabin weekend?",
+      "conversation_starter": "What's your all-time favorite board game?",
       "vibe_tags": [
         "polished",
         "fun",
-        "driven"
+        "driven",
+        "calm"
       ],
+      "vibe_prompt": "Morgan is leaning into polished, fun, driven, calm energy today.",
+      "demo_activity": "Open to a cozy coffee chat and nearby community events.",
       "slug": "morgan-22",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1452,7 +1665,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T13:44:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1467,12 +1680,19 @@
         "vibe_tags": [
           "polished",
           "fun",
-          "driven"
-        ]
+          "driven",
+          "calm"
+        ],
+        "conversation_starter": "What's your all-time favorite board game?",
+        "vibe_prompt": "Morgan is leaning into polished, fun, driven, calm energy today.",
+        "demo_activity": "Open to a cozy coffee chat and nearby community events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T13:44:29.791Z"
     },
     {
       "id": "691e6720-2920-5cf8-ad7b-7aee2e87d86d",
@@ -1488,12 +1708,15 @@
         "tarot",
         "tea"
       ],
-      "conversation_starter": "What's your big three?",
+      "conversation_starter": "Favorite game ever?",
       "vibe_tags": [
         "mystical",
         "romantic",
-        "soft"
+        "soft",
+        "dreamy"
       ],
+      "vibe_prompt": "Current mood: mystical • romantic • soft • dreamy",
+      "demo_activity": "Checking the social feed and planning something low-key this week.",
       "slug": "luna-23",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1519,7 +1742,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T13:19:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1534,12 +1757,19 @@
         "vibe_tags": [
           "mystical",
           "romantic",
-          "soft"
-        ]
+          "soft",
+          "dreamy"
+        ],
+        "conversation_starter": "Favorite game ever?",
+        "vibe_prompt": "Current mood: mystical • romantic • soft • dreamy",
+        "demo_activity": "Checking the social feed and planning something low-key this week.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T13:19:29.791Z"
     },
     {
       "id": "807bb7a2-e7fa-5e55-9c71-dd695cb65b04",
@@ -1555,12 +1785,15 @@
         "smoothies",
         "sunsets"
       ],
-      "conversation_starter": "What's your ideal beach day look like?",
+      "conversation_starter": "Best thrift find ever?",
       "vibe_tags": [
         "sunny",
         "confident",
-        "warm"
+        "warm",
+        "steady"
       ],
+      "vibe_prompt": "Best opener for Daniella today: match the sunny energy.",
+      "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
       "slug": "daniella-24",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1586,7 +1819,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T21:58:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1601,12 +1834,19 @@
         "vibe_tags": [
           "sunny",
           "confident",
-          "warm"
-        ]
+          "warm",
+          "steady"
+        ],
+        "conversation_starter": "Best thrift find ever?",
+        "vibe_prompt": "Best opener for Daniella today: match the sunny energy.",
+        "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T21:58:29.791Z"
     },
     {
       "id": "3d892293-56ce-5d0c-b003-83d002245ea0",
@@ -1622,12 +1862,15 @@
         "coding",
         "coffee"
       ],
-      "conversation_starter": "What's your all-time favorite board game?",
+      "conversation_starter": "What's your dream car or dream road trip?",
       "vibe_tags": [
         "smart",
         "playful",
-        "focused"
+        "focused",
+        "clever"
       ],
+      "vibe_prompt": "Taylor is leaning into smart, playful, focused, clever energy today.",
+      "demo_activity": "Active in the community and open to intentional dating.",
       "slug": "taylor-25",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1653,7 +1896,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T18:44:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1668,12 +1911,19 @@
         "vibe_tags": [
           "smart",
           "playful",
-          "focused"
-        ]
+          "focused",
+          "clever"
+        ],
+        "conversation_starter": "What's your dream car or dream road trip?",
+        "vibe_prompt": "Taylor is leaning into smart, playful, focused, clever energy today.",
+        "demo_activity": "Active in the community and open to intentional dating.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T18:44:29.791Z"
     },
     {
       "id": "59fbd503-e973-5235-ac85-90e264835f96",
@@ -1689,12 +1939,15 @@
         "coffee",
         "DIY"
       ],
-      "conversation_starter": "What's something you've made that you're proud of?",
+      "conversation_starter": "What helps you feel safe opening up to someone?",
       "vibe_tags": [
         "grounded",
         "capable",
-        "warm"
+        "warm",
+        "balanced"
       ],
+      "vibe_prompt": "Casey's vibe today: grounded • capable • warm • balanced",
+      "demo_activity": "Currently refreshing her profile and exploring new conversations.",
       "slug": "casey-26",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1720,7 +1973,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T23:37:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1735,12 +1988,19 @@
         "vibe_tags": [
           "grounded",
           "capable",
-          "warm"
-        ]
+          "warm",
+          "balanced"
+        ],
+        "conversation_starter": "What helps you feel safe opening up to someone?",
+        "vibe_prompt": "Casey's vibe today: grounded • capable • warm • balanced",
+        "demo_activity": "Currently refreshing her profile and exploring new conversations.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T23:37:29.791Z"
     },
     {
       "id": "b29d395c-994f-5ad3-9dcf-72a0366828ab",
@@ -1756,12 +2016,15 @@
         "concerts",
         "night walks"
       ],
-      "conversation_starter": "What song feels like home to you?",
+      "conversation_starter": "Where would you go for a weekend escape?",
       "vibe_tags": [
         "romantic",
         "creative",
-        "soulful"
+        "soulful",
+        "sweet"
       ],
+      "vibe_prompt": "Best opener for Aaliyah today: match the romantic energy.",
+      "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
       "slug": "aaliyah-27",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1787,7 +2050,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T13:06:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1802,12 +2065,19 @@
         "vibe_tags": [
           "romantic",
           "creative",
-          "soulful"
-        ]
+          "soulful",
+          "sweet"
+        ],
+        "conversation_starter": "Where would you go for a weekend escape?",
+        "vibe_prompt": "Best opener for Aaliyah today: match the romantic energy.",
+        "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T13:06:29.791Z"
     },
     {
       "id": "8efc427d-97ed-5e6a-991c-6ad94bb1462c",
@@ -1823,12 +2093,15 @@
         "plants",
         "coffee"
       ],
-      "conversation_starter": "What's one thing that instantly makes a space feel cozy?",
+      "conversation_starter": "Favorite comfort food?",
       "vibe_tags": [
         "cozy",
         "stylish",
-        "thoughtful"
+        "thoughtful",
+        "reliable"
       ],
+      "vibe_prompt": "Brooke is leaning into cozy, stylish, thoughtful, reliable energy today.",
+      "demo_activity": "Open to a cozy coffee chat and nearby community events.",
       "slug": "brooke-28",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1854,7 +2127,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T19:04:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1869,12 +2142,19 @@
         "vibe_tags": [
           "cozy",
           "stylish",
-          "thoughtful"
-        ]
+          "thoughtful",
+          "reliable"
+        ],
+        "conversation_starter": "Favorite comfort food?",
+        "vibe_prompt": "Brooke is leaning into cozy, stylish, thoughtful, reliable energy today.",
+        "demo_activity": "Open to a cozy coffee chat and nearby community events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T19:04:29.791Z"
     },
     {
       "id": "fb84e34d-693f-51fc-a549-36cb22d3a75a",
@@ -1890,12 +2170,15 @@
         "fashion",
         "art"
       ],
-      "conversation_starter": "What's a moment you wish you could freeze in time?",
+      "conversation_starter": "What creative hobby helps you relax?",
       "vibe_tags": [
         "observant",
         "romantic",
-        "artistic"
+        "artistic",
+        "intellectual"
       ],
+      "vibe_prompt": "Current mood: observant • romantic • artistic • intellectual",
+      "demo_activity": "Checking the social feed and planning something low-key this week.",
       "slug": "sienna-29",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1921,7 +2204,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T18:23:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -1936,12 +2219,19 @@
         "vibe_tags": [
           "observant",
           "romantic",
-          "artistic"
-        ]
+          "artistic",
+          "intellectual"
+        ],
+        "conversation_starter": "What creative hobby helps you relax?",
+        "vibe_prompt": "Current mood: observant • romantic • artistic • intellectual",
+        "demo_activity": "Checking the social feed and planning something low-key this week.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T18:23:29.791Z"
     },
     {
       "id": "f969faf9-f68d-5ce7-9a2b-6b37f405b23b",
@@ -1957,12 +2247,15 @@
         "coffee shops",
         "reading"
       ],
-      "conversation_starter": "Do you like stories with happy endings or messy ones?",
+      "conversation_starter": "What's your big three?",
       "vibe_tags": [
         "introspective",
         "clever",
-        "moody"
+        "moody",
+        "nurturing"
       ],
+      "vibe_prompt": "Best opener for Remy today: match the introspective energy.",
+      "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
       "slug": "remy-30",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -1988,7 +2281,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T16:54:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2003,12 +2296,19 @@
         "vibe_tags": [
           "introspective",
           "clever",
-          "moody"
-        ]
+          "moody",
+          "nurturing"
+        ],
+        "conversation_starter": "What's your big three?",
+        "vibe_prompt": "Best opener for Remy today: match the introspective energy.",
+        "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T16:54:29.791Z"
     },
     {
       "id": "b8d2c0fb-75b3-5a8b-b8d1-156ff1b80c62",
@@ -2024,12 +2324,15 @@
         "tea",
         "podcasts"
       ],
-      "conversation_starter": "What helps you feel safe opening up to someone?",
+      "conversation_starter": "What song feels like home to you?",
       "vibe_tags": [
         "secure",
         "warm",
-        "emotionally-intelligent"
+        "emotionally-intelligent",
+        "soft"
       ],
+      "vibe_prompt": "Clara's vibe today: secure • warm • emotionally-intelligent • soft",
+      "demo_activity": "Exploring circles, local events, and one good new conversation.",
       "slug": "clara-31",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2055,7 +2358,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T21:01:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2070,12 +2373,19 @@
         "vibe_tags": [
           "secure",
           "warm",
-          "emotionally-intelligent"
-        ]
+          "emotionally-intelligent",
+          "soft"
+        ],
+        "conversation_starter": "What song feels like home to you?",
+        "vibe_prompt": "Clara's vibe today: secure • warm • emotionally-intelligent • soft",
+        "demo_activity": "Exploring circles, local events, and one good new conversation.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T21:01:29.791Z"
     },
     {
       "id": "0e2461fa-977a-5c6c-9d5d-039efd81fba9",
@@ -2091,12 +2401,15 @@
         "fitness",
         "smoothies"
       ],
-      "conversation_starter": "Would you rather have a beach date or a game night date?",
+      "conversation_starter": "What's a movie that changed how you see the world?",
       "vibe_tags": [
         "active",
         "bright",
-        "playful"
+        "playful",
+        "glam"
       ],
+      "vibe_prompt": "Best opener for Maddy today: match the active energy.",
+      "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
       "slug": "maddy-32",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2122,7 +2435,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T18:50:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2137,12 +2450,19 @@
         "vibe_tags": [
           "active",
           "bright",
-          "playful"
-        ]
+          "playful",
+          "glam"
+        ],
+        "conversation_starter": "What's a movie that changed how you see the world?",
+        "vibe_prompt": "Best opener for Maddy today: match the active energy.",
+        "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T18:50:29.791Z"
     },
     {
       "id": "a54cd44b-1f28-5d5a-b07f-19468a94a22a",
@@ -2158,12 +2478,15 @@
         "nature",
         "farmers markets"
       ],
-      "conversation_starter": "What would you grow if you had a dream garden?",
+      "conversation_starter": "What's your go-to comfort tea or drink?",
       "vibe_tags": [
         "nurturing",
         "calm",
-        "homebody"
+        "homebody",
+        "nerdy"
       ],
+      "vibe_prompt": "Best opener for Erin today: match the nurturing energy.",
+      "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
       "slug": "erin-33",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2189,7 +2512,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T23:18:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2204,12 +2527,19 @@
         "vibe_tags": [
           "nurturing",
           "calm",
-          "homebody"
-        ]
+          "homebody",
+          "nerdy"
+        ],
+        "conversation_starter": "What's your go-to comfort tea or drink?",
+        "vibe_prompt": "Best opener for Erin today: match the nurturing energy.",
+        "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T23:18:29.791Z"
     },
     {
       "id": "bee93f6f-fbde-5098-9f5e-799df3196e50",
@@ -2229,8 +2559,11 @@
       "vibe_tags": [
         "stylish",
         "creative",
-        "curious"
+        "curious",
+        "engaging"
       ],
+      "vibe_prompt": "Quinn is leaning into stylish, creative, curious, engaging energy today.",
+      "demo_activity": "Open to a cozy coffee chat and nearby community events.",
       "slug": "quinn-34",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2256,7 +2589,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T19:04:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2271,12 +2604,19 @@
         "vibe_tags": [
           "stylish",
           "creative",
-          "curious"
-        ]
+          "curious",
+          "engaging"
+        ],
+        "conversation_starter": "What's the coolest mural or piece of art you've seen in person?",
+        "vibe_prompt": "Quinn is leaning into stylish, creative, curious, engaging energy today.",
+        "demo_activity": "Open to a cozy coffee chat and nearby community events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T19:04:29.791Z"
     },
     {
       "id": "dc796787-cf33-5fa7-9ef0-c107a148ae68",
@@ -2292,12 +2632,15 @@
         "hiking",
         "photography"
       ],
-      "conversation_starter": "What's the most memorable city you've ever visited?",
+      "conversation_starter": "What book would you reread forever?",
       "vibe_tags": [
         "independent",
         "kind",
-        "adventurous"
+        "adventurous",
+        "nerdy"
       ],
+      "vibe_prompt": "Best opener for Naomi today: match the independent energy.",
+      "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
       "slug": "naomi-35",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2323,7 +2666,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T22:18:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2338,12 +2681,19 @@
         "vibe_tags": [
           "independent",
           "kind",
-          "adventurous"
-        ]
+          "adventurous",
+          "nerdy"
+        ],
+        "conversation_starter": "What book would you reread forever?",
+        "vibe_prompt": "Best opener for Naomi today: match the independent energy.",
+        "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T22:18:29.791Z"
     },
     {
       "id": "40069cf1-7a45-5f18-92f3-f65dc4c5c17c",
@@ -2359,12 +2709,15 @@
         "hiking",
         "sustainability"
       ],
-      "conversation_starter": "What place in nature instantly resets you?",
+      "conversation_starter": "What's your all-time favorite board game?",
       "vibe_tags": [
         "earthy",
         "smart",
-        "quiet"
+        "quiet",
+        "moody"
       ],
+      "vibe_prompt": "Ivy's vibe today: earthy • smart • quiet • moody",
+      "demo_activity": "Exploring circles, local events, and one good new conversation.",
       "slug": "ivy-36",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2390,7 +2743,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T22:21:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2405,12 +2758,19 @@
         "vibe_tags": [
           "earthy",
           "smart",
-          "quiet"
-        ]
+          "quiet",
+          "moody"
+        ],
+        "conversation_starter": "What's your all-time favorite board game?",
+        "vibe_prompt": "Ivy's vibe today: earthy • smart • quiet • moody",
+        "demo_activity": "Exploring circles, local events, and one good new conversation.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T22:21:29.791Z"
     },
     {
       "id": "6cd71a4b-55eb-5ea7-b75c-73e8c50e4416",
@@ -2426,12 +2786,15 @@
         "writing",
         "live events"
       ],
-      "conversation_starter": "What topic could you talk about for hours?",
+      "conversation_starter": "What's the most memorable city you've ever visited?",
       "vibe_tags": [
         "engaging",
         "intellectual",
-        "fun"
+        "fun",
+        "homey"
       ],
+      "vibe_prompt": "Best opener for Alex today: match the engaging energy.",
+      "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
       "slug": "alex-37",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2457,7 +2820,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T21:02:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2472,12 +2835,19 @@
         "vibe_tags": [
           "engaging",
           "intellectual",
-          "fun"
-        ]
+          "fun",
+          "homey"
+        ],
+        "conversation_starter": "What's the most memorable city you've ever visited?",
+        "vibe_prompt": "Best opener for Alex today: match the engaging energy.",
+        "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T21:02:29.791Z"
     },
     {
       "id": "9f43b0f5-e898-5e56-b704-357d7e32235d",
@@ -2493,12 +2863,15 @@
         "coffee",
         "beach"
       ],
-      "conversation_starter": "What's a movie that changed how you see the world?",
+      "conversation_starter": "What's the most memorable city you've ever visited?",
       "vibe_tags": [
         "thoughtful",
         "curious",
-        "soft"
+        "soft",
+        "romantic"
       ],
+      "vibe_prompt": "Maya R. is leaning into thoughtful, curious, soft, romantic energy today.",
+      "demo_activity": "Open to a cozy coffee chat and nearby community events.",
       "slug": "maya-r-38",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2524,7 +2897,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T18:24:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2539,12 +2912,19 @@
         "vibe_tags": [
           "thoughtful",
           "curious",
-          "soft"
-        ]
+          "soft",
+          "romantic"
+        ],
+        "conversation_starter": "What's the most memorable city you've ever visited?",
+        "vibe_prompt": "Maya R. is leaning into thoughtful, curious, soft, romantic energy today.",
+        "demo_activity": "Open to a cozy coffee chat and nearby community events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T18:24:29.791Z"
     },
     {
       "id": "31d88f94-342c-501b-82e8-7a6236cbbd86",
@@ -2560,12 +2940,15 @@
         "wellness",
         "crafts"
       ],
-      "conversation_starter": "What's your go-to comfort tea or drink?",
+      "conversation_starter": "What's a moment you wish you could freeze in time?",
       "vibe_tags": [
         "gentle",
         "grounded",
-        "witchy"
+        "witchy",
+        "dreamy"
       ],
+      "vibe_prompt": "Rowan's vibe today: gentle • grounded • witchy • dreamy",
+      "demo_activity": "Exploring circles, local events, and one good new conversation.",
       "slug": "rowan-39",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2591,7 +2974,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T17:09:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2606,12 +2989,19 @@
         "vibe_tags": [
           "gentle",
           "grounded",
-          "witchy"
-        ]
+          "witchy",
+          "dreamy"
+        ],
+        "conversation_starter": "What's a moment you wish you could freeze in time?",
+        "vibe_prompt": "Rowan's vibe today: gentle • grounded • witchy • dreamy",
+        "demo_activity": "Exploring circles, local events, and one good new conversation.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T17:09:29.791Z"
     },
     {
       "id": "af26f97c-4684-54a5-9d90-df81fdd6e03c",
@@ -2627,12 +3017,15 @@
         "streetwear",
         "dogs"
       ],
-      "conversation_starter": "What song belongs on every good driving playlist?",
+      "conversation_starter": "What's your all-time favorite board game?",
       "vibe_tags": [
         "cool",
         "protective",
-        "funny"
+        "funny",
+        "moody"
       ],
+      "vibe_prompt": "Best opener for Tori today: match the cool energy.",
+      "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
       "slug": "tori-40",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2658,7 +3051,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T23:22:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2673,12 +3066,19 @@
         "vibe_tags": [
           "cool",
           "protective",
-          "funny"
-        ]
+          "funny",
+          "moody"
+        ],
+        "conversation_starter": "What's your all-time favorite board game?",
+        "vibe_prompt": "Best opener for Tori today: match the cool energy.",
+        "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T23:22:29.791Z"
     },
     {
       "id": "d95cc11d-600a-5d4b-a732-c4aa8d81850e",
@@ -2694,12 +3094,15 @@
         "fashion",
         "brunch"
       ],
-      "conversation_starter": "What's your getting-ready playlist like?",
+      "conversation_starter": "What song belongs on every good driving playlist?",
       "vibe_tags": [
         "glam",
         "chatty",
-        "expressive"
+        "expressive",
+        "cosmic"
       ],
+      "vibe_prompt": "Best opener for Jasmine today: match the glam energy.",
+      "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
       "slug": "jasmine-41",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2725,7 +3128,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T15:50:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2740,12 +3143,19 @@
         "vibe_tags": [
           "glam",
           "chatty",
-          "expressive"
-        ]
+          "expressive",
+          "cosmic"
+        ],
+        "conversation_starter": "What song belongs on every good driving playlist?",
+        "vibe_prompt": "Best opener for Jasmine today: match the glam energy.",
+        "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T15:50:29.791Z"
     },
     {
       "id": "448f13be-abac-581d-8eaa-69ff3d9937ca",
@@ -2761,12 +3171,15 @@
         "coffee",
         "campus life"
       ],
-      "conversation_starter": "What's something people misunderstand about you at first?",
+      "conversation_starter": "If you could take a spontaneous road trip tomorrow where would you go?",
       "vibe_tags": [
         "sweet",
         "curious",
-        "brainy"
+        "brainy",
+        "bold"
       ],
+      "vibe_prompt": "Best opener for Zoe today: match the sweet energy.",
+      "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
       "slug": "zoe-42",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2792,7 +3205,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T23:34:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2807,12 +3220,19 @@
         "vibe_tags": [
           "sweet",
           "curious",
-          "brainy"
-        ]
+          "brainy",
+          "bold"
+        ],
+        "conversation_starter": "If you could take a spontaneous road trip tomorrow where would you go?",
+        "vibe_prompt": "Best opener for Zoe today: match the sweet energy.",
+        "demo_activity": "Looking for thoughtful conversation and a genuine first connection.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T23:34:29.791Z"
     },
     {
       "id": "58635d47-7b4b-58b5-b7c7-8757690bf870",
@@ -2828,12 +3248,15 @@
         "food",
         "comedy"
       ],
-      "conversation_starter": "What's your go-to karaoke song?",
+      "conversation_starter": "What color matches your mood today?",
       "vibe_tags": [
         "fun",
         "reliable",
-        "outgoing"
+        "outgoing",
+        "intentional"
       ],
+      "vibe_prompt": "Current mood: fun • reliable • outgoing • intentional",
+      "demo_activity": "In a social mood today and open to a warm first hello.",
       "slug": "marissa-43",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2859,7 +3282,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T14:35:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2874,12 +3297,19 @@
         "vibe_tags": [
           "fun",
           "reliable",
-          "outgoing"
-        ]
+          "outgoing",
+          "intentional"
+        ],
+        "conversation_starter": "What color matches your mood today?",
+        "vibe_prompt": "Current mood: fun • reliable • outgoing • intentional",
+        "demo_activity": "In a social mood today and open to a warm first hello.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T14:35:29.791Z"
     },
     {
       "id": "84da0169-acae-53af-8557-ebb745269fed",
@@ -2895,12 +3325,15 @@
         "wellness",
         "nature"
       ],
-      "conversation_starter": "What helps you feel most grounded lately?",
+      "conversation_starter": "Dream road trip?",
       "vibe_tags": [
         "serene",
         "flirty",
-        "mindful"
+        "mindful",
+        "sweet"
       ],
+      "vibe_prompt": "Elle is leaning into serene, flirty, mindful, sweet energy today.",
+      "demo_activity": "Active in the community and open to intentional dating.",
       "slug": "elle-44",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2926,7 +3359,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T18:28:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -2941,12 +3374,19 @@
         "vibe_tags": [
           "serene",
           "flirty",
-          "mindful"
-        ]
+          "mindful",
+          "sweet"
+        ],
+        "conversation_starter": "Dream road trip?",
+        "vibe_prompt": "Elle is leaning into serene, flirty, mindful, sweet energy today.",
+        "demo_activity": "Active in the community and open to intentional dating.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T18:28:29.791Z"
     },
     {
       "id": "294fdb62-7ba6-5ffe-a625-9f2aafd1e026",
@@ -2962,12 +3402,15 @@
         "thrifting",
         "music"
       ],
-      "conversation_starter": "What's your dream car or dream road trip?",
+      "conversation_starter": "What's the most memorable city you've ever visited?",
       "vibe_tags": [
         "hands-on",
         "loyal",
-        "cool"
+        "cool",
+        "smart"
       ],
+      "vibe_prompt": "Frankie's vibe today: hands-on • loyal • cool • smart",
+      "demo_activity": "Currently refreshing her profile and exploring new conversations.",
       "slug": "frankie-45",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -2993,7 +3436,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T13:05:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -3008,12 +3451,19 @@
         "vibe_tags": [
           "hands-on",
           "loyal",
-          "cool"
-        ]
+          "cool",
+          "smart"
+        ],
+        "conversation_starter": "What's the most memorable city you've ever visited?",
+        "vibe_prompt": "Frankie's vibe today: hands-on • loyal • cool • smart",
+        "demo_activity": "Currently refreshing her profile and exploring new conversations.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T13:05:29.791Z"
     },
     {
       "id": "2cee66e5-a9ff-508d-94f0-1a991dbc8942",
@@ -3029,12 +3479,15 @@
         "art",
         "city walks"
       ],
-      "conversation_starter": "What's one outfit you felt unstoppable in?",
+      "conversation_starter": "Favorite game ever?",
       "vibe_tags": [
         "stylish",
         "bold",
-        "creative"
+        "creative",
+        "empathetic"
       ],
+      "vibe_prompt": "Kiara is leaning into stylish, bold, creative, empathetic energy today.",
+      "demo_activity": "Active in the community and open to intentional dating.",
       "slug": "kiara-46",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -3060,7 +3513,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T13:40:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -3075,12 +3528,19 @@
         "vibe_tags": [
           "stylish",
           "bold",
-          "creative"
-        ]
+          "creative",
+          "empathetic"
+        ],
+        "conversation_starter": "Favorite game ever?",
+        "vibe_prompt": "Kiara is leaning into stylish, bold, creative, empathetic energy today.",
+        "demo_activity": "Active in the community and open to intentional dating.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T13:40:29.791Z"
     },
     {
       "id": "b364e484-b483-5732-b30f-261c95a66d36",
@@ -3096,12 +3556,15 @@
         "podcasts",
         "brunch"
       ],
-      "conversation_starter": "What's your favorite way to reset after a long week?",
+      "conversation_starter": "Morning workouts or night workouts?",
       "vibe_tags": [
         "driven",
         "healthy",
-        "easygoing"
+        "easygoing",
+        "social"
       ],
+      "vibe_prompt": "Current mood: driven • healthy • easygoing • social",
+      "demo_activity": "Checking the social feed and planning something low-key this week.",
       "slug": "sasha-47",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -3127,7 +3590,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T17:51:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -3142,12 +3605,19 @@
         "vibe_tags": [
           "driven",
           "healthy",
-          "easygoing"
-        ]
+          "easygoing",
+          "social"
+        ],
+        "conversation_starter": "Morning workouts or night workouts?",
+        "vibe_prompt": "Current mood: driven • healthy • easygoing • social",
+        "demo_activity": "Checking the social feed and planning something low-key this week.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T17:51:29.791Z"
     },
     {
       "id": "a8a3f647-0676-5ea6-8a64-a322f5b87ced",
@@ -3163,12 +3633,15 @@
         "farmers markets",
         "rom-coms"
       ],
-      "conversation_starter": "What dessert would win your heart immediately?",
+      "conversation_starter": "What color matches your mood today?",
       "vibe_tags": [
         "sweet",
         "homey",
-        "romantic"
+        "romantic",
+        "intellectual"
       ],
+      "vibe_prompt": "Alina's vibe today: sweet • homey • romantic • intellectual",
+      "demo_activity": "Currently refreshing her profile and exploring new conversations.",
       "slug": "alina-48",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -3194,7 +3667,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T13:53:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -3209,12 +3682,19 @@
         "vibe_tags": [
           "sweet",
           "homey",
-          "romantic"
-        ]
+          "romantic",
+          "intellectual"
+        ],
+        "conversation_starter": "What color matches your mood today?",
+        "vibe_prompt": "Alina's vibe today: sweet • homey • romantic • intellectual",
+        "demo_activity": "Currently refreshing her profile and exploring new conversations.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T13:53:29.791Z"
     },
     {
       "id": "83aa2325-bbda-523e-b594-fb4867a19559",
@@ -3230,12 +3710,15 @@
         "books",
         "walks"
       ],
-      "conversation_starter": "What makes a community feel safe to you?",
+      "conversation_starter": "What book would you reread forever?",
       "vibe_tags": [
         "compassionate",
         "steady",
-        "intentional"
+        "intentional",
+        "witchy"
       ],
+      "vibe_prompt": "Brooke M.'s vibe today: compassionate • steady • intentional • witchy",
+      "demo_activity": "Currently refreshing her profile and exploring new conversations.",
       "slug": "brooke-m-49",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -3261,7 +3744,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T23:21:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -3276,12 +3759,19 @@
         "vibe_tags": [
           "compassionate",
           "steady",
-          "intentional"
-        ]
+          "intentional",
+          "witchy"
+        ],
+        "conversation_starter": "What book would you reread forever?",
+        "vibe_prompt": "Brooke M.'s vibe today: compassionate • steady • intentional • witchy",
+        "demo_activity": "Currently refreshing her profile and exploring new conversations.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T23:21:29.791Z"
     },
     {
       "id": "1f588562-552b-5482-a099-186248bfebc9",
@@ -3297,12 +3787,15 @@
         "hiking",
         "coffee"
       ],
-      "conversation_starter": "Where would you fly first if you could leave tomorrow?",
+      "conversation_starter": "What book would you reread forever?",
       "vibe_tags": [
         "confident",
         "adventurous",
-        "grounded"
+        "grounded",
+        "empathetic"
       ],
+      "vibe_prompt": "Best opener for Val today: match the confident energy.",
+      "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
       "slug": "val-50",
       "seed_profile": true,
       "demo_label": "Founding Community Demo",
@@ -3328,7 +3821,7 @@
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-15T20:39:13.958Z",
+      "last_active_at": "2026-03-15T17:46:29.791Z",
       "privacy_settings": {
         "demo_profile": true,
         "demo_label": "Founding Community Demo",
@@ -3343,12 +3836,19 @@
         "vibe_tags": [
           "confident",
           "adventurous",
-          "grounded"
-        ]
+          "grounded",
+          "empathetic"
+        ],
+        "conversation_starter": "What book would you reread forever?",
+        "vibe_prompt": "Best opener for Val today: match the confident energy.",
+        "demo_activity": "Updating her vibe and checking out nearby women-centered events.",
+        "demo_rotation_key": "20260316"
       },
       "safety_settings": {
-        "seeded_demo_profile": true
-      }
+        "seeded_demo_profile": true,
+        "demo_engagement_managed": true
+      },
+      "updated_at": "2026-03-15T17:46:29.791Z"
     }
   ]
 }

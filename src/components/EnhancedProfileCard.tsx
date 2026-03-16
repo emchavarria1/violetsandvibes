@@ -62,7 +62,7 @@ export const EnhancedProfileCard: React.FC<EnhancedProfileCardProps> = ({
   };
 
   return (
-    <Card className={`glass-pride-strong hover:scale-105 transition-all duration-300 overflow-hidden ${className}`}>
+    <Card className={`card-pride-solid hover:scale-105 transition-all duration-300 overflow-hidden ${className}`}>
       <div className="relative">
         <div className={`h-2 w-full ${identityClasses[identity]}`} />
         
@@ -105,7 +105,7 @@ export const EnhancedProfileCard: React.FC<EnhancedProfileCardProps> = ({
           {profile.interests && profile.interests.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
               {profile.interests.slice(0, 3).map((interest) => (
-                <Badge key={interest} variant="secondary" className="bg-white/10 text-white border-white/20">
+                <Badge key={interest} variant="secondary" className="bg-black/25 text-white border-white/15">
                   {interest}
                 </Badge>
               ))}
@@ -123,7 +123,7 @@ export const EnhancedProfileCard: React.FC<EnhancedProfileCardProps> = ({
             <div className="flex gap-2 ml-auto">
               <button
                 onClick={() => onPass?.(profile.id)}
-                className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200"
+                className="px-4 py-2 rounded-full bg-black/30 hover:bg-black/40 text-white transition-all duration-200 border border-white/12"
               >
                 Pass
               </button>

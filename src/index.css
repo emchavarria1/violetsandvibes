@@ -426,6 +426,18 @@
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
   }
+
+  .card-pride-solid {
+    @apply border rounded-2xl shadow-2xl text-white;
+    background:
+      radial-gradient(circle at top right, rgba(236, 72, 153, 0.08), transparent 24%),
+      radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.06), transparent 22%),
+      linear-gradient(155deg, rgba(19, 11, 40, 0.98), rgba(10, 7, 25, 0.98));
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 18px 50px rgba(0, 0, 0, 0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
   
   /* Identity-Based Styling */
   .identity-lesbian {

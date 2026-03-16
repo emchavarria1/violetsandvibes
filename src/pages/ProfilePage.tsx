@@ -16,7 +16,22 @@ import MessageButton from "@/components/MessageButton";
 import ProfileSafetyScore from "@/components/ProfileSafetyScore";
 import KindnessEndorsements from "@/components/KindnessEndorsements";
 import { supabase } from "@/lib/supabase";
-import { getDemoProfileLabel, isDemoProfile } from "@/lib/profiles";
+import {
+  getDemoActivityStatus,
+  getDemoConversationStarter,
+  getDemoProfileLabel,
+  getPrimaryProfilePhoto,
+  getDemoVibePrompt,
+  getDemoVibeTags,
+  isDemoProfile,
+} from "@/lib/profiles";
+import {
+  PROFILE_VIBE_OPTIONS,
+  getProfileVibeLabel,
+  isProfileVibe,
+  sendProfileVibe,
+  type ProfileVibe,
+} from "@/lib/vibes";
 import { useToast } from "@/hooks/use-toast";
 
 function calcAge(birthdate?: string | null) {
@@ -131,10 +146,15 @@ const ProfilePage: React.FC = () => {
   const isOwnProfile = !!user && !!profile && profile.id === user.id;
   const isDemoProfileView = isDemoProfile(profile);
   const demoProfileLabel = getDemoProfileLabel(profile);
+  const demoStarter = getDemoConversationStarter(profile);
+  const demoVibePrompt = getDemoVibePrompt(profile);
+  const demoActivity = getDemoActivityStatus(profile);
+  const demoVibeTags = getDemoVibeTags(profile);
   const [liked, setLiked] = useState(false);
   const [matched, setMatched] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
   const [likeError, setLikeError] = useState<string | null>(null);
+  const [likedVibe, setLikedVibe] = useState<ProfileVibe | null>(null);
   const [matchConversationId, setMatchConversationId] = useState<string | null>(null);
   const [blockLoading, setBlockLoading] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
@@ -165,9 +185,8 @@ const ProfilePage: React.FC = () => {
   const age = useMemo(() => calcAge(profile?.birthdate), [profile?.birthdate]);
 
   const profilePhoto = useMemo(() => {
-    const p = profile?.photos?.[0];
-    return p || "";
-  }, [profile?.photos]);
+    return getPrimaryProfilePhoto(profile) ?? "";
+  }, [profile]);
 
   const socialProofItems = useMemo(() => {
     const privacy = (livePrivacySettings ?? profile?.privacy ?? profile?.privacy_settings ?? {}) as Record<string, any>;
@@ -246,6 +265,7 @@ const ProfilePage: React.FC = () => {
     const run = async () => {
       if (!user || !otherUserId || isDemoProfileView) {
         setLiked(false);
+        setLikedVibe(null);
         setMatched(false);
         setMatchConversationId(null);
         return;
@@ -254,17 +274,36 @@ const ProfilePage: React.FC = () => {
       setLikeError(null);
 
       // 1) Did I already like them?
-      const { data: likeRow, error: likeErr } = await supabase
+      let likeRow: { id: string; vibe?: string | null } | null = null;
+      let likeErr: any = null;
+
+      const likeResult = await supabase
         .from("likes")
-        .select("id")
+        .select("id, vibe")
         .eq("liker_id", user.id)
         .eq("liked_id", otherUserId)
         .maybeSingle();
+
+      likeRow = likeResult.data;
+      likeErr = likeResult.error;
+
+      if (likeErr && `${likeErr.message || ""}`.toLowerCase().includes("vibe")) {
+        const fallbackResult = await supabase
+          .from("likes")
+          .select("id")
+          .eq("liker_id", user.id)
+          .eq("liked_id", otherUserId)
+          .maybeSingle();
+
+        likeRow = fallbackResult.data;
+        likeErr = fallbackResult.error;
+      }
 
       if (likeErr) {
         console.warn("like lookup failed:", likeErr.message);
       }
       setLiked(!!likeRow);
+      setLikedVibe(isProfileVibe(likeRow?.vibe) ? likeRow.vibe : null);
 
       // 2) Are we matched?
       // NOTE: this project stores matches as user1_id/user2_id.
@@ -476,85 +515,35 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const handleLike = async () => {
+  const handleSendVibe = async (vibe: ProfileVibe) => {
     if (!user || !otherUserId || isDemoProfileView) return;
 
     try {
       setLikeLoading(true);
       setLikeError(null);
 
-      const { error: likeError } = await supabase
-        .from("likes")
-        .insert({
-          liker_id: user.id,
-          liked_id: otherUserId,
-        });
-
-      // If unique constraint already exists, treat as already liked.
-      if (likeError && likeError.code !== "23505") throw likeError;
+      const result = await sendProfileVibe(user.id, otherUserId, vibe);
       setLiked(true);
+      setLikedVibe(vibe);
+      setMatched(result.matched);
+      setMatchConversationId(result.conversationId);
 
-      // Check whether they already liked me.
-      const { data: theirLike, error: theirLikeErr } = await supabase
-        .from("likes")
-        .select("id")
-        .eq("liker_id", otherUserId)
-        .eq("liked_id", user.id)
-        .maybeSingle();
-
-      if (theirLikeErr) {
-        console.warn("theirLike check failed:", theirLikeErr.message);
-      }
-
-      if (theirLike) {
-        // Keep canonical order in this project schema.
-        const a = user.id < otherUserId ? user.id : otherUserId;
-        const b = user.id < otherUserId ? otherUserId : user.id;
-
-        const { error: matchCreateErr } = await supabase
-          .from("matches")
-          .insert({ user1_id: a, user2_id: b });
-
-        // Unique conflict means match already exists, which is okay.
-        if (matchCreateErr && matchCreateErr.code !== "23505") {
-          console.warn("match create failed:", matchCreateErr.message);
-        }
-      }
-
-      // Load match after like to capture conversation_id if present.
-      const a = user.id < otherUserId ? user.id : otherUserId;
-      const b = user.id < otherUserId ? otherUserId : user.id;
-
-      const { data: matchRow, error: matchLookupErr } = await supabase
-        .from("matches")
-        .select("id, conversation_id")
-        .eq("user1_id", a)
-        .eq("user2_id", b)
-        .maybeSingle();
-
-      if (matchLookupErr) {
-        console.warn("match lookup failed:", matchLookupErr.message);
-      }
-
-      setMatched(!!matchRow);
-      setMatchConversationId(matchRow?.conversation_id ?? null);
-
-      if (matchRow) {
+      if (result.matched) {
         toast({
           title: "It's a match 💜",
           description: "You can message them now.",
         });
       } else {
         toast({
-          title: "Liked",
-          description: "We’ll let you know if it’s a match.",
+          title: `Sent a ${getProfileVibeLabel(vibe)?.toLowerCase() ?? vibe} vibe`,
+          description: "Your energy landed. We’ll let you know if it becomes a match.",
         });
       }
     } catch (likeSubmitError: any) {
-      console.error("Error liking profile:", likeSubmitError);
+      console.error("Error sending vibe:", likeSubmitError);
       setLikeError(likeSubmitError?.message || "Please try again.");
       toast({
-        title: "Could not like profile",
+        title: "Could not send vibe",
         description: likeSubmitError?.message || "Please try again.",
       });
     } finally {
@@ -774,6 +763,52 @@ const ProfilePage: React.FC = () => {
             onUpdated={setLivePrivacySettings}
           />
         )}
+
+        {isDemoProfileView ? (
+          <Card className="border-white/12 bg-[linear-gradient(145deg,rgba(18,10,38,0.94),rgba(8,12,28,0.94))] text-white shadow-xl backdrop-blur-md">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-pink-200" />
+                Demo Engagement Snapshot
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {demoActivity ? (
+                <div className="rounded-2xl border border-cyan-300/20 bg-cyan-500/8 px-4 py-3 text-cyan-50/90">
+                  {demoActivity}
+                </div>
+              ) : null}
+
+              {demoVibePrompt ? (
+                <div className="rounded-2xl border border-pink-300/20 bg-pink-500/8 px-4 py-3 text-white/85 italic">
+                  {demoVibePrompt}
+                </div>
+              ) : null}
+
+              {demoStarter ? (
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-violet-200/75">
+                    Conversation Starter
+                  </div>
+                  <div className="mt-2 text-white/95">{demoStarter}</div>
+                </div>
+              ) : null}
+
+              {demoVibeTags.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {demoVibeTags.map((vibe) => (
+                    <Badge
+                      key={vibe}
+                      className="border-pink-300/25 bg-pink-500/10 text-pink-100"
+                    >
+                      {vibe}
+                    </Badge>
+                  ))}
+                </div>
+              ) : null}
+            </CardContent>
+          </Card>
+        ) : null}
 
         {/* About */}
         <Card className="border-white/12 bg-[linear-gradient(145deg,rgba(18,10,38,0.94),rgba(8,12,28,0.94))] text-white shadow-xl backdrop-blur-md">
@@ -1129,13 +1164,43 @@ const ProfilePage: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      <Button
-                        className="w-full bg-pink-500 hover:bg-pink-600"
-                        onClick={handleLike}
-                        disabled={likeLoading || liked}
-                      >
-                        {likeLoading ? "Liking…" : liked ? "Liked 💜" : "Like this person 💜"}
-                      </Button>
+                      <div className="rounded-2xl border border-white/12 bg-black/20 p-4 space-y-3">
+                        <div>
+                          <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/55">
+                            Send a Vibe
+                          </div>
+                          <div className="mt-1 text-sm text-white/80">
+                            Choose how you want to show up instead of a basic like.
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          {PROFILE_VIBE_OPTIONS.map((option) => (
+                            <Button
+                              key={option.value}
+                              variant="outline"
+                              className={`h-auto min-h-20 flex-col items-start px-3 py-3 text-left ${option.buttonClass}`}
+                              onClick={() => void handleSendVibe(option.value)}
+                              disabled={likeLoading}
+                            >
+                              <span className="text-sm font-semibold">{option.label}</span>
+                              <span className="mt-1 text-xs text-white/75 whitespace-normal">
+                                {option.description}
+                              </span>
+                            </Button>
+                          ))}
+                        </div>
+
+                        {liked ? (
+                          <div className="rounded-xl border border-pink-300/20 bg-pink-500/10 px-3 py-2 text-sm text-pink-50">
+                            You sent {displayName} a{" "}
+                            <span className="font-semibold">
+                              {getProfileVibeLabel(likedVibe)?.toLowerCase() ?? "warm"}
+                            </span>{" "}
+                            vibe.
+                          </div>
+                        ) : null}
+                      </div>
 
                       <MessageButton
                         userId={profile.id}

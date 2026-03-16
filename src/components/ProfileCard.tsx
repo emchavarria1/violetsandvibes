@@ -1,5 +1,6 @@
 import React from 'react';
-import { Heart, X, MapPin, Sparkles, Star } from 'lucide-react';
+import { MapPin, Sparkles, Star } from 'lucide-react';
+import { PROFILE_VIBE_OPTIONS, type ProfileVibe } from '@/lib/vibes';
 
 interface Profile {
   id: string;
@@ -15,15 +16,17 @@ interface Profile {
 
 interface ProfileCardProps {
   profile: Profile;
-  onSwipeLeft: () => void;
-  onSwipeRight: () => void;
+  onPass: () => void;
+  onSendVibe: (vibe: ProfileVibe) => void;
+  isSendingVibe?: boolean;
   style?: React.CSSProperties;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ 
   profile, 
-  onSwipeLeft, 
-  onSwipeRight, 
+  onPass,
+  onSendVibe,
+  isSendingVibe = false,
   style 
 }) => {
   const identityClasses = {
@@ -84,7 +87,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       </div>
 
       {/* Profile Info with Enhanced Styling */}
-      <div className="p-6 h-2/5 overflow-y-auto bg-gradient-to-b from-transparent to-black/10">
+      <div className="p-6 pb-64 h-2/5 overflow-y-auto bg-gradient-to-b from-transparent to-black/10">
         <p className="text-white/90 mb-4 leading-relaxed hover:text-white transition-colors duration-300">{profile.bio}</p>
         
         {/* Enhanced Interests with Staggered Animation */}
@@ -102,21 +105,39 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         </div>
       </div>
 
-      {/* Enhanced Action Buttons */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-6">
+      {/* Send-a-vibe actions */}
+      <div className="absolute inset-x-6 bottom-6 space-y-3">
         <button
-          onClick={onSwipeLeft}
-          className="w-16 h-16 glass-pride shadow-xl rounded-full flex items-center justify-center hover:scale-125 hover:rotate-12 transition-all duration-300 border border-white/20 hover:border-red-400/50 group/btn"
+          onClick={onPass}
+          className="w-full rounded-2xl border border-white/15 bg-black/35 px-4 py-3 text-sm font-medium text-white/80 transition-colors duration-300 hover:bg-black/50 hover:text-white"
         >
-          <X className="w-7 h-7 text-red-400 group-hover/btn:text-red-300 transition-colors duration-300" />
+          Pass for now
         </button>
-        <button
-          onClick={onSwipeRight}
-          className="w-16 h-16 btn-pride shadow-xl rounded-full flex items-center justify-center hover:scale-125 hover:-rotate-12 transition-all duration-300 group/btn overflow-hidden relative"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-red-500 to-pink-500" />
-          <Heart className="w-7 h-7 text-white relative z-10 group-hover/btn:animate-pulse" />
-        </button>
+
+        <div className="rounded-3xl border border-white/12 bg-black/35 p-3 backdrop-blur-sm">
+          <div className="mb-3 text-center">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/55">
+              Send a Vibe
+            </div>
+            <div className="mt-1 text-sm text-white/75">
+              More human than a swipe. Lead with your energy.
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {PROFILE_VIBE_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => onSendVibe(option.value)}
+                disabled={isSendingVibe}
+                className={`rounded-2xl border px-3 py-3 text-left transition-all duration-300 disabled:opacity-60 ${option.buttonClass}`}
+              >
+                <div className="text-sm font-semibold">{option.label}</div>
+                <div className="mt-1 text-xs text-white/70">{option.description}</div>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

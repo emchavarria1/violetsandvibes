@@ -13,6 +13,7 @@ export type ProfileRow = {
   location: string | null;
   photos: string[] | null;
   avatar_url?: string | null;
+  profile_photo?: string | null;
   profile_completed: boolean | null;
   birthdate?: string | null;
   interests?: string[] | null;
@@ -80,6 +81,13 @@ function normalizeDemoProfile(raw: any): ProfileRow {
       ? (raw.lifestyle_interests as Record<string, any>)
       : {};
   const photos = coerceStringArray(raw?.photos);
+  const avatarUrl =
+    typeof raw?.avatar_url === "string"
+      ? raw.avatar_url
+      : typeof raw?.profile_photo === "string"
+        ? raw.profile_photo
+        : photos[0] ?? null;
+  const normalizedPhotos = photos.length > 0 ? photos : avatarUrl ? [avatarUrl] : [];
 
   return {
     id: `${raw?.id ?? ""}`.trim(),
@@ -87,8 +95,9 @@ function normalizeDemoProfile(raw: any): ProfileRow {
     username: typeof raw?.username === "string" ? raw.username : null,
     bio: typeof raw?.bio === "string" ? raw.bio : null,
     location: typeof raw?.location === "string" ? raw.location : null,
-    photos,
-    avatar_url: typeof raw?.avatar_url === "string" ? raw.avatar_url : photos[0] ?? null,
+    photos: normalizedPhotos,
+    avatar_url: avatarUrl,
+    profile_photo: avatarUrl,
     profile_completed: raw?.profile_completed !== false,
     birthdate: typeof raw?.birthdate === "string" ? raw.birthdate : null,
     interests: coerceStringArray(raw?.interests),
@@ -98,6 +107,10 @@ function normalizeDemoProfile(raw: any): ProfileRow {
     privacy_settings: {
       demo_profile: true,
       demo_label: LOCAL_DEMO_PROFILE_LABEL,
+      conversation_starter:
+        typeof raw?.conversation_starter === "string" ? raw.conversation_starter : undefined,
+      vibe_prompt: typeof raw?.vibe_prompt === "string" ? raw.vibe_prompt : undefined,
+      demo_activity: typeof raw?.demo_activity === "string" ? raw.demo_activity : undefined,
       ...privacy,
     },
     safety_settings: {
@@ -116,14 +129,19 @@ function normalizeDemoProfile(raw: any): ProfileRow {
 }
 
 function toDiscoverProfile(row: DiscoverProfileRowRaw): ProfileRow {
+  const avatarUrl =
+    row.avatar_url ?? row.profile_photo ?? row.photos?.[0] ?? null;
+  const normalizedPhotos = row.photos?.length ? row.photos : avatarUrl ? [avatarUrl] : [];
+
   return {
     id: row.id,
     full_name: row.full_name,
     username: row.username ?? null,
     bio: row.bio,
     location: row.privacy_settings?.showDistance === false ? null : row.location,
-    photos: row.photos,
-    avatar_url: row.avatar_url ?? row.photos?.[0] ?? null,
+    photos: normalizedPhotos,
+    avatar_url: avatarUrl,
+    profile_photo: avatarUrl,
     profile_completed: row.profile_completed,
     birthdate: row.privacy_settings?.showAge === false ? null : row.birthdate ?? null,
     interests: row.interests ?? [],
@@ -164,6 +182,28 @@ export function isDemoProfile(
   return privacy?.demo_profile === true || safety?.seeded_demo_profile === true;
 }
 
+export function getPrimaryProfilePhoto(
+  profile:
+    | {
+        photos?: string[] | null;
+        avatar_url?: string | null;
+        profile_photo?: string | null;
+      }
+    | null
+    | undefined
+) {
+  if (!profile) return null;
+
+  const photoFromArray =
+    Array.isArray(profile.photos) && typeof profile.photos[0] === "string"
+      ? profile.photos[0]
+      : null;
+  const avatarUrl = typeof profile.avatar_url === "string" ? profile.avatar_url : null;
+  const profilePhoto = typeof profile.profile_photo === "string" ? profile.profile_photo : null;
+
+  return photoFromArray || avatarUrl || profilePhoto || null;
+}
+
 export function getDemoProfileLabel(
   profile:
     | {
@@ -182,6 +222,86 @@ export function getDemoProfileLabel(
     (profile.privacy && typeof profile.privacy === "object" ? profile.privacy : null);
   const label = typeof privacy?.demo_label === "string" ? privacy.demo_label.trim() : "";
   return label || LOCAL_DEMO_PROFILE_LABEL;
+}
+
+export function getDemoConversationStarter(
+  profile:
+    | {
+        privacy_settings?: Record<string, any> | null;
+        privacy?: Record<string, any> | null;
+      }
+    | null
+    | undefined
+) {
+  if (!profile) return null;
+
+  const privacy =
+    (profile.privacy_settings && typeof profile.privacy_settings === "object"
+      ? profile.privacy_settings
+      : null) ??
+    (profile.privacy && typeof profile.privacy === "object" ? profile.privacy : null);
+  const starter =
+    typeof privacy?.conversation_starter === "string" ? privacy.conversation_starter.trim() : "";
+  return starter || null;
+}
+
+export function getDemoVibePrompt(
+  profile:
+    | {
+        privacy_settings?: Record<string, any> | null;
+        privacy?: Record<string, any> | null;
+      }
+    | null
+    | undefined
+) {
+  if (!profile) return null;
+
+  const privacy =
+    (profile.privacy_settings && typeof profile.privacy_settings === "object"
+      ? profile.privacy_settings
+      : null) ??
+    (profile.privacy && typeof profile.privacy === "object" ? profile.privacy : null);
+  const prompt = typeof privacy?.vibe_prompt === "string" ? privacy.vibe_prompt.trim() : "";
+  return prompt || null;
+}
+
+export function getDemoActivityStatus(
+  profile:
+    | {
+        privacy_settings?: Record<string, any> | null;
+        privacy?: Record<string, any> | null;
+      }
+    | null
+    | undefined
+) {
+  if (!profile) return null;
+
+  const privacy =
+    (profile.privacy_settings && typeof profile.privacy_settings === "object"
+      ? profile.privacy_settings
+      : null) ??
+    (profile.privacy && typeof profile.privacy === "object" ? profile.privacy : null);
+  const activity = typeof privacy?.demo_activity === "string" ? privacy.demo_activity.trim() : "";
+  return activity || null;
+}
+
+export function getDemoVibeTags(
+  profile:
+    | {
+        privacy_settings?: Record<string, any> | null;
+        privacy?: Record<string, any> | null;
+      }
+    | null
+    | undefined
+) {
+  if (!profile) return [] as string[];
+
+  const privacy =
+    (profile.privacy_settings && typeof profile.privacy_settings === "object"
+      ? profile.privacy_settings
+      : null) ??
+    (profile.privacy && typeof profile.privacy === "object" ? profile.privacy : null);
+  return coerceStringArray(privacy?.vibe_tags).slice(0, 4);
 }
 
 export async function fetchLocalDemoProfiles() {
@@ -461,7 +581,7 @@ export async function fetchDiscoverProfiles(
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "id, full_name, bio, location, photos, profile_completed, birthdate, interests, gender_identity, updated_at, privacy_settings, safety_settings, lifestyle_interests"
+      "id, username, full_name, bio, location, photos, avatar_url, profile_completed, birthdate, interests, gender_identity, sexual_orientation, updated_at, privacy_settings, safety_settings, lifestyle_interests"
     )
     .neq("id", myId)
     .eq("profile_completed", true)
