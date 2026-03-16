@@ -79,7 +79,7 @@ const SwipeContainer: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const rows = await fetchDiscoverProfiles(user.id);
+        const rows = await fetchDiscoverProfiles(user.id, { includeLocalDemo: true });
         setProfiles(rows.map(mapToSwipeProfile));
         setCurrentIndex(0);
       } catch (loadError: any) {
