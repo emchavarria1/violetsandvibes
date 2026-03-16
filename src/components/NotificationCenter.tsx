@@ -3,16 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bell, Heart, MessageCircle, Calendar, Settings } from "lucide-react";
+import { Bell, Heart, MessageCircle, Calendar, Settings, Sparkles } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/lib/i18n";
+import { getProfileVibeLabel } from "@/lib/vibes";
 
 type NotificationRow = {
   id: string;
   recipient_id: string;
   actor_id: string | null;
   type: string;
+  vibe?: string | null;
   post_id: string | null;
   comment_id: string | null;
   created_at: string;
@@ -82,6 +84,9 @@ function groupKey(n: HydratedNotification) {
 const GROUP_ORDER = ["New", "Today", "This week", "Earlier"] as const;
 
 function getIcon(type: string) {
+  if (type === "vibe") {
+    return <Sparkles className="w-5 h-5 text-violet-200" />;
+  }
   if (type === "post_like" || type === "match") {
     return <Heart className="w-5 h-5 text-pink-300" />;
   }
@@ -146,6 +151,13 @@ const NotificationCenter: React.FC = () => {
     const snippet = n.postSnippet ? `“${n.postSnippet}”` : "";
 
     switch (n.type) {
+      case "vibe": {
+        const vibeLabel = getProfileVibeLabel(n.vibe)?.toLowerCase() ?? "warm";
+        return {
+          title: `${actor} sent you a ${vibeLabel} vibe`,
+          message: "Open their profile to see if the energy feels mutual.",
+        };
+      }
       case "post_like":
         return {
           title: `${actor} liked your post`,
@@ -280,12 +292,30 @@ const NotificationCenter: React.FC = () => {
 
     setLoading(true);
 
-    const { data, error: loadError } = await supabase
+    let data: any[] | null = null;
+    let loadError: any = null;
+
+    const initialResult = await supabase
       .from("notifications")
-      .select("id, recipient_id, actor_id, type, post_id, comment_id, created_at, read_at")
+      .select("id, recipient_id, actor_id, type, vibe, post_id, comment_id, created_at, read_at")
       .eq("recipient_id", user.id)
       .order("created_at", { ascending: false })
       .limit(200);
+
+    data = initialResult.data;
+    loadError = initialResult.error;
+
+    if (loadError && `${loadError.message || ""}`.toLowerCase().includes("vibe")) {
+      const fallbackResult = await supabase
+        .from("notifications")
+        .select("id, recipient_id, actor_id, type, post_id, comment_id, created_at, read_at")
+        .eq("recipient_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(200);
+
+      data = fallbackResult.data;
+      loadError = fallbackResult.error;
+    }
 
     if (loadError) {
       console.error("loadNotifications error:", loadError);
@@ -376,6 +406,11 @@ const NotificationCenter: React.FC = () => {
 
   const openNotification = async (n: any) => {
     if (isUnread(n)) await markAsRead(n.id);
+
+    if (n.type === "vibe" && n.actor_id) {
+      navigate(`/profile/${n.actor_id}`);
+      return;
+    }
 
     const t = encodeURIComponent(n.type || "");
     const params = new URLSearchParams();
@@ -644,6 +679,11 @@ const NotificationCenter: React.FC = () => {
                           {n.type === "post_like" && (
                             <div className="mt-2 text-xs text-white/60">
                               {t("tapToViewPost")}
+                            </div>
+                          )}
+                          {n.type === "vibe" && (
+                            <div className="mt-2 text-xs text-white/60">
+                              Tap to open profile
                             </div>
                           )}
                         </div>

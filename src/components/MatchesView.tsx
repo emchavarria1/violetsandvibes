@@ -7,12 +7,15 @@ import { supabase } from "@/lib/supabase";
 import { fetchMyMatches, type MatchRow } from "@/lib/matches";
 import { getOrCreateDirectConversation } from "@/lib/messaging";
 import { loadBlockedUserIdSet } from "@/lib/safety";
+import { getPrimaryProfilePhoto } from "@/lib/profiles";
+import { getProfileVibeLabel, isProfileVibe } from "@/lib/vibes";
 
 type MatchProfileRow = {
   id: string;
   full_name: string | null;
   username: string | null;
   photos: string[] | null;
+  avatar_url?: string | null;
   location: string | null;
 };
 
@@ -26,6 +29,7 @@ type UiMatch = {
   createdAt: string;
   isNewMatch: boolean;
   hasUnread: boolean;
+  receivedVibe?: string | null;
   lastMessageText?: string | null;
   lastMessageAt?: string | null;
 };
@@ -64,7 +68,8 @@ const MatchesView: React.FC = () => {
   const toUiMatch = (
     row: MatchRow,
     myId: string,
-    prof?: MatchProfileRow
+    prof?: MatchProfileRow,
+    receivedVibe?: string | null
   ): UiMatch => {
     const otherUserId = row.user1_id === myId ? row.user2_id : row.user1_id;
     const createdAtMs = new Date(row.created_at).getTime();
@@ -74,10 +79,11 @@ const MatchesView: React.FC = () => {
       conversationId: row.conversation_id,
       otherUserId,
       name: prof?.full_name || prof?.username || "Member",
-      photo: prof?.photos?.[0] ?? null,
+      photo: getPrimaryProfilePhoto(prof) ?? null,
       location: prof?.location ?? null,
       createdAt: row.created_at,
       hasUnread: false,
+      receivedVibe: receivedVibe ?? null,
       lastMessageText: null,
       lastMessageAt: null,
       isNewMatch:
@@ -168,7 +174,7 @@ const MatchesView: React.FC = () => {
         if (otherUserIds.length > 0) {
           const { data, error: profileError } = await supabase
             .from("profiles")
-            .select("id, full_name, username, photos, location")
+            .select("id, full_name, username, photos, avatar_url, location")
             .in("id", otherUserIds);
 
           if (profileError) throw profileError;
@@ -178,10 +184,30 @@ const MatchesView: React.FC = () => {
         const profileById = new Map<string, MatchProfileRow>();
         profileRows.forEach((p) => profileById.set(p.id, p));
 
+        const receivedVibeByUserId = new Map<string, string>();
+        if (otherUserIds.length > 0) {
+          const { data: receivedVibeRows, error: receivedVibeError } = await supabase
+            .from("likes")
+            .select("liker_id, vibe")
+            .eq("liked_id", user.id)
+            .in("liker_id", otherUserIds)
+            .not("vibe", "is", null);
+
+          if (receivedVibeError) {
+            console.warn("received vibe lookup failed:", receivedVibeError.message);
+          } else {
+            (receivedVibeRows ?? []).forEach((row: any) => {
+              if (typeof row?.liker_id === "string" && isProfileVibe(row?.vibe)) {
+                receivedVibeByUserId.set(row.liker_id, row.vibe);
+              }
+            });
+          }
+        }
+
         const uiRows = visibleRows.map((m: MatchRow) => {
           const otherUserId = m.user1_id === user.id ? m.user2_id : m.user1_id;
           const prof = profileById.get(otherUserId);
-          return toUiMatch(m, user.id, prof);
+          return toUiMatch(m, user.id, prof, receivedVibeByUserId.get(otherUserId) ?? null);
         });
 
         const convoIds = uiRows
@@ -274,11 +300,23 @@ const MatchesView: React.FC = () => {
           if (blockedUserIds.has(otherUserId)) return;
           const { data: profileRow } = await supabase
             .from("profiles")
-            .select("id, full_name, username, photos, location")
+            .select("id, full_name, username, photos, avatar_url, location")
             .eq("id", otherUserId)
             .maybeSingle();
 
-          const ui = toUiMatch(row, user.id, (profileRow as MatchProfileRow | null) ?? undefined);
+          const { data: receivedVibeRow } = await supabase
+            .from("likes")
+            .select("vibe")
+            .eq("liker_id", otherUserId)
+            .eq("liked_id", user.id)
+            .maybeSingle();
+
+          const ui = toUiMatch(
+            row,
+            user.id,
+            (profileRow as MatchProfileRow | null) ?? undefined,
+            isProfileVibe(receivedVibeRow?.vibe) ? receivedVibeRow.vibe : null
+          );
 
           setMatches((prev) => {
             if (prev.some((m) => m.matchId === row.id)) return prev;
@@ -413,6 +451,11 @@ const MatchesView: React.FC = () => {
                 {match.location ? (
                   <p className="text-xs text-white/70">{match.location}</p>
                 ) : null}
+                {match.receivedVibe ? (
+                  <p className="mt-1 text-[11px] font-medium text-violet-200">
+                    {getProfileVibeLabel(match.receivedVibe)} vibe
+                  </p>
+                ) : null}
                 <div className="mt-2 flex gap-2 justify-center">
                   <button
                     type="button"
@@ -495,6 +538,11 @@ const MatchesView: React.FC = () => {
                         ? match.lastMessageText
                         : "Tap to open chat"}
                     </p>
+                    {match.receivedVibe ? (
+                      <p className="text-xs text-violet-200/90 truncate">
+                        Started with a {getProfileVibeLabel(match.receivedVibe)?.toLowerCase()} vibe
+                      </p>
+                    ) : null}
                     {match.location ? (
                       <p className="text-xs text-white/60 truncate">{match.location}</p>
                     ) : null}
