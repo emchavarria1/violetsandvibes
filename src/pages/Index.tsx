@@ -27,7 +27,7 @@ const Index: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await fetchDiscoverProfiles(user.id);
+        const data = await fetchDiscoverProfiles(user.id, { includeLocalDemo: true });
         setRows(data);
       } catch (e: any) {
         console.error(e);

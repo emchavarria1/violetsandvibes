@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { findLocalDemoProfileById } from '@/lib/profiles';
 import { useAuth } from './useAuth';
 
 function calcAgeFromBirthdate(birthdate?: string | null) {
@@ -18,6 +19,22 @@ export const useProfile = (id?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user, loading: authLoading } = useAuth();
+
+  const mapProfileRecord = (data: any) => ({
+    ...data,
+    user_id: data.id,
+    name: data.full_name || data.username || 'Member',
+    age: calcAgeFromBirthdate(data.birthdate),
+    lgbtq_status: data.sexual_orientation,
+    genderIdentity: data.gender_identity,
+    sexualOrientation: data.sexual_orientation,
+    lifestyle: data.lifestyle_interests || {},
+    privacy: data.privacy_settings || {},
+    safety: data.safety_settings || {},
+    profileCompleted: !!data.profile_completed,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
+  });
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -46,28 +63,13 @@ export const useProfile = (id?: string) => {
 
         if (fetchError) {
           if (fetchError.code === 'PGRST116') {
-            // No profile found
-            setProfile(null);
+            const localDemoProfile = id ? await findLocalDemoProfileById(userId) : null;
+            setProfile(localDemoProfile ? mapProfileRecord(localDemoProfile) : null);
           } else {
             throw fetchError;
           }
         } else {
-          // Return DB-shaped fields + legacy aliases used by older components.
-          setProfile({
-            ...data,
-            user_id: data.id,
-            name: data.full_name || data.username || 'Member',
-            age: calcAgeFromBirthdate(data.birthdate),
-            lgbtq_status: data.sexual_orientation,
-            genderIdentity: data.gender_identity,
-            sexualOrientation: data.sexual_orientation,
-            lifestyle: data.lifestyle_interests || {},
-            privacy: data.privacy_settings || {},
-            safety: data.safety_settings || {},
-            profileCompleted: !!data.profile_completed,
-            createdAt: data.created_at,
-            updatedAt: data.updated_at,
-          });
+          setProfile(mapProfileRecord(data));
         }
       } catch (err) {
         console.error('Error fetching profile:', err);

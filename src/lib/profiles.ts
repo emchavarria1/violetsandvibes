@@ -8,15 +8,21 @@ import {
 export type ProfileRow = {
   id: string;
   full_name: string | null;
+  username?: string | null;
   bio: string | null;
   location: string | null;
   photos: string[] | null;
+  avatar_url?: string | null;
   profile_completed: boolean | null;
   birthdate?: string | null;
   interests?: string[] | null;
   gender_identity?: string | null;
+  sexual_orientation?: string | null;
   privacy_settings?: Record<string, any> | null;
   safety_settings?: Record<string, any> | null;
+  lifestyle_interests?: Record<string, any> | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 };
 
 type MatchingPreferences = {
@@ -42,6 +48,172 @@ type DiscoverProfileRowRaw = ProfileRow & {
   safety_settings?: Record<string, any> | null;
   lifestyle_interests?: Record<string, any> | null;
 };
+
+type DemoProfilesPayload = {
+  seed_profiles?: unknown;
+};
+
+const LOCAL_DEMO_PROFILE_LABEL = "Founding Community Member";
+let localDemoProfilesPromise: Promise<ProfileRow[]> | null = null;
+
+function shouldUseLocalDemoProfiles() {
+  if (import.meta.env.VITE_ENABLE_LOCAL_DEMO_PROFILES === "true") return true;
+  return import.meta.env.DEV;
+}
+
+function coerceStringArray(value: unknown) {
+  if (!Array.isArray(value)) return [] as string[];
+  return value.map((entry) => `${entry ?? ""}`.trim()).filter(Boolean);
+}
+
+function normalizeDemoProfile(raw: any): ProfileRow {
+  const privacy =
+    raw?.privacy_settings && typeof raw.privacy_settings === "object"
+      ? (raw.privacy_settings as Record<string, any>)
+      : {};
+  const safety =
+    raw?.safety_settings && typeof raw.safety_settings === "object"
+      ? (raw.safety_settings as Record<string, any>)
+      : {};
+  const lifestyle =
+    raw?.lifestyle_interests && typeof raw.lifestyle_interests === "object"
+      ? (raw.lifestyle_interests as Record<string, any>)
+      : {};
+  const photos = coerceStringArray(raw?.photos);
+
+  return {
+    id: `${raw?.id ?? ""}`.trim(),
+    full_name: typeof raw?.full_name === "string" ? raw.full_name : null,
+    username: typeof raw?.username === "string" ? raw.username : null,
+    bio: typeof raw?.bio === "string" ? raw.bio : null,
+    location: typeof raw?.location === "string" ? raw.location : null,
+    photos,
+    avatar_url: typeof raw?.avatar_url === "string" ? raw.avatar_url : photos[0] ?? null,
+    profile_completed: raw?.profile_completed !== false,
+    birthdate: typeof raw?.birthdate === "string" ? raw.birthdate : null,
+    interests: coerceStringArray(raw?.interests),
+    gender_identity: typeof raw?.gender_identity === "string" ? raw.gender_identity : null,
+    sexual_orientation:
+      typeof raw?.sexual_orientation === "string" ? raw.sexual_orientation : null,
+    privacy_settings: {
+      demo_profile: true,
+      demo_label: LOCAL_DEMO_PROFILE_LABEL,
+      ...privacy,
+    },
+    safety_settings: {
+      seeded_demo_profile: true,
+      ...safety,
+    },
+    lifestyle_interests: lifestyle,
+    created_at: typeof raw?.created_at === "string" ? raw.created_at : null,
+    updated_at:
+      typeof raw?.updated_at === "string"
+        ? raw.updated_at
+        : typeof raw?.last_active_at === "string"
+          ? raw.last_active_at
+          : null,
+  };
+}
+
+function toDiscoverProfile(row: DiscoverProfileRowRaw): ProfileRow {
+  return {
+    id: row.id,
+    full_name: row.full_name,
+    username: row.username ?? null,
+    bio: row.bio,
+    location: row.privacy_settings?.showDistance === false ? null : row.location,
+    photos: row.photos,
+    avatar_url: row.avatar_url ?? row.photos?.[0] ?? null,
+    profile_completed: row.profile_completed,
+    birthdate: row.privacy_settings?.showAge === false ? null : row.birthdate ?? null,
+    interests: row.interests ?? [],
+    gender_identity: row.gender_identity ?? null,
+    sexual_orientation: row.sexual_orientation ?? null,
+    privacy_settings: row.privacy_settings ?? null,
+    safety_settings: row.safety_settings ?? null,
+    lifestyle_interests: row.lifestyle_interests ?? null,
+    created_at: row.created_at ?? null,
+    updated_at: row.updated_at ?? null,
+  };
+}
+
+export function isDemoProfile(
+  profile:
+    | {
+        privacy_settings?: Record<string, any> | null;
+        privacy?: Record<string, any> | null;
+        safety_settings?: Record<string, any> | null;
+        safety?: Record<string, any> | null;
+      }
+    | null
+    | undefined
+) {
+  if (!profile) return false;
+
+  const privacy =
+    (profile.privacy_settings && typeof profile.privacy_settings === "object"
+      ? profile.privacy_settings
+      : null) ??
+    (profile.privacy && typeof profile.privacy === "object" ? profile.privacy : null);
+  const safety =
+    (profile.safety_settings && typeof profile.safety_settings === "object"
+      ? profile.safety_settings
+      : null) ??
+    (profile.safety && typeof profile.safety === "object" ? profile.safety : null);
+
+  return privacy?.demo_profile === true || safety?.seeded_demo_profile === true;
+}
+
+export function getDemoProfileLabel(
+  profile:
+    | {
+        privacy_settings?: Record<string, any> | null;
+        privacy?: Record<string, any> | null;
+      }
+    | null
+    | undefined
+) {
+  if (!profile) return LOCAL_DEMO_PROFILE_LABEL;
+
+  const privacy =
+    (profile.privacy_settings && typeof profile.privacy_settings === "object"
+      ? profile.privacy_settings
+      : null) ??
+    (profile.privacy && typeof profile.privacy === "object" ? profile.privacy : null);
+  const label = typeof privacy?.demo_label === "string" ? privacy.demo_label.trim() : "";
+  return label || LOCAL_DEMO_PROFILE_LABEL;
+}
+
+export async function fetchLocalDemoProfiles() {
+  if (!shouldUseLocalDemoProfiles()) return [] as ProfileRow[];
+  if (!localDemoProfilesPromise) {
+    localDemoProfilesPromise = fetch("/demo/seed_profiles.ready.json", { cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Local demo profiles unavailable (${response.status})`);
+        }
+        return (await response.json()) as DemoProfilesPayload;
+      })
+      .then((payload) => {
+        const rows = Array.isArray(payload?.seed_profiles) ? payload.seed_profiles : [];
+        return rows
+          .map((row) => normalizeDemoProfile(row))
+          .filter((row) => Boolean(row.id) && row.profile_completed === true);
+      })
+      .catch((error) => {
+        console.warn("Could not load local demo profiles.", error);
+        return [] as ProfileRow[];
+      });
+  }
+
+  return await localDemoProfilesPromise;
+}
+
+export async function findLocalDemoProfileById(id: string) {
+  if (!id) return null;
+  const profiles = await fetchLocalDemoProfiles();
+  return profiles.find((profile) => profile.id === id) ?? null;
+}
 
 const isTruthy = (value: unknown, fallback: boolean) =>
   typeof value === "boolean" ? value : fallback;
@@ -276,7 +448,12 @@ function deriveLookingForTags(row: DiscoverProfileRowRaw) {
   return tags;
 }
 
-export async function fetchDiscoverProfiles(myId: string) {
+export async function fetchDiscoverProfiles(
+  myId: string,
+  options?: {
+    includeLocalDemo?: boolean;
+  }
+) {
   const matchingPrefs = await loadMyMatchingPreferences(myId);
   const safetyPrefs = await loadMySafetyPreferences(myId);
   const discoverFilters = await loadMyDiscoverFilters(myId);
@@ -369,17 +546,21 @@ export async function fetchDiscoverProfiles(myId: string) {
     });
   }
 
-  return rows.slice(0, 50).map((row) => ({
-    id: row.id,
-    full_name: row.full_name,
-    bio: row.bio,
-    location: row.privacy_settings?.showDistance === false ? null : row.location,
-    photos: row.photos,
-    profile_completed: row.profile_completed,
-    birthdate: row.privacy_settings?.showAge === false ? null : (row as any).birthdate ?? null,
-    interests: (row as any).interests ?? [],
-    gender_identity: (row as any).gender_identity ?? null,
-    privacy_settings: row.privacy_settings ?? null,
-    safety_settings: row.safety_settings ?? null,
-  })) as ProfileRow[];
+  const databaseProfiles = rows.slice(0, 50).map((row) => toDiscoverProfile(row));
+  if (!options?.includeLocalDemo) return databaseProfiles;
+
+  const demoProfiles = await fetchLocalDemoProfiles();
+  if (demoProfiles.length === 0) return databaseProfiles;
+
+  const seenIds = new Set(databaseProfiles.map((profile) => profile.id));
+  const mergedProfiles = [...databaseProfiles];
+
+  for (const demoProfile of demoProfiles) {
+    if (mergedProfiles.length >= 50) break;
+    if (!demoProfile.id || demoProfile.id === myId || seenIds.has(demoProfile.id)) continue;
+    seenIds.add(demoProfile.id);
+    mergedProfiles.push(demoProfile);
+  }
+
+  return mergedProfiles;
 }

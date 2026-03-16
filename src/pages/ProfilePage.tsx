@@ -16,6 +16,7 @@ import MessageButton from "@/components/MessageButton";
 import ProfileSafetyScore from "@/components/ProfileSafetyScore";
 import KindnessEndorsements from "@/components/KindnessEndorsements";
 import { supabase } from "@/lib/supabase";
+import { getDemoProfileLabel, isDemoProfile } from "@/lib/profiles";
 import { useToast } from "@/hooks/use-toast";
 
 function calcAge(birthdate?: string | null) {
@@ -128,6 +129,8 @@ const ProfilePage: React.FC = () => {
   const [formData, setFormData] = useState<EditableProfileForm>(EMPTY_FORM);
 
   const isOwnProfile = !!user && !!profile && profile.id === user.id;
+  const isDemoProfileView = isDemoProfile(profile);
+  const demoProfileLabel = getDemoProfileLabel(profile);
   const [liked, setLiked] = useState(false);
   const [matched, setMatched] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
@@ -241,7 +244,7 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     const run = async () => {
-      if (!user || !otherUserId) {
+      if (!user || !otherUserId || isDemoProfileView) {
         setLiked(false);
         setMatched(false);
         setMatchConversationId(null);
@@ -283,11 +286,11 @@ const ProfilePage: React.FC = () => {
     };
 
     void run();
-  }, [user?.id, otherUserId]);
+  }, [user?.id, otherUserId, isDemoProfileView]);
 
   useEffect(() => {
     const loadBlockState = async () => {
-      if (!user?.id || !otherUserId) {
+      if (!user?.id || !otherUserId || isDemoProfileView) {
         setIsBlocked(false);
         return;
       }
@@ -315,7 +318,7 @@ const ProfilePage: React.FC = () => {
     };
 
     void loadBlockState();
-  }, [user?.id, otherUserId]);
+  }, [user?.id, otherUserId, isDemoProfileView]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -474,7 +477,7 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleLike = async () => {
-    if (!user || !otherUserId) return;
+    if (!user || !otherUserId || isDemoProfileView) return;
 
     try {
       setLikeLoading(true);
@@ -560,7 +563,7 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleToggleBlock = async () => {
-    if (!user?.id || !otherUserId) return;
+    if (!user?.id || !otherUserId || isDemoProfileView) return;
 
     try {
       setBlockLoading(true);
@@ -690,6 +693,14 @@ const ProfilePage: React.FC = () => {
                   {age != null ? `, ${age}` : ""}
                 </div>
 
+                {isDemoProfileView ? (
+                  <div className="mt-3">
+                    <Badge className="border-pink-300/35 bg-pink-500/12 text-pink-100">
+                      {demoProfileLabel}
+                    </Badge>
+                  </div>
+                ) : null}
+
                 {profile.location ? (
                   <div className="flex items-center justify-center gap-1 text-white/80 mt-2">
                     <MapPin className="w-4 h-4" />
@@ -753,14 +764,16 @@ const ProfilePage: React.FC = () => {
           </CardContent>
         </Card>
 
-        <KindnessEndorsements
-          profileId={profile.id}
-          displayName={displayName}
-          currentUserId={user?.id}
-          isOwnProfile={isOwnProfile}
-          privacySettings={livePrivacySettings ?? profile.privacy ?? profile.privacy_settings}
-          onUpdated={setLivePrivacySettings}
-        />
+        {isDemoProfileView ? null : (
+          <KindnessEndorsements
+            profileId={profile.id}
+            displayName={displayName}
+            currentUserId={user?.id}
+            isOwnProfile={isOwnProfile}
+            privacySettings={livePrivacySettings ?? profile.privacy ?? profile.privacy_settings}
+            onUpdated={setLivePrivacySettings}
+          />
+        )}
 
         {/* About */}
         <Card className="border-white/12 bg-[linear-gradient(145deg,rgba(18,10,38,0.94),rgba(8,12,28,0.94))] text-white shadow-xl backdrop-blur-md">
@@ -784,7 +797,7 @@ const ProfilePage: React.FC = () => {
                     <Edit className="w-4 h-4 mr-2" />
                     {editing ? "Cancel" : "Edit"}
                   </Button>
-                ) : (
+                ) : isDemoProfileView ? null : (
                   <ProfileMenu userId={profile.id} userName={displayName} />
                 )}
               </div>
@@ -1069,63 +1082,75 @@ const ProfilePage: React.FC = () => {
             </>
           ) : (
             <div className="space-y-3">
-              <Button
-                variant="outline"
-                className={`w-full ${
-                  isBlocked
-                    ? "border-emerald-300/30 text-emerald-100 hover:bg-emerald-500/10"
-                    : "border-red-300/40 text-red-100 hover:bg-red-500/10"
-                }`}
-                onClick={handleToggleBlock}
-                disabled={blockLoading}
-              >
-                <Ban className="w-4 h-4 mr-2" />
-                {blockLoading
-                  ? "Updating…"
-                  : isBlocked
-                    ? "Unblock user"
-                    : "Block user"}
-              </Button>
-
-              {isBlocked ? (
-                <div className="text-sm text-white/80 bg-black/20 border border-white/10 rounded-xl px-3 py-2">
-                  You blocked this user. Unblock to see messaging and match actions again.
-                </div>
-              ) : null}
-
-              {isBlocked ? null : matched ? (
+              {isDemoProfileView ? (
                 <>
                   <div className="text-sm text-white/80 bg-black/20 border border-white/10 rounded-xl px-3 py-2">
-                    Matched 💜 You can message each other.
+                    {demoProfileLabel} profiles are local demo previews. Browsing is enabled, but likes,
+                    messages, and block actions stay off until you are working with real users.
                   </div>
-
-                  <MessageButton
-                    userId={profile.id}
-                    userName={displayName}
-                    className="w-full"
-                  />
                 </>
               ) : (
                 <>
                   <Button
-                    className="w-full bg-pink-500 hover:bg-pink-600"
-                    onClick={handleLike}
-                    disabled={likeLoading || liked}
+                    variant="outline"
+                    className={`w-full ${
+                      isBlocked
+                        ? "border-emerald-300/30 text-emerald-100 hover:bg-emerald-500/10"
+                        : "border-red-300/40 text-red-100 hover:bg-red-500/10"
+                    }`}
+                    onClick={handleToggleBlock}
+                    disabled={blockLoading}
                   >
-                    {likeLoading ? "Liking…" : liked ? "Liked 💜" : "Like this person 💜"}
+                    <Ban className="w-4 h-4 mr-2" />
+                    {blockLoading
+                      ? "Updating…"
+                      : isBlocked
+                        ? "Unblock user"
+                        : "Block user"}
                   </Button>
 
-                  <MessageButton
-                    userId={profile.id}
-                    userName={displayName}
-                    className="w-full"
-                  />
-
-                  {likeError && (
-                    <div className="text-sm text-pink-200 bg-pink-900/20 border border-pink-400/30 rounded-md px-3 py-2">
-                      {likeError}
+                  {isBlocked ? (
+                    <div className="text-sm text-white/80 bg-black/20 border border-white/10 rounded-xl px-3 py-2">
+                      You blocked this user. Unblock to see messaging and match actions again.
                     </div>
+                  ) : null}
+
+                  {isBlocked ? null : matched ? (
+                    <>
+                      <div className="text-sm text-white/80 bg-black/20 border border-white/10 rounded-xl px-3 py-2">
+                        Matched 💜 You can message each other.
+                      </div>
+
+                      <MessageButton
+                        userId={profile.id}
+                        userName={displayName}
+                        className="w-full"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        className="w-full bg-pink-500 hover:bg-pink-600"
+                        onClick={handleLike}
+                        disabled={likeLoading || liked}
+                      >
+                        {likeLoading ? "Liking…" : liked ? "Liked 💜" : "Like this person 💜"}
+                      </Button>
+
+                      <MessageButton
+                        userId={profile.id}
+                        userName={displayName}
+                        className="w-full"
+                      />
+
+                      {likeError && (
+                        <div className="text-sm text-pink-200 bg-pink-900/20 border border-pink-400/30 rounded-md px-3 py-2">
+                          {likeError}
+                        </div>
+                      )}
+                    </>
                   )}
+
                 </>
               )}
             </div>

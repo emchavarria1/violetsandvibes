@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import type { ProfileRow } from "@/lib/profiles";
+import { getDemoProfileLabel, isDemoProfile, type ProfileRow } from "@/lib/profiles";
 import ProfileSafetyScore from "./ProfileSafetyScore";
 import { KindnessReputationPill } from "./KindnessEndorsements";
 import { useI18n } from "@/lib/i18n";
@@ -17,6 +17,8 @@ export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
   const photo = profile.photos?.[0];
   const showPhoto = !!photo && !imageFailed;
   const privacy = (profile.privacy_settings ?? {}) as Record<string, any>;
+  const demoProfile = isDemoProfile(profile);
+  const demoLabel = getDemoProfileLabel(profile);
   const socialCircles = Array.isArray(privacy.social_circles)
     ? privacy.social_circles.filter((value: unknown): value is string => typeof value === "string")
     : [];
@@ -63,6 +65,12 @@ export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
             <div className="text-xs text-white/70">{profile.location}</div>
           ) : null}
         </div>
+
+        {demoProfile ? (
+          <div className="inline-flex max-w-full items-center rounded-full border border-pink-300/35 bg-pink-500/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-pink-100">
+            {demoLabel}
+          </div>
+        ) : null}
 
         <ProfileSafetyScore
           compact

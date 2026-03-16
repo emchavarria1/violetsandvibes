@@ -1,9 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { v5 as uuidv5 } from 'uuid';
 import seedData from '../data/seed_profiles.json' with { type: 'json' };
 
 const root = process.cwd();
 const outputDir = path.join(root, 'public', 'demo');
+const namespace = 'a7be2314-b8cc-4a2a-a5f8-f4cb3721fd30';
 fs.mkdirSync(outputDir, { recursive: true });
 
 function slugToUsername(slug: string) {
@@ -20,6 +22,7 @@ const readyProfiles = seedData.seed_profiles.map((profile) => {
   const photoPath = `/seed-avatars/${profile.slug}.svg`;
   return {
     ...profile,
+    id: uuidv5(`vv-seed:${profile.slug}`, namespace),
     full_name: profile.name,
     username: slugToUsername(profile.slug),
     birthdate: deriveBirthdate(profile.age),
