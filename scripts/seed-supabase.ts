@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import seedData from '../data/seed_profiles.json' with { type: 'json' };
 import { ensureSeedAuthUsers, slugToUsername } from './seed-auth-users.js';
+import { resolveSeedPhotoPath } from './seed-photo.js';
 
 dotenv.config({ path: process.env.DOTENV_CONFIG_PATH || '.env.seed' });
 
@@ -30,7 +31,7 @@ async function run() {
   const now = new Date().toISOString();
   const authUsers = await ensureSeedAuthUsers(supabase as any, seedData.seed_profiles);
   const rows = seedData.seed_profiles.map((profile) => {
-    const photoPath = `/seed-avatars/${profile.slug}.svg`;
+    const photoPath = resolveSeedPhotoPath(profile.slug);
     const authUser = authUsers.get(profile.slug);
 
     if (!authUser?.id) {

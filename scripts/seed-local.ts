@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { v5 as uuidv5 } from 'uuid';
 import seedData from '../data/seed_profiles.json' with { type: 'json' };
+import { resolveSeedPhotoPath } from './seed-photo.js';
 
 const root = process.cwd();
 const outputDir = path.join(root, 'public', 'demo');
@@ -19,7 +20,7 @@ function deriveBirthdate(age: number) {
 }
 
 const readyProfiles = seedData.seed_profiles.map((profile) => {
-  const photoPath = `/seed-avatars/${profile.slug}.svg`;
+  const photoPath = resolveSeedPhotoPath(profile.slug);
   return {
     ...profile,
     id: uuidv5(`vv-seed:${profile.slug}`, namespace),

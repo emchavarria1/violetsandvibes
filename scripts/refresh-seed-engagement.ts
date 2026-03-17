@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import { v5 as uuidv5 } from "uuid";
 import seedData from "../data/seed_profiles.json" with { type: "json" };
 import { ensureSeedAuthUsers, slugToUsername } from "./seed-auth-users.js";
+import { resolveSeedPhotoPath } from "./seed-photo.js";
 
 type Target = "local" | "supabase" | "both";
 
@@ -79,7 +80,7 @@ function pickDistinct(values: string[], count: number, seed: number, exclude: st
 
 function buildEngagementState(profile: (typeof seedData.seed_profiles)[number]) {
   const seed = hashString(`${rotationKey}:${profile.slug}`);
-  const photoPath = `/seed-avatars/${profile.slug}.svg`;
+  const photoPath = resolveSeedPhotoPath(profile.slug);
   const baseVibes = Array.isArray(profile.vibe_tags)
     ? profile.vibe_tags.filter((value): value is string => typeof value === "string")
     : [];
