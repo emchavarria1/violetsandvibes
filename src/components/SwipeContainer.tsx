@@ -4,7 +4,7 @@ import { useSwipeLimit } from '@/hooks/useSwipeLimit';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { useAuth } from '@/hooks/useAuth';
-import { fetchDiscoverProfiles, type ProfileRow } from '@/lib/profiles';
+import { fetchDiscoverProfiles, getProfilePhotoCropClass, type ProfileRow } from '@/lib/profiles';
 import { sendProfileVibe, type ProfileVibe } from '@/lib/vibes';
 import { useToast } from '@/hooks/use-toast';
 
@@ -14,6 +14,7 @@ interface SwipeProfile {
   age?: number | null;
   bio: string;
   photos: string[];
+  photoCropClass?: string;
   location: string;
   interests?: string[];
   pronouns?: string;
@@ -50,6 +51,7 @@ const mapToSwipeProfile = (profile: ProfileRow): SwipeProfile => ({
   age: calculateAge(profile.birthdate),
   bio: profile.bio?.trim() || 'Looking to meet kind, aligned people in community.',
   photos: profile.photos && profile.photos.length > 0 ? profile.photos : ['/api/placeholder/400/600'],
+  photoCropClass: getProfilePhotoCropClass(profile),
   location: profile.location?.trim() || '',
   interests: profile.interests || [],
   pronouns: profile.gender_identity || undefined,

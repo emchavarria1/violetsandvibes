@@ -20,7 +20,9 @@ function deriveBirthdate(age: number) {
 }
 
 const readyProfiles = seedData.seed_profiles.map((profile) => {
-  const photoPath = resolveSeedPhotoPath(profile.slug);
+  const preferredPhotoFile =
+    profile.photo_file ?? ((profile as { photoFile?: string | null }).photoFile ?? null);
+  const photoPath = resolveSeedPhotoPath(profile.slug, preferredPhotoFile);
   return {
     ...profile,
     id: uuidv5(`vv-seed:${profile.slug}`, namespace),

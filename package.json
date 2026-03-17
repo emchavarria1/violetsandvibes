@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "generate:avatars": "tsx --tsconfig tsconfig.seed.json scripts/generate-placeholders.ts",
+    "seed:import-package": "tsx --tsconfig tsconfig.seed.json scripts/import-seed-package.ts",
     "seed:local": "tsx --tsconfig tsconfig.seed.json scripts/seed-local.ts",
     "seed:supabase": "tsx --tsconfig tsconfig.seed.json scripts/seed-supabase.ts",
     "seed:refresh": "tsx --tsconfig tsconfig.seed.json scripts/refresh-seed-engagement.ts",

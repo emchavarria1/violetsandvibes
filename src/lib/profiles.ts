@@ -204,6 +204,20 @@ export function getPrimaryProfilePhoto(
   return photoFromArray || avatarUrl || profilePhoto || null;
 }
 
+export function getProfilePhotoCropClass(
+  profile:
+    | {
+        privacy_settings?: Record<string, any> | null;
+        privacy?: Record<string, any> | null;
+        safety_settings?: Record<string, any> | null;
+        safety?: Record<string, any> | null;
+      }
+    | null
+    | undefined
+) {
+  return isDemoProfile(profile) ? "object-cover object-[center_16%]" : "object-cover object-center";
+}
+
 export function getDemoProfileLabel(
   profile:
     | {

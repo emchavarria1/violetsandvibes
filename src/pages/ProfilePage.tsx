@@ -20,6 +20,7 @@ import {
   getDemoActivityStatus,
   getDemoConversationStarter,
   getDemoProfileLabel,
+  getProfilePhotoCropClass,
   getPrimaryProfilePhoto,
   getDemoVibePrompt,
   getDemoVibeTags,
@@ -187,6 +188,7 @@ const ProfilePage: React.FC = () => {
   const profilePhoto = useMemo(() => {
     return getPrimaryProfilePhoto(profile) ?? "";
   }, [profile]);
+  const profilePhotoCropClass = useMemo(() => getProfilePhotoCropClass(profile), [profile]);
 
   const socialProofItems = useMemo(() => {
     const privacy = (livePrivacySettings ?? profile?.privacy ?? profile?.privacy_settings ?? {}) as Record<string, any>;
@@ -670,7 +672,7 @@ const ProfilePage: React.FC = () => {
           <CardContent className="p-6">
             <div className="flex flex-col items-center text-center gap-4">
               <Avatar className="w-28 h-28 border-2 border-white/20">
-                {profilePhoto ? <AvatarImage src={profilePhoto} /> : null}
+                {profilePhoto ? <AvatarImage src={profilePhoto} className={profilePhotoCropClass} /> : null}
                 <AvatarFallback className="bg-white/10 text-white text-xl font-semibold">
                   {getInitials(displayName)}
                 </AvatarFallback>

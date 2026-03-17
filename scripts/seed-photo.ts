@@ -3,8 +3,16 @@ import path from "node:path";
 
 const PHOTO_EXTENSIONS = ["png", "jpg", "jpeg", "webp", "avif", "svg"] as const;
 
-export function resolveSeedPhotoPath(slug: string) {
+export function resolveSeedPhotoPath(slug: string, preferredFilename?: string | null) {
   const assetDir = path.join(process.cwd(), "public", "seed-avatars");
+
+  if (preferredFilename) {
+    const preferredName = path.basename(preferredFilename.trim());
+    const preferredPath = path.join(assetDir, preferredName);
+    if (preferredName && fs.existsSync(preferredPath)) {
+      return `/seed-avatars/${preferredName}`;
+    }
+  }
 
   for (const extension of PHOTO_EXTENSIONS) {
     const filename = `${slug}.${extension}`;
@@ -16,4 +24,3 @@ export function resolveSeedPhotoPath(slug: string) {
 
   return `/seed-avatars/${slug}.svg`;
 }
-

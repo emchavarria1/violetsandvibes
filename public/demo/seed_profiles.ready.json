@@ -1,3400 +1,2875 @@
 {
   "seed_profiles": [
     {
-      "id": "7a383c8d-ddfa-5aac-ba80-032011dcd78e",
-      "name": "Maya",
+      "id": "50defeb1-9280-5556-a2d5-00d19d9a6b56",
+      "name": "Alex",
       "age": 29,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "Sacramento, CA",
-      "bio": "Plant mom, coffee addict, and Sunday morning farmer’s market wanderer. Looking for someone who likes quiet moments and deep conversations.",
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Dog mom, early morning walker, and the type to bring snacks for everyone. Looking for genuine connection without the chaos.",
       "interests": [
-        "plants",
-        "coffee",
-        "farmers markets",
-        "reading"
-      ],
-      "conversation_starter": "What's your perfect slow Sunday?",
-      "vibe_tags": [
-        "calm",
-        "thoughtful",
-        "cozy"
-      ],
-      "slug": "maya-1",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/maya-1.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Maya",
-      "username": "maya_1",
-      "birthdate": "1997-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/maya-1.svg"
-      ],
-      "avatar_url": "/seed-avatars/maya-1.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.278Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "calm",
-          "thoughtful",
-          "cozy"
-        ],
-        "conversation_starter": "What's your perfect slow Sunday?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "108c41b4-9475-520f-8016-31d97bc658ef",
-      "name": "Dani",
-      "age": 33,
-      "identity": "Queer",
-      "presentation": "Androgynous",
-      "location": "Oakland, CA",
-      "bio": "Tattoo artist who believes life is better with dogs, road trips, and midnight snacks.",
-      "interests": [
-        "tattoos",
-        "dogs",
-        "road trips",
-        "art"
-      ],
-      "conversation_starter": "If you could take a spontaneous road trip tomorrow where would you go?",
-      "vibe_tags": [
-        "adventurous",
-        "creative",
-        "loyal"
-      ],
-      "slug": "dani-2",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/dani-2.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Dani",
-      "username": "dani_2",
-      "birthdate": "1993-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Androgynous",
-      "photos": [
-        "/seed-avatars/dani-2.svg"
-      ],
-      "avatar_url": "/seed-avatars/dani-2.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.296Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "adventurous",
-          "creative",
-          "loyal"
-        ],
-        "conversation_starter": "If you could take a spontaneous road trip tomorrow where would you go?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "3f2b653c-05ee-50eb-be71-45f32e2f577a",
-      "name": "Alexis",
-      "age": 26,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Los Angeles, CA",
-      "bio": "Bookstore employee with a weakness for poetry and rainy days.",
-      "interests": [
-        "books",
-        "poetry",
-        "coffee",
-        "movies"
-      ],
-      "conversation_starter": "What book changed your life?",
-      "vibe_tags": [
-        "romantic",
-        "intellectual",
-        "soft"
-      ],
-      "slug": "alexis-3",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/alexis-3.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Alexis",
-      "username": "alexis_3",
-      "birthdate": "2000-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/alexis-3.svg"
-      ],
-      "avatar_url": "/seed-avatars/alexis-3.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.296Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "romantic",
-          "intellectual",
-          "soft"
-        ],
-        "conversation_starter": "What book changed your life?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "6454bcd1-1762-5664-a506-d457cdad85e3",
-      "name": "Jordan",
-      "age": 31,
-      "identity": "Nonbinary",
-      "presentation": "Androgynous",
-      "location": "Portland, OR",
-      "bio": "Hiking enthusiast and amateur photographer. Let’s explore somewhere new together.",
-      "interests": [
-        "hiking",
-        "photography",
-        "nature",
-        "travel"
-      ],
-      "conversation_starter": "Mountains or ocean?",
-      "vibe_tags": [
-        "outdoorsy",
-        "curious",
-        "grounded"
-      ],
-      "slug": "jordan-4",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/jordan-4.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "they/them"
-      ],
-      "profile_status": "active",
-      "full_name": "Jordan",
-      "username": "jordan_4",
-      "birthdate": "1995-06-15",
-      "sexual_orientation": "Nonbinary",
-      "gender_identity": "Androgynous",
-      "photos": [
-        "/seed-avatars/jordan-4.svg"
-      ],
-      "avatar_url": "/seed-avatars/jordan-4.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.296Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "they/them"
-        ],
-        "vibe_tags": [
-          "outdoorsy",
-          "curious",
-          "grounded"
-        ],
-        "conversation_starter": "Mountains or ocean?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "a1a5b5b3-54fa-5390-ae91-6573f94f23dd",
-      "name": "Sofia",
-      "age": 28,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "San Diego, CA",
-      "bio": "Salsa dancing foodie who believes life should be full of flavor.",
-      "interests": [
-        "dancing",
-        "food",
-        "music",
-        "travel"
-      ],
-      "conversation_starter": "Favorite comfort food?",
-      "vibe_tags": [
-        "playful",
-        "social",
-        "warm"
-      ],
-      "slug": "sofia-5",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/sofia-5.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Sofia",
-      "username": "sofia_5",
-      "birthdate": "1998-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/sofia-5.svg"
-      ],
-      "avatar_url": "/seed-avatars/sofia-5.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.296Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "playful",
-          "social",
-          "warm"
-        ],
-        "conversation_starter": "Favorite comfort food?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "67ecd520-688b-5c48-9d29-19289b660054",
-      "name": "Riley",
-      "age": 34,
-      "identity": "Queer",
-      "presentation": "Soft masc",
-      "location": "Seattle, WA",
-      "bio": "Therapist by day, painter by night. I value kindness and emotional intelligence.",
-      "interests": [
-        "painting",
-        "mental health",
-        "journaling",
-        "art"
-      ],
-      "conversation_starter": "What creative hobby helps you relax?",
-      "vibe_tags": [
-        "empathetic",
-        "artsy",
-        "steady"
-      ],
-      "slug": "riley-6",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/riley-6.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Riley",
-      "username": "riley_6",
-      "birthdate": "1992-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Soft masc",
-      "photos": [
-        "/seed-avatars/riley-6.svg"
-      ],
-      "avatar_url": "/seed-avatars/riley-6.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.297Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "empathetic",
-          "artsy",
-          "steady"
-        ],
-        "conversation_starter": "What creative hobby helps you relax?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "6f4aff32-8c0f-509c-a3d9-9e703461d025",
-      "name": "Tasha",
-      "age": 30,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Phoenix, AZ",
-      "bio": "Gym lover and smoothie enthusiast who likes balancing adventure and cozy nights.",
-      "interests": [
-        "fitness",
-        "smoothies",
-        "hiking",
-        "wellness"
-      ],
-      "conversation_starter": "Morning workouts or night workouts?",
-      "vibe_tags": [
-        "energetic",
-        "balanced",
-        "motivated"
-      ],
-      "slug": "tasha-7",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/tasha-7.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Tasha",
-      "username": "tasha_7",
-      "birthdate": "1996-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/tasha-7.svg"
-      ],
-      "avatar_url": "/seed-avatars/tasha-7.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.297Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "energetic",
-          "balanced",
-          "motivated"
-        ],
-        "conversation_starter": "Morning workouts or night workouts?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "a184bd84-19ef-5e15-81bc-d7955a07bfc1",
-      "name": "Kira",
-      "age": 27,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "San Jose, CA",
-      "bio": "Anime nerd, gamer, and lover of late-night ramen.",
-      "interests": [
-        "gaming",
-        "anime",
-        "ramen",
-        "movies"
-      ],
-      "conversation_starter": "Favorite game ever?",
-      "vibe_tags": [
-        "funny",
-        "nerdy",
-        "cozy"
-      ],
-      "slug": "kira-8",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/kira-8.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Kira",
-      "username": "kira_8",
-      "birthdate": "1999-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/kira-8.svg"
-      ],
-      "avatar_url": "/seed-avatars/kira-8.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.297Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "funny",
-          "nerdy",
-          "cozy"
-        ],
-        "conversation_starter": "Favorite game ever?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "9705040b-f291-5d5e-8f0c-d3abbc8b2a76",
-      "name": "Sam",
-      "age": 35,
-      "identity": "Masc Lesbian",
-      "presentation": "Masc",
-      "location": "Denver, CO",
-      "bio": "Motorcycle rides, woodworking, and loyalty.",
-      "interests": [
-        "motorcycles",
-        "woodworking",
-        "camping",
-        "road trips"
-      ],
-      "conversation_starter": "Dream road trip?",
-      "vibe_tags": [
-        "protective",
-        "hands-on",
-        "adventurous"
-      ],
-      "slug": "sam-9",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/sam-9.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Sam",
-      "username": "sam_9",
-      "birthdate": "1991-06-15",
-      "sexual_orientation": "Masc Lesbian",
-      "gender_identity": "Masc",
-      "photos": [
-        "/seed-avatars/sam-9.svg"
-      ],
-      "avatar_url": "/seed-avatars/sam-9.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.297Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "protective",
-          "hands-on",
-          "adventurous"
-        ],
-        "conversation_starter": "Dream road trip?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "59252391-f70f-5ab1-bd5b-140bfb46bc68",
-      "name": "Olivia",
-      "age": 25,
-      "identity": "Queer",
-      "presentation": "Femme",
-      "location": "San Francisco, CA",
-      "bio": "Music festival junkie who loves meeting creative people.",
-      "interests": [
-        "music festivals",
-        "art",
-        "concerts",
-        "travel"
-      ],
-      "conversation_starter": "Best concert you've ever been to?",
-      "vibe_tags": [
-        "sparkly",
-        "social",
-        "creative"
-      ],
-      "slug": "olivia-10",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/olivia-10.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Olivia",
-      "username": "olivia_10",
-      "birthdate": "2001-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/olivia-10.svg"
-      ],
-      "avatar_url": "/seed-avatars/olivia-10.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.297Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "sparkly",
-          "social",
-          "creative"
-        ],
-        "conversation_starter": "Best concert you've ever been to?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "d705a875-1f0a-55c6-bc31-c080e90f4050",
-      "name": "Paige",
-      "age": 32,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Austin, TX",
-      "bio": "Yoga instructor who believes in slow mornings and mindful living.",
-      "interests": [
-        "yoga",
-        "meditation",
-        "nature",
-        "wellness"
-      ],
-      "conversation_starter": "Do you start your day with coffee or calm?",
-      "vibe_tags": [
-        "peaceful",
-        "centered",
-        "gentle"
-      ],
-      "slug": "paige-11",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/paige-11.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Paige",
-      "username": "paige_11",
-      "birthdate": "1994-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/paige-11.svg"
-      ],
-      "avatar_url": "/seed-avatars/paige-11.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.297Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "peaceful",
-          "centered",
-          "gentle"
-        ],
-        "conversation_starter": "Do you start your day with coffee or calm?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "2af6b2c9-c372-53c1-a68b-f7ed993d1b4e",
-      "name": "Carmen",
-      "age": 38,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "San Antonio, TX",
-      "bio": "Chef who will absolutely cook you dinner on the second date.",
-      "interests": [
-        "cooking",
-        "restaurants",
-        "wine",
-        "travel"
-      ],
-      "conversation_starter": "What’s your favorite dish?",
-      "vibe_tags": [
-        "confident",
-        "nurturing",
-        "sensual"
-      ],
-      "slug": "carmen-12",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/carmen-12.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Carmen",
-      "username": "carmen_12",
-      "birthdate": "1988-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/carmen-12.svg"
-      ],
-      "avatar_url": "/seed-avatars/carmen-12.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.297Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "confident",
-          "nurturing",
-          "sensual"
-        ],
-        "conversation_starter": "What’s your favorite dish?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "e6032c56-7c8b-545d-933b-2185be656ba5",
-      "name": "Ash",
-      "age": 29,
-      "identity": "Nonbinary",
-      "presentation": "Androgynous",
-      "location": "Minneapolis, MN",
-      "bio": "Skateboards, thrift stores, and indie music.",
-      "interests": [
-        "skating",
-        "thrifting",
-        "indie music",
-        "streetwear"
-      ],
-      "conversation_starter": "Best thrift find ever?",
-      "vibe_tags": [
-        "cool",
-        "offbeat",
-        "creative"
-      ],
-      "slug": "ash-13",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/ash-13.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "they/them"
-      ],
-      "profile_status": "active",
-      "full_name": "Ash",
-      "username": "ash_13",
-      "birthdate": "1997-06-15",
-      "sexual_orientation": "Nonbinary",
-      "gender_identity": "Androgynous",
-      "photos": [
-        "/seed-avatars/ash-13.svg"
-      ],
-      "avatar_url": "/seed-avatars/ash-13.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.297Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "they/them"
-        ],
-        "vibe_tags": [
-          "cool",
-          "offbeat",
-          "creative"
-        ],
-        "conversation_starter": "Best thrift find ever?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "4d24b443-2788-5491-9570-1b9e61bb5395",
-      "name": "Bianca",
-      "age": 33,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Miami, FL",
-      "bio": "Lawyer who escapes reality through travel and food.",
-      "interests": [
-        "travel",
-        "food",
-        "beaches",
-        "live music"
-      ],
-      "conversation_starter": "Where would you go for a weekend escape?",
-      "vibe_tags": [
-        "ambitious",
-        "glam",
-        "spontaneous"
-      ],
-      "slug": "bianca-14",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/bianca-14.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Bianca",
-      "username": "bianca_14",
-      "birthdate": "1993-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/bianca-14.svg"
-      ],
-      "avatar_url": "/seed-avatars/bianca-14.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.297Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "ambitious",
-          "glam",
-          "spontaneous"
-        ],
-        "conversation_starter": "Where would you go for a weekend escape?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "a21d89ea-5b96-5760-b553-aaddfc62f61f",
-      "name": "Jade",
-      "age": 24,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "Long Beach, CA",
-      "bio": "Art student who paints emotions and romanticizes everyday life.",
-      "interests": [
-        "painting",
-        "museums",
-        "coffee",
-        "journaling"
-      ],
-      "conversation_starter": "What color matches your mood today?",
-      "vibe_tags": [
-        "dreamy",
-        "sensitive",
-        "artsy"
-      ],
-      "slug": "jade-15",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/jade-15.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Jade",
-      "username": "jade_15",
-      "birthdate": "2002-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/jade-15.svg"
-      ],
-      "avatar_url": "/seed-avatars/jade-15.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.298Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "dreamy",
-          "sensitive",
-          "artsy"
-        ],
-        "conversation_starter": "What color matches your mood today?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "5f198f83-98e2-56be-b637-99cc1dd70f6b",
-      "name": "Leah",
-      "age": 36,
-      "identity": "Queer",
-      "presentation": "Soft masc",
-      "location": "Boise, ID",
-      "bio": "Dog rescuer and hiking enthusiast who always packs snacks.",
-      "interests": [
-        "dogs",
-        "hiking",
-        "volunteering",
-        "camping"
-      ],
-      "conversation_starter": "Would you rather spend a weekend in the mountains or by a lake?",
-      "vibe_tags": [
-        "caring",
-        "outdoorsy",
-        "steady"
-      ],
-      "slug": "leah-16",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/leah-16.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Leah",
-      "username": "leah_16",
-      "birthdate": "1990-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Soft masc",
-      "photos": [
-        "/seed-avatars/leah-16.svg"
-      ],
-      "avatar_url": "/seed-avatars/leah-16.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.298Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "caring",
-          "outdoorsy",
-          "steady"
-        ],
-        "conversation_starter": "Would you rather spend a weekend in the mountains or by a lake?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "4a777fee-a0e5-5806-b230-f63586e008c9",
-      "name": "Nina",
-      "age": 31,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Chicago, IL",
-      "bio": "Podcast lover, trivia champion, and believer in playful banter.",
-      "interests": [
-        "podcasts",
-        "trivia",
-        "comedy",
-        "wine bars"
-      ],
-      "conversation_starter": "What's your most random useful fact?",
-      "vibe_tags": [
-        "witty",
-        "clever",
-        "chatty"
-      ],
-      "slug": "nina-17",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/nina-17.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Nina",
-      "username": "nina_17",
-      "birthdate": "1995-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/nina-17.svg"
-      ],
-      "avatar_url": "/seed-avatars/nina-17.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.298Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "witty",
-          "clever",
-          "chatty"
-        ],
-        "conversation_starter": "What's your most random useful fact?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "8098a6a0-d68d-5f5c-8cbd-7b4b8fb2de66",
-      "name": "Harper",
-      "age": 28,
-      "identity": "Lesbian",
-      "presentation": "Androgynous",
-      "location": "Santa Cruz, CA",
-      "bio": "Coffee roaster who wakes up at sunrise and loves ocean air.",
-      "interests": [
-        "coffee",
-        "surf",
-        "sunrises",
-        "music"
-      ],
-      "conversation_starter": "Beach sunrise or mountain sunset?",
-      "vibe_tags": [
-        "earthy",
-        "easygoing",
-        "bright"
-      ],
-      "slug": "harper-18",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/harper-18.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Harper",
-      "username": "harper_18",
-      "birthdate": "1998-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Androgynous",
-      "photos": [
-        "/seed-avatars/harper-18.svg"
-      ],
-      "avatar_url": "/seed-avatars/harper-18.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.298Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "earthy",
-          "easygoing",
-          "bright"
-        ],
-        "conversation_starter": "Beach sunrise or mountain sunset?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "51dcf6e1-d059-502c-9ddb-e3ad27dfa45a",
-      "name": "Zuri",
-      "age": 30,
-      "identity": "Queer",
-      "presentation": "Femme",
-      "location": "Atlanta, GA",
-      "bio": "Dancer who believes joy is revolutionary.",
-      "interests": [
-        "dance",
-        "fashion",
-        "music",
-        "community"
-      ],
-      "conversation_starter": "What song instantly lifts your mood?",
-      "vibe_tags": [
-        "vibrant",
-        "magnetic",
-        "joyful"
-      ],
-      "slug": "zuri-19",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/zuri-19.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Zuri",
-      "username": "zuri_19",
-      "birthdate": "1996-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/zuri-19.svg"
-      ],
-      "avatar_url": "/seed-avatars/zuri-19.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.299Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "vibrant",
-          "magnetic",
-          "joyful"
-        ],
-        "conversation_starter": "What song instantly lifts your mood?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "e1f56458-cfb6-555e-a9ce-89a9061ef2b9",
-      "name": "Eliza",
-      "age": 37,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "Boston, MA",
-      "bio": "Librarian with a love for old books, tea, and quiet affection.",
-      "interests": [
-        "books",
-        "tea",
-        "history",
-        "museums"
-      ],
-      "conversation_starter": "What book would you reread forever?",
-      "vibe_tags": [
-        "gentle",
-        "bookish",
-        "old-soul"
-      ],
-      "slug": "eliza-20",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/eliza-20.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Eliza",
-      "username": "eliza_20",
-      "birthdate": "1989-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/eliza-20.svg"
-      ],
-      "avatar_url": "/seed-avatars/eliza-20.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.299Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "gentle",
-          "bookish",
-          "old-soul"
-        ],
-        "conversation_starter": "What book would you reread forever?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "27a262ae-d7d5-51c3-a465-e15501124084",
-      "name": "Sky",
-      "age": 26,
-      "identity": "Nonbinary",
-      "presentation": "Androgynous",
-      "location": "Flagstaff, AZ",
-      "bio": "Stargazer, camper, and lover of long talks under the night sky.",
-      "interests": [
-        "stargazing",
-        "camping",
-        "astronomy",
-        "photography"
-      ],
-      "conversation_starter": "If we had a blanket and a clear sky, what would we talk about first?",
-      "vibe_tags": [
-        "cosmic",
-        "curious",
-        "calm"
-      ],
-      "slug": "sky-21",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/sky-21.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "they/them"
-      ],
-      "profile_status": "active",
-      "full_name": "Sky",
-      "username": "sky_21",
-      "birthdate": "2000-06-15",
-      "sexual_orientation": "Nonbinary",
-      "gender_identity": "Androgynous",
-      "photos": [
-        "/seed-avatars/sky-21.svg"
-      ],
-      "avatar_url": "/seed-avatars/sky-21.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.300Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "they/them"
-        ],
-        "vibe_tags": [
-          "cosmic",
-          "curious",
-          "calm"
-        ],
-        "conversation_starter": "If we had a blanket and a clear sky, what would we talk about first?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "0a7421c2-aaad-5972-9d36-4e7b54cf8bef",
-      "name": "Morgan",
-      "age": 34,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Dallas, TX",
-      "bio": "Marketing strategist who lives for weekend getaways and good design.",
-      "interests": [
-        "travel",
-        "design",
-        "brunch",
-        "pilates"
-      ],
-      "conversation_starter": "City weekend or cabin weekend?",
-      "vibe_tags": [
-        "polished",
-        "fun",
-        "driven"
-      ],
-      "slug": "morgan-22",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/morgan-22.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Morgan",
-      "username": "morgan_22",
-      "birthdate": "1992-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/morgan-22.svg"
-      ],
-      "avatar_url": "/seed-avatars/morgan-22.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.300Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "polished",
-          "fun",
-          "driven"
-        ],
-        "conversation_starter": "City weekend or cabin weekend?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "691e6720-2920-5cf8-ad7b-7aee2e87d86d",
-      "name": "Luna",
-      "age": 27,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "Tucson, AZ",
-      "bio": "Astrology nerd and crystal collector who still believes in meet-cutes.",
-      "interests": [
-        "astrology",
-        "crystals",
-        "tarot",
-        "tea"
-      ],
-      "conversation_starter": "What's your big three?",
-      "vibe_tags": [
-        "mystical",
-        "romantic",
-        "soft"
-      ],
-      "slug": "luna-23",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/luna-23.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Luna",
-      "username": "luna_23",
-      "birthdate": "1999-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/luna-23.svg"
-      ],
-      "avatar_url": "/seed-avatars/luna-23.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.300Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "mystical",
-          "romantic",
-          "soft"
-        ],
-        "conversation_starter": "What's your big three?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "807bb7a2-e7fa-5e55-9c71-dd695cb65b04",
-      "name": "Daniella",
-      "age": 29,
-      "identity": "Queer",
-      "presentation": "Femme",
-      "location": "Honolulu, HI",
-      "bio": "Fitness coach who loves beach sunsets and emotionally available people.",
-      "interests": [
-        "fitness",
-        "beach",
-        "smoothies",
-        "sunsets"
-      ],
-      "conversation_starter": "What's your ideal beach day look like?",
-      "vibe_tags": [
-        "sunny",
-        "confident",
-        "warm"
-      ],
-      "slug": "daniella-24",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/daniella-24.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Daniella",
-      "username": "daniella_24",
-      "birthdate": "1997-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/daniella-24.svg"
-      ],
-      "avatar_url": "/seed-avatars/daniella-24.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.300Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "sunny",
-          "confident",
-          "warm"
-        ],
-        "conversation_starter": "What's your ideal beach day look like?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "3d892293-56ce-5d0c-b003-83d002245ea0",
-      "name": "Taylor",
-      "age": 31,
-      "identity": "Bi",
-      "presentation": "Androgynous",
-      "location": "San Francisco, CA",
-      "bio": "Tech nerd who builds apps and wins at board games more often than she should.",
-      "interests": [
-        "tech",
-        "board games",
-        "coding",
-        "coffee"
-      ],
-      "conversation_starter": "What's your all-time favorite board game?",
-      "vibe_tags": [
-        "smart",
-        "playful",
-        "focused"
-      ],
-      "slug": "taylor-25",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/taylor-25.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Taylor",
-      "username": "taylor_25",
-      "birthdate": "1995-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Androgynous",
-      "photos": [
-        "/seed-avatars/taylor-25.svg"
-      ],
-      "avatar_url": "/seed-avatars/taylor-25.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.303Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "smart",
-          "playful",
-          "focused"
-        ],
-        "conversation_starter": "What's your all-time favorite board game?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "59fbd503-e973-5235-ac85-90e264835f96",
-      "name": "Casey",
-      "age": 28,
-      "identity": "Masc Lesbian",
-      "presentation": "Masc",
-      "location": "Nashville, TN",
-      "bio": "Carpenter who builds furniture and meaningful connections.",
-      "interests": [
-        "carpentry",
-        "live music",
-        "coffee",
-        "DIY"
-      ],
-      "conversation_starter": "What's something you've made that you're proud of?",
+        "Dogs",
+        "Hiking",
+        "Coffee",
+        "Journaling"
+      ],
+      "conversation_starter": "What about dogs feels most like you?",
       "vibe_tags": [
         "grounded",
-        "capable",
         "warm"
       ],
-      "slug": "casey-26",
+      "slug": "alex",
       "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/casey-26.svg",
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_0_0.jpg",
+      "photo_file": "profile_0_0.jpg",
       "intentions": [
-        "dating",
-        "friendship",
-        "community"
+        "friends",
+        "community",
+        "maybe more"
       ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Casey",
-      "username": "casey_26",
-      "birthdate": "1998-06-15",
-      "sexual_orientation": "Masc Lesbian",
-      "gender_identity": "Masc",
-      "photos": [
-        "/seed-avatars/casey-26.svg"
-      ],
-      "avatar_url": "/seed-avatars/casey-26.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.303Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "grounded",
-          "capable",
-          "warm"
-        ],
-        "conversation_starter": "What's something you've made that you're proud of?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "b29d395c-994f-5ad3-9dcf-72a0366828ab",
-      "name": "Aaliyah",
-      "age": 25,
-      "identity": "Queer",
-      "presentation": "Femme",
-      "location": "New Orleans, LA",
-      "bio": "Singer-songwriter chasing beautiful moments and honest lyrics.",
-      "interests": [
-        "music",
-        "writing",
-        "concerts",
-        "night walks"
-      ],
-      "conversation_starter": "What song feels like home to you?",
-      "vibe_tags": [
-        "romantic",
-        "creative",
-        "soulful"
-      ],
-      "slug": "aaliyah-27",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/aaliyah-27.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Aaliyah",
-      "username": "aaliyah_27",
-      "birthdate": "2001-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/aaliyah-27.svg"
-      ],
-      "avatar_url": "/seed-avatars/aaliyah-27.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.304Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "romantic",
-          "creative",
-          "soulful"
-        ],
-        "conversation_starter": "What song feels like home to you?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "8efc427d-97ed-5e6a-991c-6ad94bb1462c",
-      "name": "Brooke",
-      "age": 33,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Charlotte, NC",
-      "bio": "Interior designer obsessed with cozy spaces and good lighting.",
-      "interests": [
-        "interior design",
-        "home decor",
-        "plants",
-        "coffee"
-      ],
-      "conversation_starter": "What's one thing that instantly makes a space feel cozy?",
-      "vibe_tags": [
-        "cozy",
-        "stylish",
-        "thoughtful"
-      ],
-      "slug": "brooke-28",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/brooke-28.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Brooke",
-      "username": "brooke_28",
-      "birthdate": "1993-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/brooke-28.svg"
-      ],
-      "avatar_url": "/seed-avatars/brooke-28.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.304Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "cozy",
-          "stylish",
-          "thoughtful"
-        ],
-        "conversation_starter": "What's one thing that instantly makes a space feel cozy?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "fb84e34d-693f-51fc-a549-36cb22d3a75a",
-      "name": "Sienna",
-      "age": 30,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "Los Angeles, CA",
-      "bio": "Photographer capturing love, light, and the in-between moments.",
-      "interests": [
-        "photography",
-        "travel",
-        "fashion",
-        "art"
-      ],
-      "conversation_starter": "What's a moment you wish you could freeze in time?",
-      "vibe_tags": [
-        "observant",
-        "romantic",
-        "artistic"
-      ],
-      "slug": "sienna-29",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/sienna-29.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Sienna",
-      "username": "sienna_29",
-      "birthdate": "1996-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/sienna-29.svg"
-      ],
-      "avatar_url": "/seed-avatars/sienna-29.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.305Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "observant",
-          "romantic",
-          "artistic"
-        ],
-        "conversation_starter": "What's a moment you wish you could freeze in time?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "f969faf9-f68d-5ce7-9a2b-6b37f405b23b",
-      "name": "Remy",
-      "age": 34,
-      "identity": "Nonbinary",
-      "presentation": "Androgynous",
-      "location": "Brooklyn, NY",
-      "bio": "Writer working on a first novel and a healthier sleep schedule.",
-      "interests": [
-        "writing",
-        "indie films",
-        "coffee shops",
-        "reading"
-      ],
-      "conversation_starter": "Do you like stories with happy endings or messy ones?",
-      "vibe_tags": [
-        "introspective",
-        "clever",
-        "moody"
-      ],
-      "slug": "remy-30",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/remy-30.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "they/them"
-      ],
-      "profile_status": "active",
-      "full_name": "Remy",
-      "username": "remy_30",
-      "birthdate": "1992-06-15",
-      "sexual_orientation": "Nonbinary",
-      "gender_identity": "Androgynous",
-      "photos": [
-        "/seed-avatars/remy-30.svg"
-      ],
-      "avatar_url": "/seed-avatars/remy-30.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.305Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "they/them"
-        ],
-        "vibe_tags": [
-          "introspective",
-          "clever",
-          "moody"
-        ],
-        "conversation_starter": "Do you like stories with happy endings or messy ones?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "b8d2c0fb-75b3-5a8b-b8d1-156ff1b80c62",
-      "name": "Clara",
-      "age": 37,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "Madison, WI",
-      "bio": "Therapist who believes vulnerability is powerful and softness is strength.",
-      "interests": [
-        "mental health",
-        "gardening",
-        "tea",
-        "podcasts"
-      ],
-      "conversation_starter": "What helps you feel safe opening up to someone?",
-      "vibe_tags": [
-        "secure",
-        "warm",
-        "emotionally-intelligent"
-      ],
-      "slug": "clara-31",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/clara-31.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Clara",
-      "username": "clara_31",
-      "birthdate": "1989-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/clara-31.svg"
-      ],
-      "avatar_url": "/seed-avatars/clara-31.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.305Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "secure",
-          "warm",
-          "emotionally-intelligent"
-        ],
-        "conversation_starter": "What helps you feel safe opening up to someone?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "0e2461fa-977a-5c6c-9d5d-039efd81fba9",
-      "name": "Maddy",
-      "age": 26,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Santa Monica, CA",
-      "bio": "Volleyball player, smoothie lover, and beach sunset chaser.",
-      "interests": [
-        "volleyball",
-        "beach",
-        "fitness",
-        "smoothies"
-      ],
-      "conversation_starter": "Would you rather have a beach date or a game night date?",
-      "vibe_tags": [
-        "active",
-        "bright",
-        "playful"
-      ],
-      "slug": "maddy-32",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/maddy-32.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Maddy",
-      "username": "maddy_32",
-      "birthdate": "2000-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/maddy-32.svg"
-      ],
-      "avatar_url": "/seed-avatars/maddy-32.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.306Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "active",
-          "bright",
-          "playful"
-        ],
-        "conversation_starter": "Would you rather have a beach date or a game night date?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "a54cd44b-1f28-5d5a-b07f-19468a94a22a",
-      "name": "Erin",
-      "age": 39,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "Eugene, OR",
-      "bio": "Garden lover growing tomatoes, herbs, and peace.",
-      "interests": [
-        "gardening",
-        "cooking",
-        "nature",
-        "farmers markets"
-      ],
-      "conversation_starter": "What would you grow if you had a dream garden?",
-      "vibe_tags": [
-        "nurturing",
-        "calm",
-        "homebody"
-      ],
-      "slug": "erin-33",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/erin-33.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Erin",
-      "username": "erin_33",
-      "birthdate": "1987-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/erin-33.svg"
-      ],
-      "avatar_url": "/seed-avatars/erin-33.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.306Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "nurturing",
-          "calm",
-          "homebody"
-        ],
-        "conversation_starter": "What would you grow if you had a dream garden?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "bee93f6f-fbde-5098-9f5e-799df3196e50",
-      "name": "Quinn",
-      "age": 28,
-      "identity": "Queer",
-      "presentation": "Androgynous",
-      "location": "Philadelphia, PA",
-      "bio": "Graphic designer who loves street art, clean lines, and weird little cafes.",
-      "interests": [
-        "graphic design",
-        "street art",
-        "coffee",
-        "museums"
-      ],
-      "conversation_starter": "What's the coolest mural or piece of art you've seen in person?",
-      "vibe_tags": [
-        "stylish",
-        "creative",
-        "curious"
-      ],
-      "slug": "quinn-34",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/quinn-34.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Quinn",
-      "username": "quinn_34",
-      "birthdate": "1998-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Androgynous",
-      "photos": [
-        "/seed-avatars/quinn-34.svg"
-      ],
-      "avatar_url": "/seed-avatars/quinn-34.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.306Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "stylish",
-          "creative",
-          "curious"
-        ],
-        "conversation_starter": "What's the coolest mural or piece of art you've seen in person?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "dc796787-cf33-5fa7-9ef0-c107a148ae68",
-      "name": "Naomi",
-      "age": 31,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Las Vegas, NV",
-      "bio": "Travel nurse chasing sunsets around the country.",
-      "interests": [
-        "travel",
-        "healthcare",
-        "hiking",
-        "photography"
-      ],
-      "conversation_starter": "What's the most memorable city you've ever visited?",
-      "vibe_tags": [
-        "independent",
-        "kind",
-        "adventurous"
-      ],
-      "slug": "naomi-35",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/naomi-35.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Naomi",
-      "username": "naomi_35",
-      "birthdate": "1995-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/naomi-35.svg"
-      ],
-      "avatar_url": "/seed-avatars/naomi-35.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.311Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "independent",
-          "kind",
-          "adventurous"
-        ],
-        "conversation_starter": "What's the most memorable city you've ever visited?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "40069cf1-7a45-5f18-92f3-f65dc4c5c17c",
-      "name": "Ivy",
-      "age": 27,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "Bend, OR",
-      "bio": "Environmental scientist who loves forests, rainy mornings, and tiny cabins.",
-      "interests": [
-        "science",
-        "forests",
-        "hiking",
-        "sustainability"
-      ],
-      "conversation_starter": "What place in nature instantly resets you?",
-      "vibe_tags": [
-        "earthy",
-        "smart",
-        "quiet"
-      ],
-      "slug": "ivy-36",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/ivy-36.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Ivy",
-      "username": "ivy_36",
-      "birthdate": "1999-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/ivy-36.svg"
-      ],
-      "avatar_url": "/seed-avatars/ivy-36.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.311Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "earthy",
-          "smart",
-          "quiet"
-        ],
-        "conversation_starter": "What place in nature instantly resets you?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "6cd71a4b-55eb-5ea7-b75c-73e8c50e4416",
-      "name": "Alex",
-      "age": 34,
-      "identity": "Queer",
-      "presentation": "Androgynous",
-      "location": "Washington, DC",
-      "bio": "Podcast host talking about love, identity, and the occasional pop culture spiral.",
-      "interests": [
-        "podcasts",
-        "culture",
-        "writing",
-        "live events"
-      ],
-      "conversation_starter": "What topic could you talk about for hours?",
-      "vibe_tags": [
-        "engaging",
-        "intellectual",
-        "fun"
-      ],
-      "slug": "alex-37",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/alex-37.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
+      "pronouns": [],
       "profile_status": "active",
       "full_name": "Alex",
-      "username": "alex_37",
-      "birthdate": "1992-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Androgynous",
-      "photos": [
-        "/seed-avatars/alex-37.svg"
-      ],
-      "avatar_url": "/seed-avatars/alex-37.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.311Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "engaging",
-          "intellectual",
-          "fun"
-        ],
-        "conversation_starter": "What topic could you talk about for hours?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "9f43b0f5-e898-5e56-b704-357d7e32235d",
-      "name": "Maya R.",
-      "age": 29,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "San Diego, CA",
-      "bio": "Film lover and documentary addict who always stays for the credits.",
-      "interests": [
-        "films",
-        "documentaries",
-        "coffee",
-        "beach"
-      ],
-      "conversation_starter": "What's a movie that changed how you see the world?",
-      "vibe_tags": [
-        "thoughtful",
-        "curious",
-        "soft"
-      ],
-      "slug": "maya-r-38",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/maya-r-38.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Maya R.",
-      "username": "maya_r_38",
+      "username": "alex",
       "birthdate": "1997-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
       "photos": [
-        "/seed-avatars/maya-r-38.svg"
+        "/seed-avatars/profile_0_0.jpg"
       ],
-      "avatar_url": "/seed-avatars/maya-r-38.svg",
+      "avatar_url": "/seed-avatars/profile_0_0.jpg",
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.311Z",
+      "last_active_at": "2026-03-17T07:44:35.970Z",
       "privacy_settings": {
         "demo_profile": true,
-        "demo_label": "Founding Community Demo",
+        "demo_label": "Founding Community Member",
         "intentions": [
-          "dating",
-          "friendship",
-          "community"
+          "friends",
+          "community",
+          "maybe more"
         ],
-        "pronouns": [
-          "she/her"
-        ],
+        "pronouns": [],
         "vibe_tags": [
-          "thoughtful",
-          "curious",
-          "soft"
-        ],
-        "conversation_starter": "What's a movie that changed how you see the world?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "31d88f94-342c-501b-82e8-7a6236cbbd86",
-      "name": "Rowan",
-      "age": 32,
-      "identity": "Nonbinary",
-      "presentation": "Androgynous",
-      "location": "Asheville, NC",
-      "bio": "Herbalist and tea enthusiast with a very serious mug collection.",
-      "interests": [
-        "herbs",
-        "tea",
-        "wellness",
-        "crafts"
-      ],
-      "conversation_starter": "What's your go-to comfort tea or drink?",
-      "vibe_tags": [
-        "gentle",
-        "grounded",
-        "witchy"
-      ],
-      "slug": "rowan-39",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/rowan-39.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "they/them"
-      ],
-      "profile_status": "active",
-      "full_name": "Rowan",
-      "username": "rowan_39",
-      "birthdate": "1994-06-15",
-      "sexual_orientation": "Nonbinary",
-      "gender_identity": "Androgynous",
-      "photos": [
-        "/seed-avatars/rowan-39.svg"
-      ],
-      "avatar_url": "/seed-avatars/rowan-39.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.312Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "they/them"
-        ],
-        "vibe_tags": [
-          "gentle",
           "grounded",
-          "witchy"
+          "warm"
         ],
-        "conversation_starter": "What's your go-to comfort tea or drink?"
+        "conversation_starter": "What about dogs feels most like you?"
       },
       "safety_settings": {
         "seeded_demo_profile": true
       }
     },
     {
-      "id": "af26f97c-4684-54a5-9d90-df81fdd6e03c",
-      "name": "Tori",
-      "age": 28,
-      "identity": "Lesbian",
-      "presentation": "Masc",
-      "location": "Sacramento, CA",
-      "bio": "Skate park regular with a big heart and a soft spot for shy femmes.",
-      "interests": [
-        "skating",
-        "music",
-        "streetwear",
-        "dogs"
-      ],
-      "conversation_starter": "What song belongs on every good driving playlist?",
-      "vibe_tags": [
-        "cool",
-        "protective",
-        "funny"
-      ],
-      "slug": "tori-40",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/tori-40.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Tori",
-      "username": "tori_40",
-      "birthdate": "1998-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Masc",
-      "photos": [
-        "/seed-avatars/tori-40.svg"
-      ],
-      "avatar_url": "/seed-avatars/tori-40.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.312Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "cool",
-          "protective",
-          "funny"
-        ],
-        "conversation_starter": "What song belongs on every good driving playlist?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "d95cc11d-600a-5d4b-a732-c4aa8d81850e",
-      "name": "Jasmine",
-      "age": 30,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Houston, TX",
-      "bio": "Makeup artist and beauty nerd who loves glam nights and honest people.",
-      "interests": [
-        "makeup",
-        "beauty",
-        "fashion",
-        "brunch"
-      ],
-      "conversation_starter": "What's your getting-ready playlist like?",
-      "vibe_tags": [
-        "glam",
-        "chatty",
-        "expressive"
-      ],
-      "slug": "jasmine-41",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/jasmine-41.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Jasmine",
-      "username": "jasmine_41",
-      "birthdate": "1996-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/jasmine-41.svg"
-      ],
-      "avatar_url": "/seed-avatars/jasmine-41.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.312Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "glam",
-          "chatty",
-          "expressive"
-        ],
-        "conversation_starter": "What's your getting-ready playlist like?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "448f13be-abac-581d-8eaa-69ff3d9937ca",
-      "name": "Zoe",
-      "age": 24,
-      "identity": "Queer",
-      "presentation": "Femme",
-      "location": "Berkeley, CA",
-      "bio": "Psychology student who overthinks texts but gives great advice.",
-      "interests": [
-        "psychology",
-        "books",
-        "coffee",
-        "campus life"
-      ],
-      "conversation_starter": "What's something people misunderstand about you at first?",
-      "vibe_tags": [
-        "sweet",
-        "curious",
-        "brainy"
-      ],
-      "slug": "zoe-42",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/zoe-42.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Zoe",
-      "username": "zoe_42",
-      "birthdate": "2002-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/zoe-42.svg"
-      ],
-      "avatar_url": "/seed-avatars/zoe-42.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.312Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "sweet",
-          "curious",
-          "brainy"
-        ],
-        "conversation_starter": "What's something people misunderstand about you at first?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "58635d47-7b4b-58b5-b7c7-8757690bf870",
-      "name": "Marissa",
-      "age": 36,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "Phoenix, AZ",
-      "bio": "Accountant by day, karaoke queen by night.",
-      "interests": [
-        "karaoke",
-        "travel",
-        "food",
-        "comedy"
-      ],
-      "conversation_starter": "What's your go-to karaoke song?",
-      "vibe_tags": [
-        "fun",
-        "reliable",
-        "outgoing"
-      ],
-      "slug": "marissa-43",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/marissa-43.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Marissa",
-      "username": "marissa_43",
-      "birthdate": "1990-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/marissa-43.svg"
-      ],
-      "avatar_url": "/seed-avatars/marissa-43.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.312Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "fun",
-          "reliable",
-          "outgoing"
-        ],
-        "conversation_starter": "What's your go-to karaoke song?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "84da0169-acae-53af-8557-ebb745269fed",
-      "name": "Elle",
+      "id": "d62337c8-82c2-57ae-a643-342338bf740d",
+      "name": "Maya",
       "age": 31,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "Ojai, CA",
-      "bio": "Yoga lover and meditation guide who still appreciates a little chaos in the right person.",
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Therapist by day, plant mom always. I value emotional intelligence and real conversation.",
       "interests": [
-        "yoga",
-        "meditation",
-        "wellness",
-        "nature"
+        "Yoga",
+        "Books",
+        "Plants",
+        "Long talks"
       ],
-      "conversation_starter": "What helps you feel most grounded lately?",
+      "conversation_starter": "What about yoga feels most like you?",
       "vibe_tags": [
-        "serene",
-        "flirty",
-        "mindful"
-      ],
-      "slug": "elle-44",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/elle-44.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Elle",
-      "username": "elle_44",
-      "birthdate": "1995-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/elle-44.svg"
-      ],
-      "avatar_url": "/seed-avatars/elle-44.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.312Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "serene",
-          "flirty",
-          "mindful"
-        ],
-        "conversation_starter": "What helps you feel most grounded lately?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "294fdb62-7ba6-5ffe-a625-9f2aafd1e026",
-      "name": "Frankie",
-      "age": 28,
-      "identity": "Masc Lesbian",
-      "presentation": "Masc",
-      "location": "Detroit, MI",
-      "bio": "Mechanic who loves road trips, thrift jackets, and fixing things for people I care about.",
-      "interests": [
-        "cars",
-        "road trips",
-        "thrifting",
-        "music"
-      ],
-      "conversation_starter": "What's your dream car or dream road trip?",
-      "vibe_tags": [
-        "hands-on",
-        "loyal",
-        "cool"
-      ],
-      "slug": "frankie-45",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/frankie-45.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Frankie",
-      "username": "frankie_45",
-      "birthdate": "1998-06-15",
-      "sexual_orientation": "Masc Lesbian",
-      "gender_identity": "Masc",
-      "photos": [
-        "/seed-avatars/frankie-45.svg"
-      ],
-      "avatar_url": "/seed-avatars/frankie-45.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.312Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "hands-on",
-          "loyal",
-          "cool"
-        ],
-        "conversation_starter": "What's your dream car or dream road trip?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "2cee66e5-a9ff-508d-94f0-1a991dbc8942",
-      "name": "Kiara",
-      "age": 27,
-      "identity": "Queer",
-      "presentation": "Femme",
-      "location": "New York, NY",
-      "bio": "Fashion stylist who lives for creativity, texture, and a really good coat.",
-      "interests": [
-        "fashion",
-        "styling",
-        "art",
-        "city walks"
-      ],
-      "conversation_starter": "What's one outfit you felt unstoppable in?",
-      "vibe_tags": [
-        "stylish",
-        "bold",
-        "creative"
-      ],
-      "slug": "kiara-46",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/kiara-46.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Kiara",
-      "username": "kiara_46",
-      "birthdate": "1999-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/kiara-46.svg"
-      ],
-      "avatar_url": "/seed-avatars/kiara-46.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.313Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "stylish",
-          "bold",
-          "creative"
-        ],
-        "conversation_starter": "What's one outfit you felt unstoppable in?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "b364e484-b483-5732-b30f-261c95a66d36",
-      "name": "Sasha",
-      "age": 33,
-      "identity": "Bi",
-      "presentation": "Femme",
-      "location": "San Diego, CA",
-      "bio": "Marathon runner chasing endorphins, balance, and someone who can make me laugh.",
-      "interests": [
-        "running",
-        "fitness",
-        "podcasts",
-        "brunch"
-      ],
-      "conversation_starter": "What's your favorite way to reset after a long week?",
-      "vibe_tags": [
-        "driven",
-        "healthy",
-        "easygoing"
-      ],
-      "slug": "sasha-47",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/sasha-47.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Sasha",
-      "username": "sasha_47",
-      "birthdate": "1993-06-15",
-      "sexual_orientation": "Bi",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/sasha-47.svg"
-      ],
-      "avatar_url": "/seed-avatars/sasha-47.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.313Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "driven",
-          "healthy",
-          "easygoing"
-        ],
-        "conversation_starter": "What's your favorite way to reset after a long week?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "a8a3f647-0676-5ea6-8a64-a322f5b87ced",
-      "name": "Alina",
-      "age": 29,
-      "identity": "Lesbian",
-      "presentation": "Femme",
-      "location": "Portland, OR",
-      "bio": "Baker who believes dessert solves almost everything.",
-      "interests": [
-        "baking",
-        "coffee",
-        "farmers markets",
-        "rom-coms"
-      ],
-      "conversation_starter": "What dessert would win your heart immediately?",
-      "vibe_tags": [
-        "sweet",
-        "homey",
-        "romantic"
-      ],
-      "slug": "alina-48",
-      "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/alina-48.svg",
-      "intentions": [
-        "dating",
-        "friendship",
-        "community"
-      ],
-      "pronouns": [
-        "she/her"
-      ],
-      "profile_status": "active",
-      "full_name": "Alina",
-      "username": "alina_48",
-      "birthdate": "1997-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Femme",
-      "photos": [
-        "/seed-avatars/alina-48.svg"
-      ],
-      "avatar_url": "/seed-avatars/alina-48.svg",
-      "profile_completed": true,
-      "onboarding_complete": true,
-      "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.313Z",
-      "privacy_settings": {
-        "demo_profile": true,
-        "demo_label": "Founding Community Demo",
-        "intentions": [
-          "dating",
-          "friendship",
-          "community"
-        ],
-        "pronouns": [
-          "she/her"
-        ],
-        "vibe_tags": [
-          "sweet",
-          "homey",
-          "romantic"
-        ],
-        "conversation_starter": "What dessert would win your heart immediately?"
-      },
-      "safety_settings": {
-        "seeded_demo_profile": true
-      }
-    },
-    {
-      "id": "83aa2325-bbda-523e-b594-fb4867a19559",
-      "name": "Brooke M.",
-      "age": 35,
-      "identity": "Queer",
-      "presentation": "Soft masc",
-      "location": "Columbus, OH",
-      "bio": "Social worker passionate about community, boundaries, and chosen family.",
-      "interests": [
-        "community",
-        "advocacy",
-        "books",
-        "walks"
-      ],
-      "conversation_starter": "What makes a community feel safe to you?",
-      "vibe_tags": [
-        "compassionate",
-        "steady",
+        "calm",
         "intentional"
       ],
-      "slug": "brooke-m-49",
+      "slug": "maya",
       "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/brooke-m-49.svg",
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_0_1.jpg",
+      "photo_file": "profile_0_1.jpg",
       "intentions": [
-        "dating",
-        "friendship",
-        "community"
+        "serious",
+        "intentional dating"
       ],
-      "pronouns": [
-        "she/her"
-      ],
+      "pronouns": [],
       "profile_status": "active",
-      "full_name": "Brooke M.",
-      "username": "brooke_m_49",
-      "birthdate": "1991-06-15",
-      "sexual_orientation": "Queer",
-      "gender_identity": "Soft masc",
+      "full_name": "Maya",
+      "username": "maya",
+      "birthdate": "1995-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
       "photos": [
-        "/seed-avatars/brooke-m-49.svg"
+        "/seed-avatars/profile_0_1.jpg"
       ],
-      "avatar_url": "/seed-avatars/brooke-m-49.svg",
+      "avatar_url": "/seed-avatars/profile_0_1.jpg",
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.313Z",
+      "last_active_at": "2026-03-17T07:44:35.981Z",
       "privacy_settings": {
         "demo_profile": true,
-        "demo_label": "Founding Community Demo",
+        "demo_label": "Founding Community Member",
         "intentions": [
-          "dating",
-          "friendship",
-          "community"
+          "serious",
+          "intentional dating"
         ],
-        "pronouns": [
-          "she/her"
-        ],
+        "pronouns": [],
         "vibe_tags": [
-          "compassionate",
-          "steady",
+          "calm",
           "intentional"
         ],
-        "conversation_starter": "What makes a community feel safe to you?"
+        "conversation_starter": "What about yoga feels most like you?"
       },
       "safety_settings": {
         "seeded_demo_profile": true
       }
     },
     {
-      "id": "1f588562-552b-5482-a099-186248bfebc9",
-      "name": "Val",
-      "age": 38,
-      "identity": "Lesbian",
-      "presentation": "Masc",
-      "location": "Seattle, WA",
-      "bio": "Pilot who loves adventure, freedom, and people who know who they are.",
+      "id": "938df96e-9c95-5515-91b8-39a6d4726b4f",
+      "name": "Taylor",
+      "age": 26,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Creative, slightly chaotic, always down for spontaneous plans. I laugh a lot and love meeting new people.",
       "interests": [
-        "aviation",
-        "travel",
-        "hiking",
-        "coffee"
+        "Art",
+        "Music",
+        "Thrift shopping"
       ],
-      "conversation_starter": "Where would you fly first if you could leave tomorrow?",
+      "conversation_starter": "What about art feels most like you?",
       "vibe_tags": [
-        "confident",
-        "adventurous",
-        "grounded"
+        "playful energy"
       ],
-      "slug": "val-50",
+      "slug": "taylor",
       "seed_profile": true,
-      "demo_label": "Founding Community Demo",
-      "profile_photo": "/seed-avatars/val-50.svg",
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_0_2.jpg",
+      "photo_file": "profile_0_2.jpg",
       "intentions": [
-        "dating",
-        "friendship",
-        "community"
+        "friends",
+        "fun connections"
       ],
-      "pronouns": [
-        "she/her"
-      ],
+      "pronouns": [],
       "profile_status": "active",
-      "full_name": "Val",
-      "username": "val_50",
-      "birthdate": "1988-06-15",
-      "sexual_orientation": "Lesbian",
-      "gender_identity": "Masc",
+      "full_name": "Taylor",
+      "username": "taylor",
+      "birthdate": "2000-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
       "photos": [
-        "/seed-avatars/val-50.svg"
+        "/seed-avatars/profile_0_2.jpg"
       ],
-      "avatar_url": "/seed-avatars/val-50.svg",
+      "avatar_url": "/seed-avatars/profile_0_2.jpg",
       "profile_completed": true,
       "onboarding_complete": true,
       "discoverable": true,
-      "last_active_at": "2026-03-17T04:10:35.313Z",
+      "last_active_at": "2026-03-17T07:44:35.981Z",
       "privacy_settings": {
         "demo_profile": true,
-        "demo_label": "Founding Community Demo",
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "fun connections"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "playful energy"
+        ],
+        "conversation_starter": "What about art feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "8b7522a1-1a57-5c13-821f-9c26ed3bf925",
+      "name": "Sam",
+      "age": 33,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Recently moved and rebuilding my circle. I love meaningful connections and low-pressure hangs.",
+      "interests": [
+        "Cooking",
+        "Walks",
+        "Podcasts"
+      ],
+      "conversation_starter": "What about cooking feels most like you?",
+      "vibe_tags": [
+        "steady",
+        "kind"
+      ],
+      "slug": "sam",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_0_3.jpg",
+      "photo_file": "profile_0_3.jpg",
+      "intentions": [
+        "community",
+        "events",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Sam",
+      "username": "sam",
+      "birthdate": "1993-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_0_3.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_0_3.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.981Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "community",
+          "events",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "steady",
+          "kind"
+        ],
+        "conversation_starter": "What about cooking feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "0b586d8f-6fcb-50e4-9b4f-05a2d50eb1c0",
+      "name": "Jordan",
+      "age": 28,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I like people who are real, not perfect. Big fan of deep talks and random humor.",
+      "interests": [
+        "Movies",
+        "Night drives",
+        "Coffee"
+      ],
+      "conversation_starter": "What about movies feels most like you?",
+      "vibe_tags": [
+        "chill",
+        "curious"
+      ],
+      "slug": "jordan",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_0_4.jpg",
+      "photo_file": "profile_0_4.jpg",
+      "intentions": [
+        "dating",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Jordan",
+      "username": "jordan",
+      "birthdate": "1998-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_0_4.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_0_4.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.981Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
         "intentions": [
           "dating",
-          "friendship",
-          "community"
+          "friends"
         ],
-        "pronouns": [
-          "she/her"
-        ],
+        "pronouns": [],
         "vibe_tags": [
-          "confident",
-          "adventurous",
+          "chill",
+          "curious"
+        ],
+        "conversation_starter": "What about movies feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "e36d733a-fd68-58a3-8b3b-522dd61f8cb4",
+      "name": "Kalia",
+      "age": 25,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I will 100% invite you to brunch. I love community energy and making people feel included.",
+      "interests": [
+        "Brunch",
+        "Dancing",
+        "Group hangouts"
+      ],
+      "conversation_starter": "What about brunch feels most like you?",
+      "vibe_tags": [
+        "social butterfly"
+      ],
+      "slug": "kalia",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_0_5.jpg",
+      "photo_file": "profile_0_5.jpg",
+      "intentions": [
+        "friends",
+        "social"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Kalia",
+      "username": "kalia",
+      "birthdate": "2001-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_0_5.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_0_5.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.981Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "social"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "social butterfly"
+        ],
+        "conversation_starter": "What about brunch feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "247a77c8-617a-5714-89f1-ab38b82823d4",
+      "name": "Rin",
+      "age": 30,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Soft-spoken but deep. I appreciate honesty, patience, and emotional safety.",
+      "interests": [
+        "Reading",
+        "Tea",
+        "Quiet spaces"
+      ],
+      "conversation_starter": "What about reading feels most like you?",
+      "vibe_tags": [
+        "gentle soul"
+      ],
+      "slug": "rin",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_0_6.jpg",
+      "photo_file": "profile_0_6.jpg",
+      "intentions": [
+        "serious",
+        "intentional"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Rin",
+      "username": "rin",
+      "birthdate": "1996-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_0_6.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_0_6.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.981Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "serious",
+          "intentional"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "gentle soul"
+        ],
+        "conversation_starter": "What about reading feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "13e300b5-eedd-592d-aca1-d1c1f1de0287",
+      "name": "Dani",
+      "age": 27,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Always planning the next trip or outdoor activity. Looking for people who say yes to life.",
+      "interests": [
+        "Travel",
+        "Hiking",
+        "Photography"
+      ],
+      "conversation_starter": "What about travel feels most like you?",
+      "vibe_tags": [
+        "adventurous"
+      ],
+      "slug": "dani",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_0_7.jpg",
+      "photo_file": "profile_0_7.jpg",
+      "intentions": [
+        "friends",
+        "adventures"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Dani",
+      "username": "dani",
+      "birthdate": "1999-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_0_7.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_0_7.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.981Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "adventures"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "adventurous"
+        ],
+        "conversation_starter": "What about travel feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "5cafe695-86d5-53a7-b1e1-979e0f17181d",
+      "name": "Noor",
+      "age": 34,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I believe in slow, meaningful connection. I value consistency and kindness above everything.",
+      "interests": [
+        "Cooking",
+        "Family",
+        "Culture"
+      ],
+      "conversation_starter": "What about cooking feels most like you?",
+      "vibe_tags": [
+        "deep",
+        "grounded"
+      ],
+      "slug": "noor",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_0_8.jpg",
+      "photo_file": "profile_0_8.jpg",
+      "intentions": [
+        "serious",
+        "long-term"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Noor",
+      "username": "noor",
+      "birthdate": "1992-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_0_8.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_0_8.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.981Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "serious",
+          "long-term"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "deep",
           "grounded"
         ],
-        "conversation_starter": "Where would you fly first if you could leave tomorrow?"
+        "conversation_starter": "What about cooking feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "3c542f28-5865-511f-a523-6b25bc74ef66",
+      "name": "Jules",
+      "age": 29,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I love creating safe spaces where people can just be themselves.",
+      "interests": [
+        "Writing",
+        "Art",
+        "Community events"
+      ],
+      "conversation_starter": "What about writing feels most like you?",
+      "vibe_tags": [
+        "safe energy"
+      ],
+      "slug": "jules",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_0_9.jpg",
+      "photo_file": "profile_0_9.jpg",
+      "intentions": [
+        "friends",
+        "community"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Jules",
+      "username": "jules",
+      "birthdate": "1997-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_0_9.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_0_9.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.982Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "community"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "safe energy"
+        ],
+        "conversation_starter": "What about writing feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "bde748a2-6077-5b06-9579-91509bf3bdf2",
+      "name": "Bri",
+      "age": 24,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I’m the friend who hypes you up. Let’s go do something fun.",
+      "interests": [
+        "Music",
+        "Dancing",
+        "Social nights"
+      ],
+      "conversation_starter": "What about music feels most like you?",
+      "vibe_tags": [
+        "high energy"
+      ],
+      "slug": "bri",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_1_0.jpg",
+      "photo_file": "profile_1_0.jpg",
+      "intentions": [
+        "fun",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Bri",
+      "username": "bri",
+      "birthdate": "2002-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_1_0.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_1_0.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.982Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "fun",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "high energy"
+        ],
+        "conversation_starter": "What about music feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "5d343b44-a668-5628-a4b1-c54644eeb2cf",
+      "name": "Sienna",
+      "age": 32,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Independent, emotionally aware, and ready for something real.",
+      "interests": [
+        "Fitness",
+        "Podcasts",
+        "Travel"
+      ],
+      "conversation_starter": "What about fitness feels most like you?",
+      "vibe_tags": [
+        "strong",
+        "centered"
+      ],
+      "slug": "sienna",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_1_1.jpg",
+      "photo_file": "profile_1_1.jpg",
+      "intentions": [
+        "serious",
+        "intentional dating"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Sienna",
+      "username": "sienna",
+      "birthdate": "1994-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_1_1.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_1_1.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.982Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "serious",
+          "intentional dating"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "strong",
+          "centered"
+        ],
+        "conversation_starter": "What about fitness feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "03869d05-94a6-515e-b225-b59b043f02d6",
+      "name": "Lila",
+      "age": 28,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Artist and dreamer. I love connecting with people who think differently.",
+      "interests": [
+        "Painting",
+        "Photography",
+        "Design"
+      ],
+      "conversation_starter": "What about painting feels most like you?",
+      "vibe_tags": [
+        "creative spirit"
+      ],
+      "slug": "lila",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_1_2.jpg",
+      "photo_file": "profile_1_2.jpg",
+      "intentions": [
+        "friends",
+        "creative circle"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Lila",
+      "username": "lila",
+      "birthdate": "1998-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_1_2.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_1_2.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.982Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "creative circle"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "creative spirit"
+        ],
+        "conversation_starter": "What about painting feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "f3004d9d-8a7f-56cc-954b-c1435b20b9c7",
+      "name": "Aria",
+      "age": 26,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I’m new here and open to meeting kind people. Let’s start with coffee ☕",
+      "interests": [
+        "Cafes",
+        "Journaling",
+        "Walks"
+      ],
+      "conversation_starter": "What about cafes feels most like you?",
+      "vibe_tags": [
+        "open",
+        "kind"
+      ],
+      "slug": "aria",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_1_3.jpg",
+      "photo_file": "profile_1_3.jpg",
+      "intentions": [
+        "friends",
+        "social"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Aria",
+      "username": "aria",
+      "birthdate": "2000-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_1_3.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_1_3.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.982Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "social"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "open",
+          "kind"
+        ],
+        "conversation_starter": "What about cafes feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "30dfa3ef-8168-5521-afb4-9b1fa477c812",
+      "name": "Tasha",
+      "age": 35,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I love bringing people together. If there’s a group event, I’m probably hosting it.",
+      "interests": [
+        "Hosting",
+        "Cooking",
+        "Networking"
+      ],
+      "conversation_starter": "What about hosting feels most like you?",
+      "vibe_tags": [
+        "connector"
+      ],
+      "slug": "tasha",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_1_4.jpg",
+      "photo_file": "profile_1_4.jpg",
+      "intentions": [
+        "community",
+        "events"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Tasha",
+      "username": "tasha",
+      "birthdate": "1991-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_1_4.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_1_4.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.982Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "community",
+          "events"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "connector"
+        ],
+        "conversation_starter": "What about hosting feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "487c6ed7-66a0-5623-8b32-7a77382699b1",
+      "name": "Kira",
+      "age": 27,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Quiet at first, but once I’m comfortable, I never stop talking.",
+      "interests": [
+        "Books",
+        "Coffee"
+      ],
+      "conversation_starter": "What about books feels most like you?",
+      "vibe_tags": [
+        "cozy"
+      ],
+      "slug": "kira",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_1_5.jpg",
+      "photo_file": "profile_1_5.jpg",
+      "intentions": [
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Kira",
+      "username": "kira",
+      "birthdate": "1999-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_1_5.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_1_5.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.982Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "cozy"
+        ],
+        "conversation_starter": "What about books feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "208c779f-6496-591a-bb69-71434586674b",
+      "name": "Zoey",
+      "age": 23,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Always laughing, always down for something fun.",
+      "interests": [
+        "Music",
+        "Friends"
+      ],
+      "conversation_starter": "What about music feels most like you?",
+      "vibe_tags": [
+        "fun energy"
+      ],
+      "slug": "zoey",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_1_6.jpg",
+      "photo_file": "profile_1_6.jpg",
+      "intentions": [
+        "friends",
+        "fun"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Zoey",
+      "username": "zoey",
+      "birthdate": "2003-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_1_6.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_1_6.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.982Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "fun"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "fun energy"
+        ],
+        "conversation_starter": "What about music feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "57339558-b5fb-58ce-b0cc-1ec3cfb649ec",
+      "name": "Nina",
+      "age": 30,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Big believer in kindness and consistency.",
+      "interests": [
+        "Yoga",
+        "Walks"
+      ],
+      "conversation_starter": "What about yoga feels most like you?",
+      "vibe_tags": [
+        "peaceful"
+      ],
+      "slug": "nina",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_1_7.jpg",
+      "photo_file": "profile_1_7.jpg",
+      "intentions": [
+        "friends",
+        "intentional"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Nina",
+      "username": "nina",
+      "birthdate": "1996-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_1_7.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_1_7.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.982Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "intentional"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "peaceful"
+        ],
+        "conversation_starter": "What about yoga feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "c231b820-a3ba-569f-a3ba-9160f51ecfca",
+      "name": "Cam",
+      "age": 29,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I value honesty and a good sense of humor.",
+      "interests": [
+        "Movies",
+        "Gym"
+      ],
+      "conversation_starter": "What about movies feels most like you?",
+      "vibe_tags": [
+        "balanced"
+      ],
+      "slug": "cam",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_1_8.jpg",
+      "photo_file": "profile_1_8.jpg",
+      "intentions": [
+        "dating",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Cam",
+      "username": "cam",
+      "birthdate": "1997-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_1_8.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_1_8.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.982Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "dating",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "balanced"
+        ],
+        "conversation_starter": "What about movies feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "fbd8717a-a955-5a55-9b61-5ac4860e2a3c",
+      "name": "Elle",
+      "age": 31,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I like slow mornings and meaningful nights.",
+      "interests": [
+        "Coffee",
+        "Journaling"
+      ],
+      "conversation_starter": "What about coffee feels most like you?",
+      "vibe_tags": [
+        "soft life"
+      ],
+      "slug": "elle",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_1_9.jpg",
+      "photo_file": "profile_1_9.jpg",
+      "intentions": [
+        "dating",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Elle",
+      "username": "elle",
+      "birthdate": "1995-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_1_9.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_1_9.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "dating",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "soft life"
+        ],
+        "conversation_starter": "What about coffee feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "ac26e1f5-d19c-5e8a-90e5-eb4935128dc9",
+      "name": "Rae",
+      "age": 28,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I’m here for real connection, not games.",
+      "interests": [
+        "Music",
+        "Late talks"
+      ],
+      "conversation_starter": "What about music feels most like you?",
+      "vibe_tags": [
+        "real"
+      ],
+      "slug": "rae",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_2_0.jpg",
+      "photo_file": "profile_2_0.jpg",
+      "intentions": [
+        "real connection"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Rae",
+      "username": "rae",
+      "birthdate": "1998-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_2_0.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_2_0.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "real connection"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "real"
+        ],
+        "conversation_starter": "What about music feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "1aa2bf06-16d8-5bab-be56-02ef8a38db71",
+      "name": "Ivy",
+      "age": 26,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Nature is my happy place.",
+      "interests": [
+        "Hiking",
+        "Plants"
+      ],
+      "conversation_starter": "What about hiking feels most like you?",
+      "vibe_tags": [
+        "earthy"
+      ],
+      "slug": "ivy",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_2_1.jpg",
+      "photo_file": "profile_2_1.jpg",
+      "intentions": [
+        "friends",
+        "outdoors"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Ivy",
+      "username": "ivy",
+      "birthdate": "2000-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_2_1.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_2_1.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "outdoors"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "earthy"
+        ],
+        "conversation_starter": "What about hiking feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "be68c136-854b-56e5-959c-1c47008faad2",
+      "name": "Sol",
+      "age": 34,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Calm energy, deep thoughts.",
+      "interests": [
+        "Reading",
+        "Tea"
+      ],
+      "conversation_starter": "What about reading feels most like you?",
+      "vibe_tags": [
+        "grounded"
+      ],
+      "slug": "sol",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_2_2.jpg",
+      "photo_file": "profile_2_2.jpg",
+      "intentions": [
+        "friends",
+        "intentional"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Sol",
+      "username": "sol",
+      "birthdate": "1992-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_2_2.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_2_2.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "intentional"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "grounded"
+        ],
+        "conversation_starter": "What about reading feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "be67fabf-f72f-563d-aba3-9f30937b4b79",
+      "name": "Jess",
+      "age": 25,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Always down to try something new.",
+      "interests": [
+        "Food",
+        "Exploring"
+      ],
+      "conversation_starter": "What about food feels most like you?",
+      "vibe_tags": [
+        "curious"
+      ],
+      "slug": "jess",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_2_3.jpg",
+      "photo_file": "profile_2_3.jpg",
+      "intentions": [
+        "friends",
+        "adventure"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Jess",
+      "username": "jess",
+      "birthdate": "2001-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_2_3.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_2_3.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "adventure"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "curious"
+        ],
+        "conversation_starter": "What about food feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "12cfd19d-e1de-5c4b-be9c-49c0f4ed9ca3",
+      "name": "Ana",
+      "age": 33,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I value stability and emotional safety.",
+      "interests": [
+        "Family",
+        "Cooking"
+      ],
+      "conversation_starter": "What about family feels most like you?",
+      "vibe_tags": [
+        "nurturing"
+      ],
+      "slug": "ana",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_2_4.jpg",
+      "photo_file": "profile_2_4.jpg",
+      "intentions": [
+        "serious",
+        "stable"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Ana",
+      "username": "ana",
+      "birthdate": "1993-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_2_4.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_2_4.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "serious",
+          "stable"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "nurturing"
+        ],
+        "conversation_starter": "What about family feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "bf48586d-ef12-544a-ab36-1f8ba0400b1d",
+      "name": "Sky",
+      "age": 27,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Creative, expressive, and a little chaotic.",
+      "interests": [
+        "Art",
+        "Music"
+      ],
+      "conversation_starter": "What about art feels most like you?",
+      "vibe_tags": [
+        "free spirit"
+      ],
+      "slug": "sky",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_2_5.jpg",
+      "photo_file": "profile_2_5.jpg",
+      "intentions": [
+        "creative connections"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Sky",
+      "username": "sky",
+      "birthdate": "1999-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_2_5.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_2_5.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "creative connections"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "free spirit"
+        ],
+        "conversation_starter": "What about art feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "f8227752-c625-52a7-b4f4-b4fac009fcaa",
+      "name": "Kim",
+      "age": 30,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Loyal, honest, and easygoing.",
+      "interests": [
+        "Fitness",
+        "Travel"
+      ],
+      "conversation_starter": "What about fitness feels most like you?",
+      "vibe_tags": [
+        "steady"
+      ],
+      "slug": "kim",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_2_6.jpg",
+      "photo_file": "profile_2_6.jpg",
+      "intentions": [
+        "dating",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Kim",
+      "username": "kim",
+      "birthdate": "1996-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_2_6.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_2_6.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "dating",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "steady"
+        ],
+        "conversation_starter": "What about fitness feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "0198ac9b-1e66-5249-a690-3c4b39fb5720",
+      "name": "Bea",
+      "age": 28,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I love good conversations and better people.",
+      "interests": [
+        "Books",
+        "Cafes"
+      ],
+      "conversation_starter": "What about books feels most like you?",
+      "vibe_tags": [
+        "thoughtful"
+      ],
+      "slug": "bea",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_2_7.jpg",
+      "photo_file": "profile_2_7.jpg",
+      "intentions": [
+        "friends",
+        "dating"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Bea",
+      "username": "bea",
+      "birthdate": "1998-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_2_7.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_2_7.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "dating"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "thoughtful"
+        ],
+        "conversation_starter": "What about books feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "8dbf3b6e-41b5-53dc-9ca6-862561da44ac",
+      "name": "Luna",
+      "age": 24,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I follow my intuition and good vibes.",
+      "interests": [
+        "Spirituality",
+        "Music"
+      ],
+      "conversation_starter": "What about spirituality feels most like you?",
+      "vibe_tags": [
+        "intuitive"
+      ],
+      "slug": "luna",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_2_8.jpg",
+      "photo_file": "profile_2_8.jpg",
+      "intentions": [
+        "friends",
+        "dating"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Luna",
+      "username": "luna",
+      "birthdate": "2002-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_2_8.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_2_8.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "dating"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "intuitive"
+        ],
+        "conversation_starter": "What about spirituality feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "176a7528-965c-547f-8c92-4a23224fcf99",
+      "name": "Daniella",
+      "age": 35,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Strong, independent, and caring.",
+      "interests": [
+        "Career",
+        "Wellness"
+      ],
+      "conversation_starter": "What about career feels most like you?",
+      "vibe_tags": [
+        "empowered"
+      ],
+      "slug": "daniella",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_2_9.jpg",
+      "photo_file": "profile_2_9.jpg",
+      "intentions": [
+        "serious",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Daniella",
+      "username": "daniella",
+      "birthdate": "1991-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_2_9.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_2_9.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "serious",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "empowered"
+        ],
+        "conversation_starter": "What about career feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "5651b9c4-1c83-5ca7-b672-2375b433560f",
+      "name": "Mira",
+      "age": 29,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I love deep conversations and meaningful connections.",
+      "interests": [
+        "Long talks",
+        "Coffee"
+      ],
+      "conversation_starter": "What about long talks feels most like you?",
+      "vibe_tags": [
+        "deep"
+      ],
+      "slug": "mira",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_3_0.jpg",
+      "photo_file": "profile_3_0.jpg",
+      "intentions": [
+        "serious",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Mira",
+      "username": "mira",
+      "birthdate": "1997-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_3_0.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_3_0.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "serious",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "deep"
+        ],
+        "conversation_starter": "What about long talks feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "679b5a29-cf20-58fa-9418-bad274b089be",
+      "name": "Tori",
+      "age": 26,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Let’s go do something spontaneous.",
+      "interests": [
+        "Adventure",
+        "Exploring"
+      ],
+      "conversation_starter": "What about adventure feels most like you?",
+      "vibe_tags": [
+        "spontaneous"
+      ],
+      "slug": "tori",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_3_1.jpg",
+      "photo_file": "profile_3_1.jpg",
+      "intentions": [
+        "fun",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Tori",
+      "username": "tori",
+      "birthdate": "2000-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_3_1.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_3_1.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "fun",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "spontaneous"
+        ],
+        "conversation_starter": "What about adventure feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "1884a1b2-fb2d-53d3-9f90-77d8cb54d23f",
+      "name": "Sasha",
+      "age": 32,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I bring calm energy wherever I go.",
+      "interests": [
+        "Walks",
+        "Tea"
+      ],
+      "conversation_starter": "What about walks feels most like you?",
+      "vibe_tags": [
+        "peaceful"
+      ],
+      "slug": "sasha",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_3_2.jpg",
+      "photo_file": "profile_3_2.jpg",
+      "intentions": [
+        "friends",
+        "community"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Sasha",
+      "username": "sasha",
+      "birthdate": "1994-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_3_2.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_3_2.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "community"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "peaceful"
+        ],
+        "conversation_starter": "What about walks feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "b7fa90bd-6140-5240-bc83-f05e61cb6b4d",
+      "name": "Nia",
+      "age": 28,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Big heart, small circle.",
+      "interests": [
+        "Close friendships",
+        "Podcasts"
+      ],
+      "conversation_starter": "What about close friendships feels most like you?",
+      "vibe_tags": [
+        "loyal"
+      ],
+      "slug": "nia",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_3_3.jpg",
+      "photo_file": "profile_3_3.jpg",
+      "intentions": [
+        "friends",
+        "meaningful connection"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Nia",
+      "username": "nia",
+      "birthdate": "1998-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_3_3.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_3_3.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "meaningful connection"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "loyal"
+        ],
+        "conversation_starter": "What about close friendships feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "b0a29c44-96a8-5207-b8a0-18b8000f7032",
+      "name": "Erin",
+      "age": 31,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I love building real friendships.",
+      "interests": [
+        "Coffee dates",
+        "Group hangs"
+      ],
+      "conversation_starter": "What about coffee dates feels most like you?",
+      "vibe_tags": [
+        "genuine"
+      ],
+      "slug": "erin",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_3_4.jpg",
+      "photo_file": "profile_3_4.jpg",
+      "intentions": [
+        "friends",
+        "community"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Erin",
+      "username": "erin",
+      "birthdate": "1995-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_3_4.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_3_4.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "community"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "genuine"
+        ],
+        "conversation_starter": "What about coffee dates feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "bdf9143a-cf60-585e-a990-5534766d8b54",
+      "name": "Val",
+      "age": 27,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I love laughter and good energy.",
+      "interests": [
+        "Music",
+        "Social nights"
+      ],
+      "conversation_starter": "What about music feels most like you?",
+      "vibe_tags": [
+        "light"
+      ],
+      "slug": "val",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_3_5.jpg",
+      "photo_file": "profile_3_5.jpg",
+      "intentions": [
+        "friends",
+        "fun"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Val",
+      "username": "val",
+      "birthdate": "1999-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_3_5.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_3_5.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.983Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "fun"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "light"
+        ],
+        "conversation_starter": "What about music feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "3b1d11ca-639f-548a-aa8a-5a40ea159d2a",
+      "name": "Jade",
+      "age": 25,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Creative and expressive.",
+      "interests": [
+        "Art",
+        "Design"
+      ],
+      "conversation_starter": "What about art feels most like you?",
+      "vibe_tags": [
+        "artistic"
+      ],
+      "slug": "jade",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_3_6.jpg",
+      "photo_file": "profile_3_6.jpg",
+      "intentions": [
+        "creative connections"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Jade",
+      "username": "jade",
+      "birthdate": "2001-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_3_6.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_3_6.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "creative connections"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "artistic"
+        ],
+        "conversation_starter": "What about art feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "5590d56c-519f-5246-b9f6-710cbc76fa41",
+      "name": "Rose",
+      "age": 34,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Soft but strong.",
+      "interests": [
+        "Wellness",
+        "Books"
+      ],
+      "conversation_starter": "What about wellness feels most like you?",
+      "vibe_tags": [
+        "balanced"
+      ],
+      "slug": "rose",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_3_7.jpg",
+      "photo_file": "profile_3_7.jpg",
+      "intentions": [
+        "serious",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Rose",
+      "username": "rose",
+      "birthdate": "1992-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_3_7.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_3_7.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "serious",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "balanced"
+        ],
+        "conversation_starter": "What about wellness feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "4497e152-7e3c-587d-9609-7a0798a43349",
+      "name": "Quinn",
+      "age": 29,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Honest, direct, and kind.",
+      "interests": [
+        "Movies",
+        "Good conversation"
+      ],
+      "conversation_starter": "What about movies feels most like you?",
+      "vibe_tags": [
+        "real"
+      ],
+      "slug": "quinn",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_3_8.jpg",
+      "photo_file": "profile_3_8.jpg",
+      "intentions": [
+        "dating",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Quinn",
+      "username": "quinn",
+      "birthdate": "1997-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_3_8.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_3_8.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "dating",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "real"
+        ],
+        "conversation_starter": "What about movies feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "46584c0a-3096-5270-8066-810adc5a2818",
+      "name": "Paige",
+      "age": 30,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I value peace and stability.",
+      "interests": [
+        "Homebody nights",
+        "Coffee"
+      ],
+      "conversation_starter": "What about homebody nights feels most like you?",
+      "vibe_tags": [
+        "grounded"
+      ],
+      "slug": "paige",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_3_9.jpg",
+      "photo_file": "profile_3_9.jpg",
+      "intentions": [
+        "stable connection"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Paige",
+      "username": "paige",
+      "birthdate": "1996-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_3_9.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_3_9.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "stable connection"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "grounded"
+        ],
+        "conversation_starter": "What about homebody nights feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "faf81bdc-8198-5c4a-add0-08d029b5c8c8",
+      "name": "Lex",
+      "age": 26,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Always ready for adventure.",
+      "interests": [
+        "Travel",
+        "Hiking"
+      ],
+      "conversation_starter": "What about travel feels most like you?",
+      "vibe_tags": [
+        "bold"
+      ],
+      "slug": "lex",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_4_0.jpg",
+      "photo_file": "profile_4_0.jpg",
+      "intentions": [
+        "adventure",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Lex",
+      "username": "lex",
+      "birthdate": "2000-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_4_0.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_4_0.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "adventure",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "bold"
+        ],
+        "conversation_starter": "What about travel feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "49219801-5cdb-5d42-a92a-83c9e3c0eb97",
+      "name": "Amber",
+      "age": 33,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I love meaningful conversations.",
+      "interests": [
+        "Books",
+        "Tea"
+      ],
+      "conversation_starter": "What about books feels most like you?",
+      "vibe_tags": [
+        "deep"
+      ],
+      "slug": "amber",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_4_1.jpg",
+      "photo_file": "profile_4_1.jpg",
+      "intentions": [
+        "serious",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Amber",
+      "username": "amber",
+      "birthdate": "1993-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_4_1.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_4_1.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "serious",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "deep"
+        ],
+        "conversation_starter": "What about books feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "d655af94-46ae-557a-aa17-437beb826594",
+      "name": "Nola",
+      "age": 28,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I bring warmth wherever I go.",
+      "interests": [
+        "Hosting",
+        "Coffee"
+      ],
+      "conversation_starter": "What about hosting feels most like you?",
+      "vibe_tags": [
+        "warm"
+      ],
+      "slug": "nola",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_4_2.jpg",
+      "photo_file": "profile_4_2.jpg",
+      "intentions": [
+        "friends",
+        "community"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Nola",
+      "username": "nola",
+      "birthdate": "1998-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_4_2.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_4_2.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "community"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "warm"
+        ],
+        "conversation_starter": "What about hosting feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "b468f079-3046-5750-98b5-23035f148b2d",
+      "name": "Skye",
+      "age": 24,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Free spirit with a big heart.",
+      "interests": [
+        "Music",
+        "Adventure"
+      ],
+      "conversation_starter": "What about music feels most like you?",
+      "vibe_tags": [
+        "free"
+      ],
+      "slug": "skye",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_4_3.jpg",
+      "photo_file": "profile_4_3.jpg",
+      "intentions": [
+        "fun",
+        "community"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Skye",
+      "username": "skye",
+      "birthdate": "2002-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_4_3.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_4_3.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "fun",
+          "community"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "free"
+        ],
+        "conversation_starter": "What about music feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "237d9c5d-4136-5151-8c41-540a0fc4c6ad",
+      "name": "Faith",
+      "age": 35,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Loyal and intentional.",
+      "interests": [
+        "Family",
+        "Wellness"
+      ],
+      "conversation_starter": "What about family feels most like you?",
+      "vibe_tags": [
+        "solid"
+      ],
+      "slug": "faith",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_4_4.jpg",
+      "photo_file": "profile_4_4.jpg",
+      "intentions": [
+        "serious",
+        "intentional"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Faith",
+      "username": "faith",
+      "birthdate": "1991-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_4_4.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_4_4.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "serious",
+          "intentional"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "solid"
+        ],
+        "conversation_starter": "What about family feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "b05bb995-2524-5714-8ccb-3f5903c79d6c",
+      "name": "Ivyanna",
+      "age": 27,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Soft energy, strong boundaries.",
+      "interests": [
+        "Journaling",
+        "Walks"
+      ],
+      "conversation_starter": "What about journaling feels most like you?",
+      "vibe_tags": [
+        "balanced"
+      ],
+      "slug": "ivyanna",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_4_5.jpg",
+      "photo_file": "profile_4_5.jpg",
+      "intentions": [
+        "dating",
+        "friends"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Ivyanna",
+      "username": "ivyanna",
+      "birthdate": "1999-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_4_5.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_4_5.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "dating",
+          "friends"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "balanced"
+        ],
+        "conversation_starter": "What about journaling feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "0f8ae7c2-1d79-5c55-9bf1-6c83d6791a56",
+      "name": "Cami",
+      "age": 29,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I love people who are real.",
+      "interests": [
+        "Coffee",
+        "Deep talks"
+      ],
+      "conversation_starter": "What about coffee feels most like you?",
+      "vibe_tags": [
+        "authentic"
+      ],
+      "slug": "cami",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_4_6.jpg",
+      "photo_file": "profile_4_6.jpg",
+      "intentions": [
+        "friends",
+        "dating"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Cami",
+      "username": "cami",
+      "birthdate": "1997-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_4_6.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_4_6.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "dating"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "authentic"
+        ],
+        "conversation_starter": "What about coffee feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "ae9fe150-ee4a-5e4d-9320-1e3ee8b34f49",
+      "name": "Rhea",
+      "age": 31,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Calm, caring, and grounded.",
+      "interests": [
+        "Tea",
+        "Reading"
+      ],
+      "conversation_starter": "What about tea feels most like you?",
+      "vibe_tags": [
+        "stable"
+      ],
+      "slug": "rhea",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_4_7.jpg",
+      "photo_file": "profile_4_7.jpg",
+      "intentions": [
+        "friends",
+        "serious"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Rhea",
+      "username": "rhea",
+      "birthdate": "1995-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_4_7.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_4_7.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "friends",
+          "serious"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "stable"
+        ],
+        "conversation_starter": "What about tea feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "4c0cbf86-db32-56fc-8d04-627ed32f1caf",
+      "name": "Tia",
+      "age": 26,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "Fun, social, and outgoing.",
+      "interests": [
+        "Brunch",
+        "Dancing"
+      ],
+      "conversation_starter": "What about brunch feels most like you?",
+      "vibe_tags": [
+        "social"
+      ],
+      "slug": "tia",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_4_8.jpg",
+      "photo_file": "profile_4_8.jpg",
+      "intentions": [
+        "fun",
+        "social"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Tia",
+      "username": "tia",
+      "birthdate": "2000-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_4_8.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_4_8.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "fun",
+          "social"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "social"
+        ],
+        "conversation_starter": "What about brunch feels most like you?"
+      },
+      "safety_settings": {
+        "seeded_demo_profile": true
+      }
+    },
+    {
+      "id": "2b0f582f-bfba-55f6-9acd-d94ad0dfbadd",
+      "name": "Zara",
+      "age": 32,
+      "identity": "Open",
+      "presentation": "",
+      "location": "Sacramento",
+      "bio": "I value depth over surface.",
+      "interests": [
+        "Books",
+        "Meaningful conversations"
+      ],
+      "conversation_starter": "What about books feels most like you?",
+      "vibe_tags": [
+        "intentional"
+      ],
+      "slug": "zara",
+      "seed_profile": true,
+      "demo_label": "Founding Community Member",
+      "profile_photo": "/seed-avatars/profile_4_9.jpg",
+      "photo_file": "profile_4_9.jpg",
+      "intentions": [
+        "serious",
+        "intentional"
+      ],
+      "pronouns": [],
+      "profile_status": "active",
+      "full_name": "Zara",
+      "username": "zara",
+      "birthdate": "1994-06-15",
+      "sexual_orientation": "Open",
+      "gender_identity": "",
+      "photos": [
+        "/seed-avatars/profile_4_9.jpg"
+      ],
+      "avatar_url": "/seed-avatars/profile_4_9.jpg",
+      "profile_completed": true,
+      "onboarding_complete": true,
+      "discoverable": true,
+      "last_active_at": "2026-03-17T07:44:35.984Z",
+      "privacy_settings": {
+        "demo_profile": true,
+        "demo_label": "Founding Community Member",
+        "intentions": [
+          "serious",
+          "intentional"
+        ],
+        "pronouns": [],
+        "vibe_tags": [
+          "intentional"
+        ],
+        "conversation_starter": "What about books feels most like you?"
       },
       "safety_settings": {
         "seeded_demo_profile": true

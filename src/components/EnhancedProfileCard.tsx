@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Heart, MapPin, Calendar } from 'lucide-react';
+import { getProfilePhotoCropClass } from '@/lib/profiles';
 
 interface Profile {
   id: string;
@@ -30,6 +31,7 @@ export const EnhancedProfileCard: React.FC<EnhancedProfileCardProps> = ({
   onPass,
   className = ''
 }) => {
+  const photoCropClass = getProfilePhotoCropClass(profile);
   const calculateAge = (birthdate?: string) => {
     if (!birthdate) return null;
     const today = new Date();
@@ -71,7 +73,7 @@ export const EnhancedProfileCard: React.FC<EnhancedProfileCardProps> = ({
             <img 
               src={profile.avatar_url} 
               alt={profile.full_name}
-              className="w-full h-48 object-cover rounded-lg"
+              className={`w-full h-48 rounded-lg ${photoCropClass}`}
             />
           </div>
         )}

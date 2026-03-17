@@ -6,6 +6,7 @@ type SupabaseAdminClient = {
       listUsers: (params?: { page?: number; perPage?: number }) => Promise<any>;
       createUser: (attributes: Record<string, any>) => Promise<any>;
       updateUserById: (id: string, attributes: Record<string, any>) => Promise<any>;
+      deleteUser: (id: string) => Promise<any>;
     };
   };
 };
@@ -121,4 +122,26 @@ export async function ensureSeedAuthUsers(
   }
 
   return resolvedUsers;
+}
+
+export async function removeStaleSeedAuthUsers(
+  supabase: SupabaseAdminClient,
+  profiles: SeedProfileInput[]
+) {
+  const emailDomain = getSeedEmailDomain();
+  const desiredEmails = new Set(
+    profiles.map((profile) => buildSeedProfileEmail(profile.slug, emailDomain))
+  );
+  const existingUsers = await listAllAuthUsers(supabase);
+
+  for (const user of existingUsers) {
+    const email = typeof user?.email === "string" ? user.email.trim().toLowerCase() : "";
+    if (!email || !email.endsWith(`@${emailDomain}`)) continue;
+    if (desiredEmails.has(email)) continue;
+
+    const { error } = await supabase.auth.admin.deleteUser(user.id);
+    if (error) {
+      throw error;
+    }
+  }
 }

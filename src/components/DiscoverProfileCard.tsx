@@ -6,6 +6,7 @@ import {
   getDemoActivityStatus,
   getDemoConversationStarter,
   getDemoProfileLabel,
+  getProfilePhotoCropClass,
   getPrimaryProfilePhoto,
   getDemoVibePrompt,
   getDemoVibeTags,
@@ -24,6 +25,7 @@ export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
   const name = profile.full_name || t("memberFallback");
   const bio = (profile.bio || "").trim();
   const photo = getPrimaryProfilePhoto(profile);
+  const photoCropClass = getProfilePhotoCropClass(profile);
   const showPhoto = !!photo && !imageFailed;
   const privacy = (profile.privacy_settings ?? {}) as Record<string, any>;
   const demoProfile = isDemoProfile(profile);
@@ -60,7 +62,7 @@ export function DiscoverProfileCard({ profile }: { profile: ProfileRow }) {
           <img
             src={photo}
             alt={name}
-            className="h-44 w-full object-cover"
+            className={`h-44 w-full ${photoCropClass}`}
             loading="lazy"
             onError={() => setImageFailed(true)}
           />

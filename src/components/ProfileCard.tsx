@@ -8,6 +8,7 @@ interface Profile {
   age?: number | null;
   bio: string;
   photos: string[];
+  photoCropClass?: string;
   location?: string;
   interests?: string[];
   pronouns?: string;
@@ -57,7 +58,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <img 
           src={profile.photos[0] || '/api/placeholder/400/600'} 
           alt={profile.name}
-          className="w-full h-full object-cover opacity-100 transition-transform duration-300 group-hover:scale-[1.02]"
+          className={`w-full h-full ${profile.photoCropClass || 'object-cover object-center'} opacity-100 transition-transform duration-300 group-hover:scale-[1.02]`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10" />
         

@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import { v5 as uuidv5 } from "uuid";
 import seedData from "../data/seed_profiles.json" with { type: "json" };
-import { ensureSeedAuthUsers, slugToUsername } from "./seed-auth-users.js";
+import { ensureSeedAuthUsers, removeStaleSeedAuthUsers, slugToUsername } from "./seed-auth-users.js";
 import { resolveSeedPhotoPath } from "./seed-photo.js";
 
 type Target = "local" | "supabase" | "both";
@@ -80,7 +80,9 @@ function pickDistinct(values: string[], count: number, seed: number, exclude: st
 
 function buildEngagementState(profile: (typeof seedData.seed_profiles)[number]) {
   const seed = hashString(`${rotationKey}:${profile.slug}`);
-  const photoPath = resolveSeedPhotoPath(profile.slug);
+  const preferredPhotoFile =
+    profile.photo_file ?? ((profile as { photoFile?: string | null }).photoFile ?? null);
+  const photoPath = resolveSeedPhotoPath(profile.slug, preferredPhotoFile);
   const baseVibes = Array.isArray(profile.vibe_tags)
     ? profile.vibe_tags.filter((value): value is string => typeof value === "string")
     : [];
@@ -177,6 +179,7 @@ async function refreshSupabaseDemoProfiles() {
     },
   });
 
+  await removeStaleSeedAuthUsers(supabase as any, seedData.seed_profiles);
   const authUsers = await ensureSeedAuthUsers(supabase as any, seedData.seed_profiles);
   const rows = seedData.seed_profiles.map((profile) => {
     const next = buildEngagementState(profile);
