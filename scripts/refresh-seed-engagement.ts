@@ -188,15 +188,22 @@ async function refreshSupabaseDemoProfiles() {
     return {
       id: authUser.id,
       full_name: next.full_name,
+      display_name: next.full_name,
       username: next.username,
       bio: next.bio,
       location: next.location,
+      occupation: null,
       birthdate: next.birthdate,
       gender_identity: next.gender_identity,
       sexual_orientation: next.sexual_orientation,
       interests: next.interests,
       photos: next.photos,
       avatar_url: next.avatar_url,
+      lifestyle_interests: {
+        pride_pins: [],
+        vibe_tags: next.vibe_tags,
+        demo_profile: true,
+      },
       profile_completed: true,
       privacy_settings: {
         ...next.privacy_settings,

@@ -40,15 +40,22 @@ async function run() {
     return {
       id: authUser.id,
       full_name: profile.name,
+      display_name: profile.name,
       username: slugToUsername(profile.slug),
       bio: profile.bio,
       location: profile.location,
+      occupation: null,
       birthdate: deriveBirthdate(profile.age),
       gender_identity: profile.presentation,
       sexual_orientation: profile.identity,
       interests: profile.interests,
       photos: [photoPath],
       avatar_url: photoPath,
+      lifestyle_interests: {
+        pride_pins: [],
+        vibe_tags: profile.vibe_tags,
+        demo_profile: true,
+      },
       profile_completed: true,
       privacy_settings: {
         demo_profile: true,
