@@ -46,26 +46,52 @@ const applyInitialUiPreferences = () => {
   }
 
   root.classList.add(resolvedTheme)
+  root.setAttribute('data-theme-preapplied', '1')
 }
 
 applyInitialUiPreferences()
 
+const LEGACY_SERVICE_WORKER_CLEANUP_KEY = 'vv:legacy-sw-cleanup-v1'
+
+const hasCompletedLegacyServiceWorkerCleanup = () => {
+  try {
+    return window.localStorage.getItem(LEGACY_SERVICE_WORKER_CLEANUP_KEY) === 'done'
+  } catch {
+    return false
+  }
+}
+
+const markLegacyServiceWorkerCleanupComplete = () => {
+  try {
+    window.localStorage.setItem(LEGACY_SERVICE_WORKER_CLEANUP_KEY, 'done')
+  } catch {
+    // Ignore storage failures and try again on the next page load.
+  }
+}
+
 const cleanupLegacyServiceWorkers = async () => {
   if (!('serviceWorker' in navigator)) return
+  if (hasCompletedLegacyServiceWorkerCleanup()) return
 
   try {
     const registrations = await navigator.serviceWorker.getRegistrations()
+    if (registrations.length === 0) {
+      markLegacyServiceWorkerCleanupComplete()
+      return
+    }
+
     await Promise.all(registrations.map((registration) => registration.unregister()))
 
     if ('caches' in window) {
       const keys = await caches.keys()
       await Promise.all(keys.map((key) => caches.delete(key)))
     }
+
+    markLegacyServiceWorkerCleanupComplete()
   } catch (error) {
     console.error('Service worker cleanup failed:', error)
   }
 }
 
-cleanupLegacyServiceWorkers().finally(() => {
-  createRoot(document.getElementById('root')!).render(<App />)
-})
+createRoot(document.getElementById('root')!).render(<App />)
+void cleanupLegacyServiceWorkers()

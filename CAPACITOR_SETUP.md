@@ -12,10 +12,14 @@ npx cap init "Violets and Vibes" "com.violetsandvibes.app"
 
 ## 3. Build and Sync
 ```bash
-npm run build
+npm run build:mobile
+```
+
+If the native projects do not exist yet, run:
+
+```bash
 npx cap add ios
 npx cap add android
-npx cap sync
 ```
 
 ## 4. iOS App Store Steps
